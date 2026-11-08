@@ -109,7 +109,9 @@ def operate(action, learner, candidate=None, session=None, payload=None):
             return {'status':'missing','review_queue':[], 'dynamic_reviews':[]}
         item=store['history'][-1]
         if item['plan_sha256'] != sha(item['plan']): raise Invalid('规划内容摘要不匹配')
+        stale=any(item['inputs'][k] != ctx[k] for k in item['inputs'])
         if action in ('schedule-dynamic', 'complete-dynamic'):
+            if stale: raise Invalid('路线已过期，请先重新检查教学范围并更新路线，再推进动态复习')
             if not isinstance(payload, dict): raise Invalid('动态复习需要 JSON 对象')
             tasks = store.setdefault('dynamic_reviews', [])
             snapshot = sessions.read_folder(folder)
@@ -164,7 +166,6 @@ def operate(action, learner, candidate=None, session=None, payload=None):
                 raise Invalid('没有可由此证据完成的复习')
             events.append({'task_id':task_id(pending[0]), 'plan_version':item['version'], 'concept':record['concept'], 'session_id':session,'evidence_at':record['captured_at']})
             write(path,store)
-        stale=any(item['inputs'][k] != ctx[k] for k in item['inputs'])
         now=dt.datetime.now(dt.timezone.utc)
         completed = {event_task_id(e, store['history']) for e in store.get('review_events',[])}
         reviews=[{**q,'task_id':task_id(q),'due':parse_date(q['due_at']) <= now, 'status':'completed' if task_id(q) in completed else 'pending'} for q in item['review_queue']]
