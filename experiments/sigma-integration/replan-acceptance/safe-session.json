@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "revision": 3,
+  "state": {
+    "learner": "synthetic-replan",
+    "phase": "paused",
+    "adult_accompaniment": "confirmed_by_user",
+    "pending_replan": {
+      "candidate_path": "pilot-c01-c02/records/synthetic-replan/sigma/replan-candidate-v1.json",
+      "candidate_sha256": "64230ba5c1ae203753d67a405035134f5bb5665afbf2fd4a29c77eb681e947b2",
+      "base_plan_version": 1,
+      "inputs": {
+        "curriculum_digest": "87fb4f1d1148c708c8a09f1b3b3c077cecb4628db3da4ce7422255810902bfea",
+        "learner_digest": "6950d0e97c2536fa2c93a73f4886e382c7e75995c712225b0bade6fd77fcdbaf",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "status": "published",
+      "published_version": 2,
+      "confirmation": "家长明确确认展示的第1、3、7天C01短复习候选方案并授权发布。"
+    }
+  },
+  "session": "虚构成人模拟：先前学习 C01，暂停。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "q1",
+      "text": "桌上有水杯，能确定有人刚喝水吗？"
+    },
+    {
+      "type": "answer",
+      "question_id": "q1",
+      "text": "不能，只有水杯，需要再核实。"
+    },
+    {
+      "type": "analysis",
+      "question_id": "q1",
+      "analysis": {
+        "understanding": "区分已见信息与过去事件",
+        "next_step": "继续复习核实依据"
+      }
+    }
+  ]
+}
