@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "history": [
+    {
+      "version": 1,
+      "plan_sha256": "f7caa24fb41f6b8348ab281b653be946619c85b9a13ab6ebe73d1ac6db366f75",
+      "created_at": "2026-11-08T14:37:07.548348+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "6950d0e97c2536fa2c93a73f4886e382c7e75995c712225b0bade6fd77fcdbaf",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-p1",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "6950d0e97c2536fa2c93a73f4886e382c7e75995c712225b0bade6fd77fcdbaf",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "无先修；正式证据为空，先以已发布诊断取得起点线索，再按门禁巩固。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "在C01之后安排；尚无C01掌握证据与家长确认，暂不进入正式训练。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "先比较属性，再按明确属性分类及寻找反例。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "建立稳定比较维度后，识别并检验变化规则。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "依赖分类与规律检验，学习有序且不重不漏地列举。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "依赖事实辨析与枚举，检查条件方向及逆推。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "依赖事实辨析与条件推理，审视证据范围和替代解释。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "在证据判断之后组织理由，并公平倾听。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "依赖枚举与条件推理，整理目标及约束并检验方案。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "依赖论证与约束分解，比较不同角色需求及方案代价。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "按课程叙事安排在方案设计阶段；C02/C09为可穿插关系，并非硬先修。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "依赖约束分解及发散构想，建立测试标准与迭代记录。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "综合枚举、证据和约束方法，在新情境选择并验证策略。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "正式集中反思置于末段；C01/C09为可穿插关系，可早期记录具体自查动作。 仅列未来路线，未发布前不开展正式教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "尚无学习者回答，理解、理由、提示依赖和体验均为unknown。",
+          "C01只有一张已发布训练卡，不能满足不同题卡掌握证据；C02正式训练先修未满足。",
+          "C03—C14没有已发布题卡，只列未来路线。"
+        ],
+        "revision_suggestions": [
+          "依真实回答调整教学动作；影响概念顺序或长期目标的实质变化才更新planning_basis并重规划。",
+          "补充不同题卡证据并经家长确认后，重新核查正式训练许可。"
+        ]
+      },
+      "review_queue": []
+    }
+  ],
+  "dynamic_reviews": [
+    {
+      "task_id": "41c8d071-1463-4d4a-87b8-72303d6d8377",
+      "concept": "C01",
+      "source_question_id": "diag-001",
+      "reason": "diag-001把桌上有笔作为写过作业必真的依据；diag-002在H1后仍表示不明白并请求平行示范。用户随后主动请求复习，示范后独立理解尚未验证，先做1天短间隔检索。",
+      "interval_days": 1,
+      "scheduled_at": "2026-11-08T14:43:00.434332+00:00",
+      "due_at": "2026-11-09T14:43:00.434332+00:00",
+      "status": "pending"
+    }
+  ]
+}

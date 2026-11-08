@@ -14,6 +14,24 @@ store = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(store)
 
 class SnapshotTests(unittest.TestCase):
+    def test_analysis_survives_multiple_turns_and_rejects_missing_or_duplicate(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(store.evidence, 'get_folder', return_value=Path(tmp)):
+            proposed = {'state': {}, 'session': '', 'turns': []}
+            revision = 0
+            for i in range(5):
+                qid = f'q{i}'
+                proposed['turns'].append({'type':'question','question_id':qid,'text':'问题'})
+                revision = store.operate('synthetic', proposed, revision)['revision']
+                proposed['turns'].append({'type':'answer','question_id':qid,'text':f'原话{i}'})
+                with self.assertRaises(store.Invalid):
+                    store.operate('synthetic', proposed, revision)
+                proposed['turns'].append({'type':'analysis','question_id':qid,'analysis':{'reason':f'分析{i}'}})
+                revision = store.operate('synthetic', proposed, revision)['revision']
+            restored = store.operate('synthetic')
+            self.assertEqual([e['analysis']['reason'] for e in restored['turns'] if e.get('type') == 'analysis'], [f'分析{i}' for i in range(5)])
+            proposed['turns'].append({'type':'analysis','question_id':'q0','analysis':{'reason':'重复'}})
+            with self.assertRaises(store.Invalid): store.operate('synthetic', proposed, revision)
+            self.assertEqual(store.operate('synthetic'), restored)
     def test_legacy_files_block_read_and_commit_even_after_snapshot(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)

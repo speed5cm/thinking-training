@@ -37,14 +37,19 @@ class SigmaIntegration(unittest.TestCase):
             published = call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate))
             self.assertEqual(published['status'], 'current')
             self.assertTrue(published['review_queue'][0]['due'])
-            events = [{'type':'question','question_id':'q1','text':'问题'}, {'type':'answer','question_id':'q1','text':'回答'}, {'type':'question','question_id':'q2','text':'追问'}]
-            for revision, event in enumerate(events, 1):
-                snapshot['turns'].append(event)
+            # Routine coach events do not change formal evidence or the plan.
+            (folder / 'events.jsonl').write_text(json.dumps({'type':'parent_feedback','text':'普通记录'}, ensure_ascii=False) + '\n')
+            self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
+            events = [[{'type':'question','question_id':'q1','text':'问题'}],
+                      [{'type':'answer','question_id':'q1','text':'回答'}, {'type':'analysis','question_id':'q1','analysis':{'reason':'分析'}}],
+                      [{'type':'question','question_id':'q2','text':'追问'}]]
+            for revision, batch in enumerate(events, 1):
+                snapshot['turns'].extend(batch)
                 call('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=snapshot)
             snapshot['state']['status'] = 'paused'
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '4', data=snapshot)
             resumed = call('sigma_session_store.py', 'read', *learner)
-            self.assertEqual(resumed['turns'][-1], events[-1])
+            self.assertEqual(resumed['turns'][-1], events[-1][0])
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
             snapshot['state']['planning_basis'] = {'C01':'需要复习'}
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '5', data=snapshot)

@@ -39,6 +39,27 @@ def validate(obj):
     if 'planning_basis' in obj['state'] and not isinstance(obj['state']['planning_basis'], dict):
         raise Invalid('planning_basis 必须是对象')
 
+def validate_new_events(previous, current):
+    """Validate new analysis records without rewriting legacy snapshot history."""
+    turns = current['turns']
+    added = turns[len(previous['turns']):]
+    for event in added:
+        if event.get('type') not in ('answer', 'analysis'):
+            continue
+        qid = event.get('question_id')
+        if not isinstance(qid, str) or not qid:
+            raise Invalid('回答和分析须关联问题 ID')
+        questions = [e for e in turns if e.get('type') == 'question' and e.get('question_id') == qid]
+        answers = [e for e in turns if e.get('type') == 'answer' and e.get('question_id') == qid]
+        analyses = [e for e in turns if e.get('type') == 'analysis' and e.get('question_id') == qid]
+        if len(questions) != 1 or len(answers) != 1 or len(analyses) != 1:
+            raise Invalid('每个新回答须关联唯一问题和唯一分析，并在同次提交中保存')
+        analysis = analyses[0].get('analysis')
+        if not isinstance(analysis, dict) or not analysis:
+            raise Invalid('分析须为非空对象')
+        if turns.index(questions[0]) >= turns.index(answers[0]) or turns.index(answers[0]) >= turns.index(analyses[0]):
+            raise Invalid('事件顺序须为问题、回答、分析')
+
 def operate(learner, proposed=None, expected=None):
     folder = evidence.get_folder(learner)
     dest = folder / 'sigma'
@@ -58,6 +79,7 @@ def operate(learner, proposed=None, expected=None):
         # Previously committed turns must remain byte-for-byte equivalent in JSON data.
         if current['turns'][:len(previous['turns'])] != previous['turns']:
             raise Invalid('不能覆盖已提交的逐轮记录')
+        validate_new_events(previous, current)
         fd, temp = tempfile.mkstemp(dir=dest, prefix='.session-')
         try:
             os.fchmod(fd, 0o600)

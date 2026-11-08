@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "state": {
+    "learner": "synthetic-p1",
+    "simulation": "adult_isolated",
+    "adult_accompaniment": "confirmed_by_user",
+    "language": "zh-CN",
+    "phase": "awaiting_diagnostic_answer",
+    "current_concept": "C01",
+    "pending_question_id": "diag-001",
+    "roadmap_version": 1,
+    "coach_session_id": "32a682d5-5eed-4812-9aa7-ebbf0d82b54e",
+    "understanding": "unknown",
+    "hypotheses": [],
+    "parent_observations": "unknown",
+    "hints": [],
+    "teaching_action": "展示已发布的首个C01诊断题，等待真实回答",
+    "reason": "尚无正式证据；诊断仅取得起点线索，不授予掌握或晋级",
+    "wiki_read_gate": [
+      "wiki/concepts/observation-vs-inference.md",
+      "pilot-c01-c02/wiki/concepts/C01.md",
+      "pilot-c01-c02/wiki/sources/project-research.md"
+    ],
+    "question_self_review": {
+      "age_appropriate": true,
+      "wiki_grounded": true,
+      "facts_checked": true,
+      "answer_leakage": false,
+      "one_question": true
+    }
+  },
+  "session": "# synthetic-p1 成人隔离模拟\n成人陪同：用户已确认。理解、评分与掌握：unknown，尚无回答。\n\n## Wiki Survey\n此前完整阅读根索引、14概念页、12周计划、教法与来源；结构检查通过。本次路线摘要未变化，v1 current；重读C01根Wiki、试点概念及相关资料，无冲突。\nC11/C14结构化关系为可穿插，不误作硬先修。\n\n## 路线 v1\n覆盖C01—C14，按课程叙事及硬先修排列，每概念保留Wiki Pages。C01先诊断；C02正式训练等待C01证据及家长确认；C03—C14仅列未来路线。\n\n## 当前问题\ndiag-001，PILOT-DIAG-C01@1.1.0，待回答。\n\n## 持久化边界\n会话、路线及coach分别保存，不构成跨文件事务。上次JavaScript调用解析失败未执行提交，本次核对为空快照revision 0后提交。\n## Concept Map\n| Concept | Wiki Pages | Status |\n|---|---|---|\n| C01 | wiki/concepts/observation-vs-inference.md | not-started |\n| C02 | wiki/concepts/attribute-comparison.md | not-started |\n| C03 | wiki/concepts/classification-counterexample.md | not-started |\n| C04 | wiki/concepts/pattern-rule.md | not-started |\n| C05 | wiki/concepts/systematic-enumeration.md | not-started |\n| C06 | wiki/concepts/conditional-reasoning.md | not-started |\n| C07 | wiki/concepts/evidence-and-alternatives.md | not-started |\n| C08 | wiki/concepts/structured-argument.md | not-started |\n| C09 | wiki/concepts/constraint-decomposition.md | not-started |\n| C10 | wiki/concepts/perspectives-tradeoffs.md | not-started |\n| C11 | wiki/concepts/divergent-ideas.md | not-started |\n| C12 | wiki/concepts/prototype-testing.md | not-started |\n| C13 | wiki/concepts/strategy-transfer.md | not-started |\n| C14 | wiki/concepts/plan-monitor-reflect.md | not-started |",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "diag-001",
+      "text": "桌上有红笔和蓝书。有人说：“一定有人刚写过作业。”哪部分是看到的，哪部分是猜测？",
+      "concept": "C01",
+      "kind": "published_diagnosis",
+      "card_id": "PILOT-DIAG-C01",
+      "card_version": "1.1.0",
+      "hints": [],
+      "action": "等待用户回答",
+      "reason": "建立事实与推测的起点线索"
+    }
+  ]
+}

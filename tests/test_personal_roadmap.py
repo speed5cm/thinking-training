@@ -86,6 +86,7 @@ class PersonalRoadmapTests(unittest.TestCase):
             planner.sigma_session.operate('fiction-demo', snapshot, 1)
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
             snapshot['turns'].append({'type': 'answer', 'question_id': 'q1', 'text': '回答'})
+            snapshot['turns'].append({'type': 'analysis', 'question_id': 'q1', 'analysis': {'reason': '普通教学观察'}})
             planner.sigma_session.operate('fiction-demo', snapshot, 2)
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
             snapshot['state']['planning_basis'] = {'C01': '需要复习'}

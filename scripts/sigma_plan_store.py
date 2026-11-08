@@ -9,8 +9,10 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import uuid
 import learning_evidence as evidence
 import validate_personal_roadmap as planner
+import sigma_session_store as sessions
 
 class Invalid(ValueError): pass
 
@@ -72,7 +74,19 @@ def queue(records, history, events):
         result.append(item)
     return result
 
-def operate(action, learner, candidate=None, session=None):
+def dynamic_answer(snapshot, question_id, task=None):
+    turns = snapshot['turns']
+    found = {kind: [e for e in turns if e.get('type') == kind and e.get('question_id') == question_id]
+             for kind in ('question', 'answer', 'analysis')}
+    if any(len(found[k]) != 1 for k in found):
+        raise Invalid('动态复习须引用已保存的唯一问题、原答和分析')
+    if task is not None and found['question'][0].get('review_task_id') != task:
+        raise Invalid('复习问题未关联该任务')
+    if not isinstance(found['analysis'][0].get('analysis'), dict) or not found['analysis'][0]['analysis']:
+        raise Invalid('动态复习分析缺失')
+    return found
+
+def operate(action, learner, candidate=None, session=None, payload=None):
     folder=evidence.get_folder(learner); dest=folder/'sigma';dest.mkdir(mode=0o700,exist_ok=True)
     path=dest/'plan-history.json'
     # Lock order is publication, learner, plan, shared with coach/evidence.
@@ -90,9 +104,52 @@ def operate(action, learner, candidate=None, session=None):
             item={'version':len(store['history'])+1,'plan_sha256':sha(plan),'created_at':dt.datetime.now(dt.timezone.utc).isoformat(),
                   'inputs':{k:ctx[k] for k in ('curriculum_digest','learner_digest','evidence_digest')},'plan':plan,'review_queue':queue(records,store['history'],store.get('review_events',[]))}
             store['history'].append(item);write(path,store)
-        if not store['history']: return {'status':'missing','review_queue':[]}
+        if not store['history']:
+            if action in ('schedule-dynamic', 'complete-dynamic'): raise Invalid('请先建立路线，再安排动态复习')
+            return {'status':'missing','review_queue':[], 'dynamic_reviews':[]}
         item=store['history'][-1]
         if item['plan_sha256'] != sha(item['plan']): raise Invalid('规划内容摘要不匹配')
+        if action in ('schedule-dynamic', 'complete-dynamic'):
+            if not isinstance(payload, dict): raise Invalid('动态复习需要 JSON 对象')
+            tasks = store.setdefault('dynamic_reviews', [])
+            snapshot = sessions.read_folder(folder)
+            now = dt.datetime.now(dt.timezone.utc)
+            if action == 'schedule-dynamic':
+                if set(payload) != {'concept', 'question_id', 'reason', 'interval_days'}:
+                    raise Invalid('安排复习字段无效')
+                concept, qid, reason, days = (payload[k] for k in ('concept','question_id','reason','interval_days'))
+                if not isinstance(concept, str) or concept not in {c['id'] for c in ctx['curriculum']['concepts']}:
+                    raise Invalid('未知概念')
+                if not isinstance(qid, str) or not qid or not isinstance(reason, str) or not reason.strip():
+                    raise Invalid('须提供问题 ID 和复习依据')
+                if type(days) is not int or not 1 <= days <= 32: raise Invalid('复习间隔须为 1 至 32 天')
+                dynamic_answer(snapshot, qid)
+                if any(t['concept'] == concept and t['status'] == 'pending' for t in tasks):
+                    raise Invalid('该概念已有待完成的动态复习')
+                tasks.append({'task_id':str(uuid.uuid4()), 'concept':concept, 'source_question_id':qid,
+                              'reason':reason, 'interval_days':days, 'scheduled_at':now.isoformat(),
+                              'due_at':(now + dt.timedelta(days=days)).isoformat(), 'status':'pending'})
+            else:
+                if set(payload) != {'task_id', 'question_id', 'result', 'next_interval_days'}:
+                    raise Invalid('完成复习字段无效')
+                task_id_value, qid, result, days = (payload[k] for k in ('task_id','question_id','result','next_interval_days'))
+                matches = [t for t in tasks if t['task_id'] == task_id_value]
+                if len(matches) != 1 or matches[0]['status'] != 'pending': raise Invalid('复习任务不存在或已完成')
+                task = matches[0]
+                if parse_date(task['due_at']) > now: raise Invalid('复习任务尚未到期')
+                if not isinstance(qid, str) or not qid: raise Invalid('复习问题 ID 无效')
+                if result not in ('correct', 'partial', 'incorrect'): raise Invalid('复习结果无效')
+                if type(days) is not int or not 1 <= days <= 32: raise Invalid('复习间隔须为 1 至 32 天')
+                dynamic_answer(snapshot, qid, task_id_value)
+                if any(t.get('review_question_id') == qid for t in tasks): raise Invalid('复习回答已使用')
+                next_task = {'task_id':str(uuid.uuid4()), 'concept':task['concept'], 'source_question_id':qid,
+                             'reason':'上次动态复习后的跟进；不代表正式掌握', 'interval_days':days,
+                             'scheduled_at':now.isoformat(), 'due_at':(now + dt.timedelta(days=days)).isoformat(),
+                             'status':'pending', 'previous_task_id':task_id_value}
+                task.update({'status':'completed', 'review_question_id':qid, 'result':result,
+                             'completed_at':now.isoformat(), 'next_task_id':next_task['task_id']})
+                tasks.append(next_task)
+            write(path, store)
         if action == 'complete-review':
             records=evidence.load_evidence(folder)
             matching=[r for r in records if r['session_id'] == session]
@@ -111,14 +168,16 @@ def operate(action, learner, candidate=None, session=None):
         now=dt.datetime.now(dt.timezone.utc)
         completed = {event_task_id(e, store['history']) for e in store.get('review_events',[])}
         reviews=[{**q,'task_id':task_id(q),'due':parse_date(q['due_at']) <= now, 'status':'completed' if task_id(q) in completed else 'pending'} for q in item['review_queue']]
-        return {'status':'stale' if stale else 'current','version':item['version'],'plan_sha256':item['plan_sha256'], 'inputs':item['inputs'],'review_queue':reviews,'notice':'复习安排非掌握判定或教学授权；须重新检查实时门禁。'}
+        dynamic = [{**t, 'due': t['status'] == 'pending' and parse_date(t['due_at']) <= now} for t in store.get('dynamic_reviews', [])]
+        return {'status':'stale' if stale else 'current','version':item['version'],'plan_sha256':item['plan_sha256'], 'inputs':item['inputs'],'review_queue':reviews, 'dynamic_reviews':dynamic, 'notice':'复习安排非掌握判定或教学授权；须重新检查实时门禁。'}
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['publish','status','complete-review']);p.add_argument('--learner',required=True);p.add_argument('--plan');p.add_argument('--session');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['publish','status','complete-review','schedule-dynamic','complete-dynamic']);p.add_argument('--learner',required=True);p.add_argument('--plan');p.add_argument('--session');a=p.parse_args()
     try:
         if a.action=='publish' and not a.plan: raise Invalid('publish 需要 --plan')
         if a.action=='complete-review' and not a.session: raise Invalid('complete-review 需要 --session')
-        print(json.dumps(operate(a.action,a.learner,a.plan,a.session),ensure_ascii=False,indent=2))
+        payload=json.load(sys.stdin) if a.action in ('schedule-dynamic','complete-dynamic') else None
+        print(json.dumps(operate(a.action,a.learner,a.plan,a.session,payload),ensure_ascii=False,indent=2))
     except (Invalid, planner.Invalid, evidence.EvidenceError, evidence.coach.Stop, evidence.roadmap.Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print('停止：'+str(exc),file=sys.stderr); return 1
     return 0

@@ -1,0 +1,8 @@
+--- wiki/concepts/observation-vs-inference.md	2026-11-08 17:12:47.235289400 +0800
++++ /tmp/sigma-acceptance-clean/wiki/concepts/observation-vs-inference.md	2026-11-08 22:15:20.638036247 +0800
+@@ -43,3 +43,5 @@
+ - **来源索引**：R04, R06（详见 `../../references/sources.md`）
+ - **相关先修**：无
+ - **版权**：本页表述和例子为本项目独立编写；不含原教材文本。
++
++<!-- 成人模拟验收：仅在隔离副本添加的无语义变更 -->

@@ -1,0 +1,25 @@
+{
+  "id": "SYNTH-C01-DRAFT",
+  "version": "0.0.1",
+  "concept": "C01",
+  "lesson": "synthetic",
+  "age": 9,
+  "difficulty": "synthetic",
+  "stem": "桌上有一个空杯子。下面哪句是直接看到的？",
+  "answer": "桌上有一个空杯子。",
+  "explanation": "只记录可见信息。",
+  "hints": [
+    "先看桌面。",
+    "描述杯子。",
+    "观察杯子是否有东西。"
+  ],
+  "common_errors": [
+    "猜测杯子之前装了什么"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "桌上有一本书。",
+    "explanation": "可以看到一本书。"
+  },
+  "status": "draft"
+}

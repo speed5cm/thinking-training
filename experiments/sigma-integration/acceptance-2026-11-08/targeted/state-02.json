@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "revision": 3,
+  "state": {
+    "learner": "synthetic-p1",
+    "simulation": "adult_isolated",
+    "adult_accompaniment": "confirmed_by_user",
+    "language": "zh-CN",
+    "phase": "awaiting_diagnostic_followup_answer",
+    "current_concept": "C01",
+    "pending_question_id": "diag-002",
+    "roadmap_version": 1,
+    "coach_session_id": "32a682d5-5eed-4812-9aa7-ebbf0d82b54e",
+    "understanding": "本次事实辨识部分正确；从物品推断过去事件的证据边界需核实",
+    "hypotheses": [
+      {
+        "text": "本次把物品存在视为过去行为的充分证据",
+        "status": "待验证",
+        "evidence_question_id": "diag-001"
+      }
+    ],
+    "parent_observations": "unknown",
+    "hints": [
+      {
+        "level": 1,
+        "text": "先观察题目给出的信息。",
+        "source": "coach.py hint"
+      }
+    ],
+    "teaching_action": "展示已审核H1及原题辨析追问，等待用户回答",
+    "reason": "保持C01难度；只用通用观察提示，不排除选项或揭示答案",
+    "wiki_read_gate": [
+      "wiki/concepts/observation-vs-inference.md",
+      "pilot-c01-c02/wiki/concepts/C01.md",
+      "pilot-c01-c02/wiki/sources/project-research.md"
+    ],
+    "question_self_review": {
+      "age_appropriate": true,
+      "wiki_grounded": true,
+      "facts_checked": true,
+      "answer_leakage": false,
+      "one_question": true
+    }
+  },
+  "session": "# synthetic-p1 成人隔离模拟\n成人陪同：用户已确认。已收到首次回答：部分正确，理由无效；掌握尚无充分证据。\n\n## Wiki Survey\n此前完整阅读根索引、14概念页、12周计划、教法与来源；结构检查通过。本次路线摘要未变化，v1 current；重读C01根Wiki、试点概念及相关资料，无冲突。\nC11/C14结构化关系为可穿插，不误作硬先修。\n\n## 路线 v1\n覆盖C01—C14，按课程叙事及硬先修排列，每概念保留Wiki Pages。C01先诊断；C02正式训练等待C01证据及家长确认；C03—C14仅列未来路线。\n\n## 当前问题\ndiag-001，PILOT-DIAG-C01@1.1.0，原答与分析已保存。\n\n## 持久化边界\n会话、路线及coach分别保存，不构成跨文件事务。上次JavaScript调用解析失败未执行提交，本次核对为空快照revision 0后提交。\n## Concept Map\n| Concept | Wiki Pages | Status |\n|---|---|---|\n| C01 | wiki/concepts/observation-vs-inference.md | not-started |\n| C02 | wiki/concepts/attribute-comparison.md | not-started |\n| C03 | wiki/concepts/classification-counterexample.md | not-started |\n| C04 | wiki/concepts/pattern-rule.md | not-started |\n| C05 | wiki/concepts/systematic-enumeration.md | not-started |\n| C06 | wiki/concepts/conditional-reasoning.md | not-started |\n| C07 | wiki/concepts/evidence-and-alternatives.md | not-started |\n| C08 | wiki/concepts/structured-argument.md | not-started |\n| C09 | wiki/concepts/constraint-decomposition.md | not-started |\n| C10 | wiki/concepts/perspectives-tradeoffs.md | not-started |\n| C11 | wiki/concepts/divergent-ideas.md | not-started |\n| C12 | wiki/concepts/prototype-testing.md | not-started |\n| C13 | wiki/concepts/strategy-transfer.md | not-started |\n| C14 | wiki/concepts/plan-monitor-reflect.md | not-started |\n\n## 恢复核对与追问\n原答在会话中仅一条；coach原先无attempt，已补记partial/invalid一次。随后由coach取得已审核H1提示。路线v1 current，无需因本轮短期提示重规划。diag-002为同一诊断题的轻提示追问，待回答；无掌握或晋级。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "diag-001",
+      "text": "桌上有红笔和蓝书。有人说：“一定有人刚写过作业。”哪部分是看到的，哪部分是猜测？",
+      "concept": "C01",
+      "kind": "published_diagnosis",
+      "card_id": "PILOT-DIAG-C01",
+      "card_version": "1.1.0",
+      "hints": [],
+      "action": "等待用户回答",
+      "reason": "建立事实与推测的起点线索"
+    },
+    {
+      "type": "answer",
+      "question_id": "diag-001",
+      "text": "红笔和蓝书是看到的，写过作业也是真的，因为桌上有笔。"
+    },
+    {
+      "type": "analysis",
+      "question_id": "diag-001",
+      "analysis": {
+        "understanding": "能指出题设中红笔和蓝书，但将写过作业判断为已证实。",
+        "reasoning": "明确以桌上有笔作为写过作业必真的理由；该线索不足以确认过去事件。",
+        "support": "本次回答前无提示，H0。",
+        "next_step": "保留C01，调用coach的已审核H1提示，不晋级。",
+        "hypothesis": "待验证：本次可能把物品存在视为过去行为的充分证据；不推断稳定能力。",
+        "correctness": "partial",
+        "explanation": "invalid",
+        "engagement": "unknown",
+        "familiarity": "unknown"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "diag-002",
+      "text": "先观察题目给出的信息。再想一想：哪部分是看到的，哪部分是猜测？",
+      "concept": "C01",
+      "kind": "published_diagnosis_followup",
+      "parent_question_id": "diag-001",
+      "card_id": "PILOT-DIAG-C01",
+      "card_version": "1.1.0",
+      "hint": {
+        "level": 1,
+        "text": "先观察题目给出的信息。",
+        "source": "coach.py hint"
+      },
+      "action": "使用已审核H1提示，重新辨析同一题，不推进",
+      "reason": "首次原答中将物品存在作为过去行为必真的依据，需进一步核实"
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "revision": 7,
+  "state": {
+    "learner": "synthetic-p1",
+    "simulation": "adult_isolated",
+    "adult_accompaniment": "confirmed_by_user",
+    "language": "zh-CN",
+    "phase": "parallel_demo_shown_waiting",
+    "current_concept": "C01",
+    "pending_question_id": null,
+    "roadmap_version": 1,
+    "coach_session_id": "32a682d5-5eed-4812-9aa7-ebbf0d82b54e",
+    "understanding": "原题理解待验证；示范后尚无用户反馈",
+    "hypotheses": [
+      {
+        "text": "本次把物品存在视为过去行为的充分证据",
+        "status": "待验证",
+        "evidence_question_id": "diag-001"
+      }
+    ],
+    "parent_observations": "unknown",
+    "hints": [
+      {
+        "level": 1,
+        "text": "先观察题目给出的信息。",
+        "source": "coach.py hint"
+      }
+    ],
+    "teaching_action": "等待之后复习；到期再核查Wiki和门禁，使用不同情境的动态题",
+    "reason": "首次回答及H1后求助记录支持先做短间隔复习；不据自述认定稳定能力或掌握",
+    "wiki_read_gate": [
+      "wiki/concepts/observation-vs-inference.md",
+      "pilot-c01-c02/wiki/concepts/C01.md",
+      "pilot-c01-c02/wiki/sources/project-research.md"
+    ],
+    "question_self_review": {
+      "age_appropriate": true,
+      "wiki_grounded": true,
+      "facts_checked": true,
+      "answer_leakage": false,
+      "one_question": true
+    },
+    "support_level": "H3 parallel_demo",
+    "dynamic_review_scheduling": "scheduled",
+    "dynamic_review": {
+      "task_id": "41c8d071-1463-4d4a-87b8-72303d6d8377",
+      "concept": "C01",
+      "source_question_id": "diag-001",
+      "due_at": "2026-11-09T14:43:00.434332+00:00",
+      "interval_days": 1,
+      "status": "pending"
+    }
+  },
+  "session": "# synthetic-p1 成人隔离模拟\n成人陪同：用户已确认。已收到首次回答：部分正确，理由无效；掌握尚无充分证据。\n\n## Wiki Survey\n此前完整阅读根索引、14概念页、12周计划、教法与来源；结构检查通过。本次路线摘要未变化，v1 current；重读C01根Wiki、试点概念及相关资料，无冲突。\nC11/C14结构化关系为可穿插，不误作硬先修。\n\n## 路线 v1\n覆盖C01—C14，按课程叙事及硬先修排列，每概念保留Wiki Pages。C01先诊断；C02正式训练等待C01证据及家长确认；C03—C14仅列未来路线。\n\n## 当前问题\ndiag-001，PILOT-DIAG-C01@1.1.0，原答与分析已保存。\n\n## 持久化边界\n会话、路线及coach分别保存，不构成跨文件事务。上次JavaScript调用解析失败未执行提交，本次核对为空快照revision 0后提交。\n## Concept Map\n| Concept | Wiki Pages | Status |\n|---|---|---|\n| C01 | wiki/concepts/observation-vs-inference.md | not-started |\n| C02 | wiki/concepts/attribute-comparison.md | not-started |\n| C03 | wiki/concepts/classification-counterexample.md | not-started |\n| C04 | wiki/concepts/pattern-rule.md | not-started |\n| C05 | wiki/concepts/systematic-enumeration.md | not-started |\n| C06 | wiki/concepts/conditional-reasoning.md | not-started |\n| C07 | wiki/concepts/evidence-and-alternatives.md | not-started |\n| C08 | wiki/concepts/structured-argument.md | not-started |\n| C09 | wiki/concepts/constraint-decomposition.md | not-started |\n| C10 | wiki/concepts/perspectives-tradeoffs.md | not-started |\n| C11 | wiki/concepts/divergent-ideas.md | not-started |\n| C12 | wiki/concepts/prototype-testing.md | not-started |\n| C13 | wiki/concepts/strategy-transfer.md | not-started |\n| C14 | wiki/concepts/plan-monitor-reflect.md | not-started |\n\n## 恢复核对与追问\n原答在会话中仅一条；coach原先无attempt，已补记partial/invalid一次。随后由coach取得已审核H1提示。路线v1 current，无需因本轮短期提示重规划。diag-002为同一诊断题的轻提示追问，待回答；无掌握或晋级。\n用户对diag-002表示仍不明白并请求相似例子，原话和分析已保存；未评0分，不增加稳定能力标签。\n已通过coach记录本轮unknown/none，并取得已审核平行示范；示范全文已保存。展示后等待用户反馈，无新增未答问题；不升级或修改planning_basis。\n用户请求之后复习；根据diag-001与diag-002完整问答分析，拟安排1天后C01动态复习。属于复习队列调度，不更改概念顺序、长期目标或planning_basis，不强制重发布路线。\n已核对动态复习队列：C01任务 41c8d071-1463-4d4a-87b8-72303d6d8377，到期 2026-11-09T14:43:00.434332+00:00；路线v1 current。会话与队列分别保存并核对，不声称跨文件事务。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "diag-001",
+      "text": "桌上有红笔和蓝书。有人说：“一定有人刚写过作业。”哪部分是看到的，哪部分是猜测？",
+      "concept": "C01",
+      "kind": "published_diagnosis",
+      "card_id": "PILOT-DIAG-C01",
+      "card_version": "1.1.0",
+      "hints": [],
+      "action": "等待用户回答",
+      "reason": "建立事实与推测的起点线索"
+    },
+    {
+      "type": "answer",
+      "question_id": "diag-001",
+      "text": "红笔和蓝书是看到的，写过作业也是真的，因为桌上有笔。"
+    },
+    {
+      "type": "analysis",
+      "question_id": "diag-001",
+      "analysis": {
+        "understanding": "能指出题设中红笔和蓝书，但将写过作业判断为已证实。",
+        "reasoning": "明确以桌上有笔作为写过作业必真的理由；该线索不足以确认过去事件。",
+        "support": "本次回答前无提示，H0。",
+        "next_step": "保留C01，调用coach的已审核H1提示，不晋级。",
+        "hypothesis": "待验证：本次可能把物品存在视为过去行为的充分证据；不推断稳定能力。",
+        "correctness": "partial",
+        "explanation": "invalid",
+        "engagement": "unknown",
+        "familiarity": "unknown"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "diag-002",
+      "text": "先观察题目给出的信息。再想一想：哪部分是看到的，哪部分是猜测？",
+      "concept": "C01",
+      "kind": "published_diagnosis_followup",
+      "parent_question_id": "diag-001",
+      "card_id": "PILOT-DIAG-C01",
+      "card_version": "1.1.0",
+      "hint": {
+        "level": 1,
+        "text": "先观察题目给出的信息。",
+        "source": "coach.py hint"
+      },
+      "action": "使用已审核H1提示，重新辨析同一题，不推进",
+      "reason": "首次原答中将物品存在作为过去行为必真的依据，需进一步核实"
+    },
+    {
+      "type": "answer",
+      "question_id": "diag-002",
+      "text": "我还是不明白，可以先看一个相似的例子吗？"
+    },
+    {
+      "type": "analysis",
+      "question_id": "diag-002",
+      "analysis": {
+        "understanding": "用户明确表示仍不明白，并主动请求相似例子；本轮未给出事实与推测的判断。",
+        "reasoning": "unknown；不能以请求帮助视为新的错误判断或稳定能力特征。",
+        "support": "已给H1；现请求平行示范，尚未展示。",
+        "next_step": "停止重复原题追问，使用coach已审核平行示范；不揭示原题解析，不推进。",
+        "correctness": "unknown",
+        "explanation": "none",
+        "engagement": "愿意通过例子继续；疲劳unknown"
+      }
+    },
+    {
+      "type": "teaching_support",
+      "related_question_id": "diag-002",
+      "text": "我们先看一个相似的例子。\n\n一张便条写着“下午三点”。另一个人问：便条写在蓝纸上吗？\n\n题目只给了便条上的时间，没有给纸张颜色。想确认颜色，需要查看便条。\n\n可以先慢慢看，不急着回到原题。",
+      "support": "parallel_demo",
+      "source": "coach.py demo",
+      "demo": {
+        "stem": "一张便条写着“下午三点”。另一个人问：便条写在蓝纸上吗？",
+        "explanation": "题目只给了便条上的时间，没有给纸张颜色。想确认颜色，需要查看便条。"
+      },
+      "action": "按用户请求展示已审核平行示范，不追加问题",
+      "reason": "轻提示后仍不明白，换说明方式并减少追问压力",
+      "self_review": {
+        "age_appropriate": true,
+        "wiki_grounded": true,
+        "facts_checked": true,
+        "original_answer_leakage": false,
+        "maps_to_original_options": false
+      }
+    },
+    {
+      "type": "review_request",
+      "text": "刚才我一直分不清看到的和猜的，之后可以安排复习吗？",
+      "related_question_ids": [
+        "diag-001",
+        "diag-002"
+      ],
+      "analysis": {
+        "understanding": "用户自述仍分不清看到与猜测，尚无平行示范后的独立作答可确认理解。",
+        "reasoning": "diag-001将物品存在作为过去行为必真的理由；diag-002在H1后仍表示不明白，后请求平行示范。",
+        "support": "已接受H1和已审核平行示范；示范后掌握unknown。",
+        "next_step": "先安排1天后的C01动态复习，使用不同情境；按实际回答再调整间隔。"
+      },
+      "action": "申请建立C01动态复习任务",
+      "reason": "已保存问答和分析支持短间隔复习，用户明确请求"
+    },
+    {
+      "type": "review_scheduled",
+      "task_id": "41c8d071-1463-4d4a-87b8-72303d6d8377",
+      "concept": "C01",
+      "source_question_id": "diag-001",
+      "due_at": "2026-11-09T14:43:00.434332+00:00",
+      "interval_days": 1,
+      "reason": "diag-001把桌上有笔作为写过作业必真的依据；diag-002在H1后仍表示不明白并请求平行示范。用户随后主动请求复习，示范后独立理解尚未验证，先做1天短间隔检索。",
+      "notice": "动态复习，不是正式证据或晋级授权；会话与队列分别核对保存"
+    }
+  ]
+}

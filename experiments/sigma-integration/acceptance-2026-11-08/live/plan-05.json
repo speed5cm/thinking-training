@@ -1,0 +1,710 @@
+{
+  "schema_version": 1,
+  "history": [
+    {
+      "version": 1,
+      "plan_sha256": "3674f39d32a8d0b4219b8b1f9191ac3cdad7b494188294ef2c771f2c2105fee3",
+      "created_at": "2026-11-08T14:06:21.640399+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "6f94c4aac528a6a9f031b4e8c199ece2fff6b93180890bf5535383c10ed0aa16",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-live",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "6f94c4aac528a6a9f031b4e8c199ece2fff6b93180890bf5535383c10ed0aa16",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "无先修；无正式证据，先做 C01 非正式诊断。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "仅未来建议；须先修证据、家长确认及实时发布门禁通过后才可进入。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "无学习者回答，理解、困难和熟悉程度均 unknown。",
+          "C01 当前仅一张正式发布训练卡，不能满足不同题卡掌握证据；C02 尚不可进入。",
+          "C03—C14 无已发布题卡；未来路线不构成授权。"
+        ],
+        "revision_suggestions": [
+          "收到真实原答后记录分析；若实质性规划依据变化，更新 planning_basis 并重验和发布路线。",
+          "正式证据与家长确认由独立门禁处理；动态诊断不计正式证据。"
+        ]
+      },
+      "review_queue": []
+    },
+    {
+      "version": 2,
+      "plan_sha256": "edc704a5ae618aae9a14fbafdf7f6d1b30cfaa73765acddb5930b29f32e3a1af",
+      "created_at": "2026-11-08T14:07:42.213577+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "b756d37465e94cc6f17cbed759c4504ddd3dc3304237285fb75880a1c4febc39",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-live",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "b756d37465e94cc6f17cbed759c4504ddd3dc3304237285fb75880a1c4febc39",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "动态诊断分类正确，但理由未知；保持 C01，追问判断依据，不以诊断授予掌握。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "仅未来建议；须先修证据、家长确认及实时发布门禁通过后才可进入。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "仅收到“推测。”；分类正确，判断依据、迁移和熟悉程度仍 unknown，无正式证据。",
+          "C01 当前仅一张正式发布训练卡，不能满足不同题卡掌握证据；C02 尚不可进入。",
+          "C03—C14 无已发布题卡；未来路线不构成授权。"
+        ],
+        "revision_suggestions": [
+          "收到真实原答后记录分析；若实质性规划依据变化，更新 planning_basis 并重验和发布路线。",
+          "正式证据与家长确认由独立门禁处理；动态诊断不计正式证据。"
+        ]
+      },
+      "review_queue": []
+    },
+    {
+      "version": 3,
+      "plan_sha256": "8eb0c82f744126596d7688b35bdfc6147f093ad04b9c6d3bd84fd5d4fe8009b4",
+      "created_at": "2026-11-08T14:08:39.132743+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "f08241acbfcca31d27553ecfffae183841aaf3d3e9210c73ca32564abda4cfec",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-live",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "f08241acbfcca31d27553ecfffae183841aaf3d3e9210c73ca32564abda4cfec",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "C01 动态诊断分类正确，能提出不同可能且指出观察限制；继续同一情境探究核实方法，不授予掌握或推进 C02。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "仅未来建议；须先修证据、家长确认及实时发布门禁通过后才可进入。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "本情境分类及理由已有支持；核实方法、跨情境迁移、延迟保持未知；正式证据仍为零。",
+          "C01 当前仅一张正式发布训练卡，不能满足不同题卡掌握证据；C02 尚不可进入。",
+          "C03—C14 无已发布题卡；未来路线不构成授权。"
+        ],
+        "revision_suggestions": [
+          "收到真实原答后记录分析；若实质性规划依据变化，更新 planning_basis 并重验和发布路线。",
+          "正式证据与家长确认由独立门禁处理；动态诊断不计正式证据。"
+        ]
+      },
+      "review_queue": []
+    },
+    {
+      "version": 4,
+      "plan_sha256": "9c0999e842875a82ca03b08498b321cd4a46b364664e7f27e659f0911966fe6c",
+      "created_at": "2026-11-08T14:09:44.817614+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "5a3ccfec44bab4c66da383a05a716e0d382d4b343906a388f37465f88519f47f",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-live",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "5a3ccfec44bab4c66da383a05a716e0d382d4b343906a388f37465f88519f47f",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "C01 分类和本情境理由充分，但学习者明确说不知道如何核实；先提供找线索、平行例子或休息选择，按选择支持，不升级。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "仅未来建议；须先修证据、家长确认及实时发布门禁通过后才可进入。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "尚未提出核实方法；支持方式待学习者选择；跨情境迁移和延迟保持 unknown，正式证据为零。",
+          "C01 当前仅一张正式发布训练卡，不能满足不同题卡掌握证据；C02 尚不可进入。",
+          "C03—C14 无已发布题卡；未来路线不构成授权。"
+        ],
+        "revision_suggestions": [
+          "收到真实原答后记录分析；若实质性规划依据变化，更新 planning_basis 并重验和发布路线。",
+          "正式证据与家长确认由独立门禁处理；动态诊断不计正式证据。"
+        ]
+      },
+      "review_queue": []
+    },
+    {
+      "version": 5,
+      "plan_sha256": "bff96003b62de6be0dd09d95135e6f9c09f4045e335c811266d3dc0fcdfb68d7",
+      "created_at": "2026-11-08T14:10:43.493860+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "e5afcf9f64208c2a49a010985c250fedae613736f3b623daf1c2f3fcffcfa648",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-live",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "e5afcf9f64208c2a49a010985c250fedae613736f3b623daf1c2f3fcffcfa648",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "C01 判断理由已有支持，核实方法尚未提出；按本轮明确选择提供更简单的平行例子 H3 示范，再邀请尝试，不计独立迁移或升级。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "仅未来建议；须先修证据、家长确认及实时发布门禁通过后才可进入。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "仅未来建议；当前无已发布题卡，保持课程叙事顺序及硬性先修，不开始教学。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "核实方法尚待支持后尝试；本轮选择平行例子；跨情境独立迁移和保持 unknown，正式证据为零。",
+          "C01 当前仅一张正式发布训练卡，不能满足不同题卡掌握证据；C02 尚不可进入。",
+          "C03—C14 无已发布题卡；未来路线不构成授权。"
+        ],
+        "revision_suggestions": [
+          "收到真实原答后记录分析；若实质性规划依据变化，更新 planning_basis 并重验和发布路线。",
+          "正式证据与家长确认由独立门禁处理；动态诊断不计正式证据。"
+        ]
+      },
+      "review_queue": []
+    }
+  ]
+}

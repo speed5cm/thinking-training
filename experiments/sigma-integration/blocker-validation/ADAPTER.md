@@ -14,7 +14,7 @@
 
 coach 的正式 C02 启动及后续使用时在化名锁内校验已发布证据与家长确认；诊断与正式训练独立。以 coach 为唯一正式题卡执行入口，禁止直接将动态题当正式题。发布维护操作必须取得 `pilot-c01-c02/.publication.lock` 独占锁，coach、证据及规划在读期间获取共享锁，随后取得化名锁；未遵守该约定的外部写入不受保护。
 
-Sigma 规划沿用个人规划 JSON schema；运行 `python3 scripts/sigma_plan_store.py publish --learner <化名> --plan <候选文件>` 保存版本、输入和队列，`status` 恢复并检查 stale；不得在失效时继续使用旧路线。正式证据产生后建议重新规划，队列仅基于已采集的正式证据；复习队列不是教学授权或掌握。所有时间安排仅实验，不表示经过科学验证。`complete-review --session` 只接受新的已采集正式证据；动态问题不能记录为正式题。
+Sigma 规划沿用个人规划 JSON schema；运行 `python3 scripts/sigma_plan_store.py publish --learner <化名> --plan <候选文件>` 保存版本和输入，`status` 检查 stale。正式证据复习仍使用 `complete-review --session`；动态复习使用上一级适配文件中的 `schedule-dynamic` 和 `complete-dynamic`，两者分开，不授予掌握或晋级。普通教学动作不触发路线重规划。
 
 C01 独立正确且理由充分，可以继续由 AI 开放探究、换情境或探讨验证方法，不能因为 coach 自动结束该张卡便机械跳到下一道诊断题。只问一个短问题；展示前检查适龄、Wiki 依据、事实、是否泄漏正式卡答案。仍要先保留原答、教学动作及追问，再展示。疲劳及时暂停；恢复先检查门禁和未答问题。未通过 C02 先修时不开始 C02 正式训练。
 

@@ -34,7 +34,10 @@ def context(learner, already_locked=False):
     paths += [c['wiki_page'] for c in curriculum['concepts']]
     contents = {p: (ROOT / p).read_text(encoding='utf-8') for p in paths}
     folder = evidence.get_folder(learner)
-    names = ('planner-profile.md', 'events.jsonl', 'evidence.jsonl', 'mastery-confirmation.json')
+    # Raw coach events include routine questions and answers. Formal evidence and
+    # parent confirmation are bound independently; transient activity is not a
+    # reason to invalidate the whole plan.
+    names = ('planner-profile.md', 'evidence.jsonl', 'mastery-confirmation.json')
     learner_files = {name: (folder / name).read_text(encoding='utf-8') if (folder / name).is_file() else None for name in names}
     # Bind tutor decisions when present without invalidating existing plans with no tutor data.
     tutor = folder / 'tutor-state.json'

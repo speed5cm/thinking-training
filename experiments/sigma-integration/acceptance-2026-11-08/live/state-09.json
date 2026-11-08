@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "revision": 21,
+  "state": {
+    "learner": "synthetic-live",
+    "simulation": "isolated_adult",
+    "adult_accompaniment_confirmed": true,
+    "language": "zh-CN",
+    "level": "unknown",
+    "parent_observations": "unknown",
+    "hypotheses": [],
+    "misconceptions": [],
+    "planning_basis": {
+      "formal_evidence_count": 0,
+      "mastery": "unknown",
+      "entry_concept": "C01",
+      "decision": "先诊断 C01；C02 先修未获确认，C03—C14 未发布，仅列未来路线。",
+      "diagnostic_observation": {
+        "concept": "C01",
+        "classification": "correct",
+        "reasoning": "本情境能提出两种可能并指出未观察到来源",
+        "verification_method": "H3 平行示范后仍未提出方法",
+        "transfer": "unknown",
+        "decision": "停止追问水的来源；提供仅描述直接可见信息的简化 C01 任务或休息选择，等待学习者决定；不升级、不贴标签。"
+      }
+    },
+    "wiki_survey": {
+      "scope": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "sources": [
+        "wiki/index.md",
+        "curriculum/12-week-plan.md",
+        "references/pedagogy.md",
+        "references/sources.md"
+      ],
+      "concept_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "wiki/concepts/attribute-comparison.md",
+        "wiki/concepts/classification-counterexample.md",
+        "wiki/concepts/pattern-rule.md",
+        "wiki/concepts/systematic-enumeration.md",
+        "wiki/concepts/conditional-reasoning.md",
+        "wiki/concepts/evidence-and-alternatives.md",
+        "wiki/concepts/structured-argument.md",
+        "wiki/concepts/constraint-decomposition.md",
+        "wiki/concepts/perspectives-tradeoffs.md",
+        "wiki/concepts/divergent-ideas.md",
+        "wiki/concepts/prototype-testing.md",
+        "wiki/concepts/strategy-transfer.md",
+        "wiki/concepts/plan-monitor-reflect.md"
+      ],
+      "structure_check": "passed"
+    },
+    "actions": [
+      {
+        "action": "survey_and_initial_planning",
+        "reason": "无既有会话及正式证据，按 Wiki 顺序保留所有概念与先修；尚未评价学习者。"
+      },
+      {
+        "action": "ask_initial_dynamic_diagnostic",
+        "reason": "以独立新情境探查事实与推测的区别；无提示，不评价未收到的回答。"
+      },
+      {
+        "action": "ask_reason_for_classification",
+        "reason": "分类正确但理由尚未给出；仅追问同一判断的依据，不提供答案或提示，不推进概念。"
+      },
+      {
+        "action": "explore_verification_method",
+        "reason": "当前情境判断与理由充分；沿 C01 Wiki 探究核实办法，不机械换题或开放 C02。",
+        "feedback": "你提出了不同的可能，也指出自己没看到水的来源。",
+        "hints": []
+      },
+      {
+        "action": "offer_support_or_rest",
+        "reason": "遵循“不知道”分支，等待选择后再支持；未给提示或示范，不将一次卡点记作能力标签。",
+        "options": [
+          "找一个线索",
+          "相似的小例子",
+          "休息"
+        ],
+        "hints": []
+      },
+      {
+        "action": "parallel_demonstration_then_try",
+        "reason": "响应学习者选择，在不同且更简单的情境示范寻找可直接核查的信息；不提供花盆原情境的解法。",
+        "text": "比如：摇一摇盒子，听到响声，我猜里面是积木。要核实，我会打开盒子看看里面的东西，而不只凭声音确定。",
+        "followup_question_id": "synthetic-live-c01-dynamic-005",
+        "support_level": "H3",
+        "independent_evidence": false
+      },
+      {
+        "action": "stop_current_verification_task",
+        "reason": "在核实方法上两次表达不会，已有一次 H3 示范；停止重复追问，降低挑战并提供休息选择。"
+      },
+      {
+        "action": "offer_simpler_task_or_rest",
+        "reason": "不继续同一难度追问，保留学习者选择权；未自行认定疲劳或拒绝。",
+        "text": "我们先放下查水来源这道题。你想换成只说眼前看见什么的小任务，还是先休息？",
+        "support_level": "choice_only"
+      },
+      {
+        "action": "pause",
+        "reason": "学习者原话“我累了，先暂停。”；立即停止提问和教学。",
+        "new_question": false
+      },
+      {
+        "action": "resume_with_simpler_observation",
+        "raw_request": "我休息好了，继续学习。",
+        "reason": "重新 survey、发布及先修核对通过；无未答问题、无正式复习证据。落实暂停前简化 C01 的决定，只描述直接呈现的信息，不重问水的来源。",
+        "question_id": "synthetic-live-c01-dynamic-007",
+        "new_hint_level": "H0",
+        "prior_H3_preserved": true
+      },
+      {
+        "action": "pause",
+        "raw_request": "我现在累了，暂停学习。",
+        "reason": "明确疲劳并请求暂停，立即停止教学；这不是当前认知题的回答，保留其未答状态，不计零分。",
+        "new_question": false,
+        "pending_question_id": "synthetic-live-c01-dynamic-007"
+      }
+    ],
+    "phase": "paused",
+    "current_concept": "C01",
+    "route_version": 6,
+    "hint_level": "H3",
+    "response_analysis": {
+      "question_id": "synthetic-live-c01-support-006",
+      "observation": "学习者明确表示疲劳并请求暂停；立即停止教学，不计零分或能力退步。",
+      "formal_evidence": false
+    },
+    "self_review": {
+      "single_question": true,
+      "age_appropriate": true,
+      "wiki_grounded": true,
+      "formal_card_answer_disclosed": false,
+      "kind": "dynamic_simplified_practice",
+      "authority": "ADAPTER.md 第4条允许 Sigma 动态问题，覆盖试点 Wiki 的旧题卡限制；不作为已审核卡或正式证据。",
+      "parallel_example_distinct": true,
+      "no_mastery_claim": true
+    },
+    "concept_entry_reads": [
+      "wiki/concepts/observation-vs-inference.md",
+      "pilot-c01-c02/wiki/concepts/C01.md",
+      "pilot-c01-c02/wiki/index.md",
+      "pilot-c01-c02/wiki/overview.md",
+      "pilot-c01-c02/wiki/sources/project-research.md",
+      "references/pedagogy.md",
+      "references/sources.md"
+    ],
+    "pause": {
+      "reason": "learner_requested_rest",
+      "raw_request": "我现在累了，暂停学习。",
+      "fatigue": "self_reported_this_turn",
+      "unanswered_questions": [
+        {
+          "type": "question",
+          "question_id": "synthetic-live-c01-dynamic-007",
+          "text": "看这行图案：● ● ●。你能说出一条直接看见的信息吗？"
+        }
+      ],
+      "resume_requirement": "重新 survey、核对路线、发布及先修门禁后，先恢复未答问题的原文和原 ID，不生成替代题。"
+    },
+    "pending_question_id": "synthetic-live-c01-dynamic-007",
+    "current_question_hint_level": "H0",
+    "prior_concept_support_max": "H3",
+    "resume": {
+      "raw_request": "我休息好了，继续学习。",
+      "fatigue": "learner_reports_rested",
+      "unanswered_questions_before_resume": 0,
+      "wiki_resurvey": "completed_14_pages_and_plan",
+      "structure_check": "passed",
+      "plan_status": "current",
+      "review_queue": [],
+      "recommendation": {
+        "action": "collect_or_reinforce",
+        "concept": "C01"
+      },
+      "C02_entry": "not_authorized_no_C01_mastery_confirmation"
+    }
+  },
+  "session": "# Sigma 成人隔离模拟\n\nC01 诊断与支持过程进行中；全部概念掌握状态 unknown。规划不授予教学许可。\n\n| Concept | Wiki Pages | Hard prerequisites | Status |\n|---|---|---|---|\n| C01 观察事实与推测 | wiki/concepts/observation-vs-inference.md | 无 | in-progress |\n| C02 多属性比较 | wiki/concepts/attribute-comparison.md | C01 | not-started |\n| C03 分类与反例 | wiki/concepts/classification-counterexample.md | C02 | not-started |\n| C04 规律识别与检验 | wiki/concepts/pattern-rule.md | C02 | not-started |\n| C05 系统枚举 | wiki/concepts/systematic-enumeration.md | C03, C04 | not-started |\n| C06 条件推理及逆推陷阱 | wiki/concepts/conditional-reasoning.md | C01, C05 | not-started |\n| C07 证据可靠性与替代解释 | wiki/concepts/evidence-and-alternatives.md | C01, C06 | not-started |\n| C08 结构化论证与倾听 | wiki/concepts/structured-argument.md | C07 | not-started |\n| C09 复杂问题与约束分解 | wiki/concepts/constraint-decomposition.md | C05, C06 | not-started |\n| C10 多视角与方案权衡 | wiki/concepts/perspectives-tradeoffs.md | C08, C09 | not-started |\n| C11 创造性发散 | wiki/concepts/divergent-ideas.md | 无 | not-started |\n| C12 原型测试与迭代 | wiki/concepts/prototype-testing.md | C09, C11 | not-started |\n| C13 跨情境策略选择 | wiki/concepts/strategy-transfer.md | C05, C07, C09 | not-started |\n| C14 计划、监控与反思 | wiki/concepts/plan-monitor-reflect.md | 无 | not-started |\n\nC11、C14 的穿插关系不等同硬性先修；只列未来建议，未授权教学。\n\n路线版本：1；当前 C01，诊断待答，H0；尚无回答或学习表现证据。\n\n首题原答已保存；分类正确，理由未知，不授予掌握。下一步保持 C01 并追问依据。\n\n路线版本：2；同一 C01 情境追问依据，H0，等待回答。\n\n第二次原答已保存：提出两种可能并指出未看到来源；本情境理由充分。核实方法、迁移未知，无正式证据，继续 C01。\n\n路线版本：3；开放追问核实方法，H0，等待原答。\n\n原答“我不知道怎么查。”已保存。核实方法尚未提出，误区和疲劳 unknown；按不知道分支先提供支持方式与休息选择。\n\n路线版本：4；已保存支持/休息选择问题，等待回答，尚未暂停或提供 H1—H3。\n\n支持选择原答已保存；本轮选择平行小例子。拟提供 H3 非原题示范，不推断稳定偏好，不计独立完成。\n\n路线版本：5；H3 平行例子已保存，追问等待回答，后续表现不得计作 H0 独立迁移。\n\n原答“我还是不会。”已保存。H3 后仍未提出核实办法，停止当前查证任务；不否定已有事实/推测判断证据，不记录稳定能力或情绪标签。下一步由学习者选择更简单的可见信息描述或休息。\n\n路线版本：6；已保存简化任务/休息选择，等待原答；尚未替学习者选择或宣称暂停。\n\n已暂停：学习者原话“我累了，先暂停。”；无未答问题，不再提问。不将疲劳记为低分，不改变掌握或先修状态。恢复时先重新 survey 并核对门禁、路线和快照。\n\n恢复请求原话“我休息好了，继续学习。”已记录。重新读取索引、14 概念及12周计划，结构校验通过；路线6有效，无未答问题，无正式复习证据。保持 C01，按原决定改为只描述可见图案的简化任务；本题无新增提示，保留此前 H3 支持历史，不计独立迁移或掌握。\n\n已再次暂停：原话“我现在累了，暂停学习。”。未作答的 synthetic-live-c01-dynamic-007 保留原题与原 ID；暂停请求不写作认知题答案，不计低分，不变更 planning_basis。恢复须重新核对门禁，并先恢复该未答原题。\n",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-dynamic-001",
+      "text": "你看到窗台上有一个花盆，盆旁有一小摊水；有人说“刚才一定有人给花浇水了”。你认为这句话是观察事实还是推测，请说说判断依据？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-dynamic-001",
+      "text": "推测。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-dynamic-002",
+      "text": "你是根据什么，把“刚才一定有人给花浇水了”判断为推测的？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-dynamic-002",
+      "text": "可能有人浇了，也可能是杯子里的水洒了，我没有看到水怎么来的。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-dynamic-003",
+      "text": "你会怎样查证这摊水是怎么来的？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-dynamic-003",
+      "text": "我不知道怎么查。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-support-004",
+      "text": "可以不知道。你想先找一个线索、看看相似的小例子，还是先休息？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-support-004",
+      "text": "看看相似的小例子。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-dynamic-005",
+      "text": "回到花盆旁的那摊水，你想先查哪一条线索？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-dynamic-005",
+      "text": "我还是不会。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-support-006",
+      "text": "我们先放下查水来源这道题。你想换成只说眼前看见什么的小任务，还是先休息？"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-live-c01-support-006",
+      "text": "我累了，先暂停。"
+    },
+    {
+      "type": "question",
+      "question_id": "synthetic-live-c01-dynamic-007",
+      "text": "看这行图案：● ● ●。你能说出一条直接看见的信息吗？"
+    }
+  ]
+}
