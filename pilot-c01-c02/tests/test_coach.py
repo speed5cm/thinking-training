@@ -58,8 +58,34 @@ class CoachTest(unittest.TestCase):
             shutil.copy2(review, self.root / 'reviews' / review.name)
         for mode in ('diagnosis', 'C01', 'C02'):
             learner = 'published_' + mode
-            coach.run(args('start', learner, mode=mode))
-            self.assertEqual(coach.run(args('show', learner))['id'], coach.MODES[mode][0])
+            # This test checks published snapshots; authorization has separate tests.
+            with patch.object(coach, 'authorize_c02_locked'):
+                coach.run(args('start', learner, mode=mode))
+                self.assertEqual(coach.run(args('show', learner))['id'], coach.MODES[mode][0])
+
+    def test_direct_c02_without_evidence_is_rejected(self):
+        # Use the actual evidence module in an isolated copy, with no authorization mock.
+        scripts = self.parent / 'scripts'
+        scripts.mkdir()
+        for name in ('learning_evidence.py', 'generate_roadmap.py'):
+            shutil.copy(PROJECT / 'scripts' / name, scripts / name)
+        result = subprocess.run([sys.executable, str(self.root / 'scripts/coach.py'),
+                                 'start', '--learner', 'child_a', '--mode', 'C02'],
+                                capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('C01 掌握证据不足', result.stderr)
+        self.assertFalse((self.root / 'records/child_a/events.jsonl').exists())
+
+    def test_concurrent_starts_create_only_one_session(self):
+        self.approve_fixture('ST-C01-01')
+        command = [sys.executable, str(self.root / 'scripts/coach.py'),
+                   'start', '--learner', 'child_a', '--mode', 'C01']
+        processes = [subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                      text=True) for _ in range(2)]
+        results = [p.communicate(timeout=10) for p in processes]
+        self.assertEqual(sorted(p.returncode for p in processes), [0, 1], results)
+        events = coach.load_events(self.root / 'records/child_a')
+        self.assertEqual(sum(e['type'] == 'start' for e in events), 1)
 
     def test_ai_cannot_approve(self):
         self.approve_fixture('ST-C01-01')
