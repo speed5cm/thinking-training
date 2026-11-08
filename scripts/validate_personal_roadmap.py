@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import generate_roadmap as base
 import learning_evidence as evidence
+import sigma_session_store as sigma_session
 
 class Invalid(ValueError):
     pass
@@ -32,6 +33,11 @@ def context(learner):
     tutor = folder / 'tutor-state.json'
     if tutor.exists():
         learner_files['tutor-state.json'] = tutor.read_text(encoding='utf-8')
+    sigma = folder / 'sigma'
+    if sigma.exists():
+        snapshot = sigma_session.read_folder(folder)
+        if snapshot['revision']:
+            learner_files['sigma/session-snapshot.json'] = snapshot
     return {'curriculum': curriculum, 'curriculum_digest': digest(contents),
             'learner_digest': digest(learner_files),
             'evidence_digest': assessment['evidence_digest'], 'assessment': assessment,

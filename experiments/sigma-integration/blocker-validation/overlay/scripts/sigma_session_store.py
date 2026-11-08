@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experimental single-snapshot Sigma session store; not a teaching gate."""
+"""Atomic Sigma session snapshot; not a teaching gate."""
 import argparse
 import fcntl
 import json
@@ -12,6 +12,15 @@ import learning_evidence as evidence
 
 class Invalid(ValueError):
     pass
+
+LEGACY = ('state.json', 'session.md', 'turns.jsonl')
+
+def read_folder(folder):
+    """Read with the learner lock already held, or from an atomically replaced file."""
+    dest = folder / 'sigma'
+    if any((dest / name).exists() for name in LEGACY):
+        raise Invalid('发现旧版 Sigma 会话文件；停止并人工核对迁移，不能自动覆盖或忽略')
+    return read(dest / 'session-snapshot.json')
 
 def read(path):
     if not path.exists():
@@ -35,7 +44,7 @@ def operate(learner, proposed=None, expected=None):
     path = dest / 'session-snapshot.json'
     with (folder / '.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        previous = read(path)
+        previous = read_folder(folder)
         if proposed is None:
             return previous
         if type(expected) is not int or expected != previous['revision']:
