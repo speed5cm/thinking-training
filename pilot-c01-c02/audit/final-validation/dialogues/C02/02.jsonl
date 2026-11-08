@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1ab60-2699-76b3-8af0-0f0d40a98890"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"没关系，不知道也可以。我们先休息一下。"}}
+{"type":"turn.completed","usage":{"input_tokens":80317,"cached_input_tokens":62976,"cache_write_input_tokens":0,"output_tokens":498,"reasoning_output_tokens":147}}

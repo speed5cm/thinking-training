@@ -1,0 +1,26 @@
+test_ai_cannot_approve (test_coach.CoachTest.test_ai_cannot_approve) ... ok
+test_changed_card_cannot_use_old_approval_or_same_version (test_coach.CoachTest.test_changed_card_cannot_use_old_approval_or_same_version) ... ok
+test_children_isolated_and_parent_feedback_preserved (test_coach.CoachTest.test_children_isolated_and_parent_feedback_preserved) ... ok
+test_complete_final_completed_and_idempotent (test_coach.CoachTest.test_complete_final_completed_and_idempotent) ... ok
+test_correct_and_explained_final_answer_completes (test_coach.CoachTest.test_correct_and_explained_final_answer_completes) ... ok
+test_correct_answer_wrong_explanation_does_not_mark_mastery (test_coach.CoachTest.test_correct_answer_wrong_explanation_does_not_mark_mastery) ... ok
+test_diagnosis_one_question_at_a_time_and_skip (test_coach.CoachTest.test_diagnosis_one_question_at_a_time_and_skip) ... ok
+test_direct_answer_request_policy_exists_but_is_not_runtime_behavior (test_coach.CoachTest.test_direct_answer_request_policy_exists_but_is_not_runtime_behavior) ... ok
+test_dont_know_allows_hint_or_pause (test_coach.CoachTest.test_dont_know_allows_hint_or_pause) ... ok
+test_explanation_requires_consent_and_sufficient_attempts_and_records_support (test_coach.CoachTest.test_explanation_requires_consent_and_sufficient_attempts_and_records_support) ... ok
+test_failed_persistence_never_returns_completed (test_coach.CoachTest.test_failed_persistence_never_returns_completed) ... ok
+test_h3_does_not_disclose_complete_answer_for_selected_cards (test_coach.CoachTest.test_h3_does_not_disclose_complete_answer_for_selected_cards) ... ok
+test_missing_source_stops_on_resume (test_coach.CoachTest.test_missing_source_stops_on_resume) ... ok
+test_missing_wiki_or_broken_links_stop (test_coach.CoachTest.test_missing_wiki_or_broken_links_stop) ... ok
+test_new_process_resume_from_disk (test_coach.CoachTest.test_new_process_resume_from_disk) ... ok
+test_new_version_cannot_reuse_old_approval (test_coach.CoachTest.test_new_version_cannot_reuse_old_approval) ... ok
+test_no_hint_or_demo_before_attempt (test_coach.CoachTest.test_no_hint_or_demo_before_attempt) ... ok
+test_pause_resume_restores_question_and_hint_count (test_coach.CoachTest.test_pause_resume_restores_question_and_hint_count) ... ok
+test_skip_final_completed_and_idempotent (test_coach.CoachTest.test_skip_final_completed_and_idempotent) ... ok
+test_two_consecutive_wrong_then_stop (test_coach.CoachTest.test_two_consecutive_wrong_then_stop) ... ok
+test_unreviewed_card_is_rejected (test_coach.CoachTest.test_unreviewed_card_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 4.369s
+
+OK

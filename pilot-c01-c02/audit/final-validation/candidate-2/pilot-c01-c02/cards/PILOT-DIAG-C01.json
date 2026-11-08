@@ -1,0 +1,28 @@
+{
+  "id": "PILOT-DIAG-C01",
+  "version": "1.1.0",
+  "concept": "C01",
+  "lesson": "DIAG",
+  "age": [
+    8,
+    10
+  ],
+  "difficulty": "L1",
+  "stem": "桌上有红笔和蓝书。有人说：“一定有人刚写过作业。”哪部分是看到的，哪部分是猜测？",
+  "answer": "看到红笔、蓝书；刚写作业是猜测。",
+  "explanation": "题设未呈现写作业的经过，不能确定。",
+  "hints": [
+    "先观察题目给出的信息。",
+    "逐条核对：哪些信息由题目提供，哪些还需要另外查证？",
+    "看一个不一样的例子，练习核查信息。"
+  ],
+  "common_errors": [
+    "把物品存在直接当成写作业的证据"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "一张便条写着“下午三点”。另一个人问：便条写在蓝纸上吗？",
+    "explanation": "题目只给了便条上的时间，没有给纸张颜色。想确认颜色，需要查看便条。"
+  },
+  "status": "draft"
+}

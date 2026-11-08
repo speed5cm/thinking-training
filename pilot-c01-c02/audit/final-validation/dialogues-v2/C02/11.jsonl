@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1ab61-3633-7d63-a075-ee1ff4cf34dc"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"好的，我们先休息一下。"}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'python3 pilot-c01-c02/scripts/coach.py pause --learner teach_C02'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'python3 pilot-c01-c02/scripts/coach.py pause --learner teach_C02'","aggregated_output":"{\n  \"status\": \"paused\"\n}\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"已经暂停了。想继续的时候告诉我就好。"}}
+{"type":"turn.completed","usage":{"input_tokens":560872,"cached_input_tokens":502528,"cache_write_input_tokens":0,"output_tokens":2418,"reasoning_output_tokens":103}}

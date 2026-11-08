@@ -1,0 +1,1 @@
+这是成人模拟，所有审核记录仅为虚构测试夹具，不是人工批准或儿童试教。请读取 pilot-c01-c02/skills/child-thinking-coach/SKILL.md，使用化名 diag_C02 开始诊断，只显示允许儿童看到的内容。

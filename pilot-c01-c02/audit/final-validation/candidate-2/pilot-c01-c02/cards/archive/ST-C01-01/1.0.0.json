@@ -1,0 +1,28 @@
+{
+  "id": "ST-C01-01",
+  "version": "1.0.0",
+  "concept": "C01",
+  "lesson": "C01",
+  "age": [
+    8,
+    10
+  ],
+  "difficulty": "L1",
+  "stem": "桌上有一只打开的水杯，杯旁有水迹，窗户开着。哪一项只是猜测？A. 杯旁有水迹；B. 有人刚碰倒杯子；C. 窗户开着。",
+  "answer": "B。",
+  "explanation": "A、C 是题设给出的状态，B 增加了未看到的过去事件。",
+  "hints": [
+    "哪些描述说的是现在能核查的状态？",
+    "哪些描述说到了过去发生的动作？",
+    "题干有没有直接呈现这个动作？"
+  ],
+  "common_errors": [
+    "把推测当作观察事实"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "桌上有一张撕破的纸。有人说：“小猫刚把纸撕破。”",
+    "explanation": "纸撕破是题设状态；是谁撕的未被观察到，因此是猜测。"
+  },
+  "status": "draft"
+}

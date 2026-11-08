@@ -1,0 +1,28 @@
+{
+  "id": "PILOT-DIAG-C02",
+  "version": "1.0.0",
+  "concept": "C02",
+  "lesson": "DIAG",
+  "age": [
+    8,
+    10
+  ],
+  "difficulty": "L1",
+  "stem": "甲卡有一个红圆形；乙卡有一个蓝圆形。说一个相同点和一个不同点。",
+  "answer": "相同是形状圆形或数量一个；不同是颜色红和蓝。",
+  "explanation": "对两个卡片按相同的颜色、形状或数量维度比较。",
+  "hints": [
+    "先选一个观察角度。",
+    "可以依次观察颜色和形状。",
+    "比较时两张卡片都看同一种特征。"
+  ],
+  "common_errors": [
+    "把颜色与形状交叉比较"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "甲有两个小方块，乙有三个小方块。",
+    "explanation": "按形状看都为方块；按数量看一个两个、一个三个。"
+  },
+  "status": "draft"
+}

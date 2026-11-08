@@ -1,0 +1,28 @@
+{
+  "id": "PILOT-DIAG-C01",
+  "version": "1.0.0",
+  "concept": "C01",
+  "lesson": "DIAG",
+  "age": [
+    8,
+    10
+  ],
+  "difficulty": "L1",
+  "stem": "桌上有红笔和蓝书。有人说：“一定有人刚写过作业。”哪部分是看到的，哪部分是猜测？",
+  "answer": "看到红笔、蓝书；刚写作业是猜测。",
+  "explanation": "题设未呈现写作业的经过，不能确定。",
+  "hints": [
+    "先说有哪些物品。",
+    "再想哪句话说到了没有看到的事情。",
+    "看看那句话是否能单凭桌上的物品确定。"
+  ],
+  "common_errors": [
+    "把物品存在直接当成写作业的证据"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "桌上有一只合上的盒子。有人说：“里面一定有玩具。”",
+    "explanation": "可以看到盒子合上；里面有玩具是猜测，打开盒子可以核实。"
+  },
+  "status": "draft"
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1ab60-2697-72e1-8348-95caf51c8c9b"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"现在还不能开始诊断，所以暂时没有下一道题。"}}
+{"type":"turn.completed","usage":{"input_tokens":144226,"cached_input_tokens":125568,"cache_write_input_tokens":0,"output_tokens":670,"reasoning_output_tokens":189}}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a679-07f1-7290-9495-8e538c7c98df"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"我们可以一起继续思考，或者先休息一下。你想选哪一个？"}}
+{"type":"turn.completed","usage":{"input_tokens":489433,"cached_input_tokens":442112,"cache_write_input_tokens":0,"output_tokens":2376,"reasoning_output_tokens":90}}

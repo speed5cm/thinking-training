@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1ab61-3633-71c2-b516-e2e460a83e29"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"我们可以先一起看一个类似的小例子，或者你可以再想一想、休息一下。你想选哪一种？"}}
+{"type":"turn.completed","usage":{"input_tokens":290132,"cached_input_tokens":275712,"cache_write_input_tokens":0,"output_tokens":1301,"reasoning_output_tokens":136}}

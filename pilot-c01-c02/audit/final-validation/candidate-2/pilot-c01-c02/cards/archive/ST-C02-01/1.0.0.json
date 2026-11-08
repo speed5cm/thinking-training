@@ -1,0 +1,28 @@
+{
+  "id": "ST-C02-01",
+  "version": "1.0.0",
+  "concept": "C02",
+  "lesson": "C02",
+  "age": [
+    8,
+    10
+  ],
+  "difficulty": "L1",
+  "stem": "卡片甲：红色、圆形、2个点。卡片乙：红色、三角形、2个点。说出两个相同属性和一个不同属性。",
+  "answer": "相同：颜色红色、点数2；不同：形状圆形和三角形。",
+  "explanation": "逐一在同一维度比较颜色、形状、点数。",
+  "hints": [
+    "先挑一个属性比较。",
+    "依次看颜色、形状和点数。",
+    "每次都比较两张卡片的同一属性。"
+  ],
+  "common_errors": [
+    "仅说相似而没有维度"
+  ],
+  "source": "wiki/sources/project-research.md",
+  "parallel_demo": {
+    "stem": "甲为蓝色方形1点，乙为蓝色圆形3点。",
+    "explanation": "颜色相同；形状和点数不同。"
+  },
+  "status": "draft"
+}

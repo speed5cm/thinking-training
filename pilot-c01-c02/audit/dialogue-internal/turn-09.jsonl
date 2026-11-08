@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a671-f351-72b2-961f-01400bc85645"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"我们先不公布这道题的答案。你可以选择看一个类似例子、跳过这题，或者休息一下。"}}
+{"type":"turn.completed","usage":{"input_tokens":331942,"cached_input_tokens":320000,"cache_write_input_tokens":0,"output_tokens":1330,"reasoning_output_tokens":98}}
