@@ -1,0 +1,28 @@
+{
+  "card_id": "ST-C02-01",
+  "version": "1.1.0",
+  "content_sha256": "bfabaf653d13113faf5d72a7ff9adc822e6df336c8d40f69c553b589822ae349",
+  "transitions": [
+    {
+      "state": "verified",
+      "actor_type": "human",
+      "actor": "用户（本对话确认）",
+      "time": "2026-11-08T11:24:36+08:00",
+      "note": "核对 1.1.0 题面、答案、三级提示及平行示范；确认全部审核通过。"
+    },
+    {
+      "state": "approved",
+      "actor_type": "human",
+      "actor": "用户（本对话确认）",
+      "time": "2026-11-08T11:24:36+08:00",
+      "note": "人工批准题卡及平行示范；未发布。"
+    },
+    {
+      "state": "published",
+      "actor_type": "human",
+      "actor": "家长（本对话授权）",
+      "time": "2026-11-08T11:34:55+08:00",
+      "note": "依家长本次明确授权发布 C01/C02 试点题卡及平行示范；题卡维持 status: draft，通过审核记录控制可用性。"
+    }
+  ]
+}

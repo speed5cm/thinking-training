@@ -24,6 +24,9 @@ class CoachTest(unittest.TestCase):
         self.parent = Path(self.tmp.name)
         self.root = self.parent / 'pilot-c01-c02'
         shutil.copytree(SOURCE, self.root, ignore=shutil.ignore_patterns('records','__pycache__'))
+        # 每项测试从未审核状态开始；正式发布记录只保留在源目录。
+        for review in (self.root / 'reviews').glob('*@*.json'):
+            review.unlink()
         for name in ('wiki/concepts/observation-vs-inference.md','wiki/concepts/attribute-comparison.md','question-bank/original-examples.md','references/sources.md','references/pedagogy.md'):
             dest=self.parent/name; dest.parent.mkdir(parents=True, exist_ok=True); shutil.copy(PROJECT/name,dest)
         coach.ROOT = self.root
