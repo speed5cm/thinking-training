@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate an AI-authored planning proposal; never authorize or start teaching."""
 import argparse
+import fcntl
 import hashlib
 import json
 from pathlib import Path
@@ -18,10 +19,16 @@ class Invalid(ValueError):
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
-def context(learner):
+def context(learner, already_locked=False):
+    if not already_locked:
+        folder = evidence.get_folder(learner)
+        with (evidence.coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
+            fcntl.flock(publication, fcntl.LOCK_SH)
+            fcntl.flock(lock, fcntl.LOCK_SH)
+            return context(learner, already_locked=True)
     curriculum = base.build()
-    assessment = evidence.assess(learner)
-    recommendation = evidence.recommend(learner)
+    assessment = evidence.assess(learner, already_locked=already_locked)
+    recommendation = evidence.recommend(learner, already_locked=already_locked)
     # Bind full Wiki text and pedagogy, not just extracted metadata.
     paths = ['wiki/index.md', 'curriculum/12-week-plan.md', 'references/pedagogy.md', 'references/sources.md']
     paths += [c['wiki_page'] for c in curriculum['concepts']]
@@ -36,8 +43,9 @@ def context(learner):
     sigma = folder / 'sigma'
     if sigma.exists():
         snapshot = sigma_session.read_folder(folder)
-        if snapshot['revision']:
-            learner_files['sigma/session-snapshot.json'] = snapshot
+        basis = snapshot['state'].get('planning_basis')
+        if basis is not None:
+            learner_files['sigma/planning_basis'] = basis
     return {'curriculum': curriculum, 'curriculum_digest': digest(contents),
             'learner_digest': digest(learner_files),
             'evidence_digest': assessment['evidence_digest'], 'assessment': assessment,

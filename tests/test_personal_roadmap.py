@@ -72,7 +72,7 @@ class PersonalRoadmapTests(unittest.TestCase):
             with self.assertRaises(planner.Invalid):
                 planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
 
-    def test_sigma_snapshot_changes_invalidate_plan_and_legacy_stops(self):
+    def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
             snapshot = {'state': {'question': '原题'}, 'session': '记录', 'turns': []}
             planner.sigma_session.operate('fiction-demo', snapshot, 0)
@@ -82,7 +82,14 @@ class PersonalRoadmapTests(unittest.TestCase):
                 plan[key] = ctx[key]
             planner.validate(plan, ctx, 'fiction-demo')
             snapshot['state']['question'] = '下一题'
+            snapshot['turns'].append({'type': 'question', 'question_id': 'q1', 'text': '下一题'})
             planner.sigma_session.operate('fiction-demo', snapshot, 1)
+            planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
+            snapshot['turns'].append({'type': 'answer', 'question_id': 'q1', 'text': '回答'})
+            planner.sigma_session.operate('fiction-demo', snapshot, 2)
+            planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
+            snapshot['state']['planning_basis'] = {'C01': '需要复习'}
+            planner.sigma_session.operate('fiction-demo', snapshot, 3)
             with self.assertRaises(planner.Invalid):
                 planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
             (Path(tmp) / 'sigma' / 'state.json').write_text('{}', encoding='utf-8')

@@ -36,6 +36,8 @@ def validate(obj):
         or not isinstance(obj['state'], dict) or not isinstance(obj['session'], str)
         or not isinstance(obj['turns'], list) or any(not isinstance(t, dict) for t in obj['turns'])):
         raise Invalid('会话快照格式无效')
+    if 'planning_basis' in obj['state'] and not isinstance(obj['state']['planning_basis'], dict):
+        raise Invalid('planning_basis 必须是对象')
 
 def operate(learner, proposed=None, expected=None):
     folder = evidence.get_folder(learner)
