@@ -1,0 +1,12 @@
+WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir "/tmp" (codex_home: AbsolutePathBuf("/tmp/thinking-codex-baafdc49"))
+Reading additional input from stdin...
+2026-11-08T04:56:48.750231Z ERROR codex_models_manager::manager: failed to refresh available models: Connection failed: error sending request
+2026-11-08T04:56:48.789163Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:49.001729Z ERROR codex_models_manager::manager: failed to refresh available models: Connection failed: error sending request
+2026-11-08T04:56:49.039811Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:50.041609Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:50.041899Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:50.292899Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:51.294293Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-11-08T04:56:51.775720Z ERROR codex_models_manager::manager: failed to refresh available models: Connection failed: error sending request
+2026-11-08T04:56:51.937576Z ERROR codex_models_manager::manager: failed to refresh available models: Connection failed: error sending request

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1b984-c32e-7633-8033-9f0d94c96fe4"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"我们可以先一起想一想。你愿意试着选一项，还是先休息一下？"}}
+{"type":"turn.completed","usage":{"input_tokens":355700,"cached_input_tokens":338944,"cache_write_input_tokens":0,"output_tokens":1176,"reasoning_output_tokens":66}}

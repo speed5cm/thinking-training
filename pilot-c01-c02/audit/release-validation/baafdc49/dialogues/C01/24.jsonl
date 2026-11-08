@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1b984-c32e-7633-8033-9f0d94c96fe4"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"好的，我们现在结束。"}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'python3 pilot-c01-c02/scripts/coach.py end --learner end_C01'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'python3 pilot-c01-c02/scripts/coach.py end --learner end_C01'","aggregated_output":"{\n  \"status\": \"completed\",\n  \"summary\": {\n    \"session_id\": \"b4db231c-a65a-4c71-aeeb-7a8db1af85da\",\n    \"mode\": \"C01\",\n    \"completed\": 0,\n    \"skipped\": 0,\n    \"attempts\": 0,\n    \"parent_feedback\": [],\n    \"question_versions\": [\n      {\n        \"id\": \"ST-C01-01\",\n        \"version\": \"1.1.0\",\n        \"sha256\": \"55597a243579d22e9fdd2e539bda7d25a3a0f72e57c637c7f28da77ee5757cbd\",\n        \"concept\": \"C01\",\n        \"source\": \"wiki/sources/project-research.md\"\n      }\n    ],\n    \"note\": \"仅为观察记录，不代表掌握或教育效果。\"\n  }\n}\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"会话已结束。"}}
+{"type":"turn.completed","usage":{"input_tokens":1622397,"cached_input_tokens":1574016,"cache_write_input_tokens":0,"output_tokens":4354,"reasoning_output_tokens":125}}

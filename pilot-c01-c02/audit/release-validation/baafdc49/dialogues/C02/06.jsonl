@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1b984-c331-7393-ac7b-88424db05b28"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"你可以先试着想一想，也可以休息一下。你想怎么做？"}}
+{"type":"turn.completed","usage":{"input_tokens":363303,"cached_input_tokens":333824,"cache_write_input_tokens":0,"output_tokens":1124,"reasoning_output_tokens":96}}

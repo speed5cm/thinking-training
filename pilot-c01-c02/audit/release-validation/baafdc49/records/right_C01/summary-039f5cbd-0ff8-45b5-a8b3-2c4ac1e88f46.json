@@ -1,0 +1,20 @@
+{
+  "session_id": "039f5cbd-0ff8-45b5-a8b3-2c4ac1e88f46",
+  "mode": "C01",
+  "completed": 1,
+  "skipped": 0,
+  "attempts": 1,
+  "parent_feedback": [
+    "孩子愿意尝试。"
+  ],
+  "question_versions": [
+    {
+      "id": "ST-C01-01",
+      "version": "1.1.0",
+      "sha256": "55597a243579d22e9fdd2e539bda7d25a3a0f72e57c637c7f28da77ee5757cbd",
+      "concept": "C01",
+      "source": "wiki/sources/project-research.md"
+    }
+  ],
+  "note": "仅为观察记录，不代表掌握或教育效果。"
+}

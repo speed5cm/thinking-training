@@ -1,0 +1,18 @@
+{
+  "session_id": "a1dd9c55-dc22-4be2-a286-650132062acd",
+  "mode": "C01",
+  "completed": 0,
+  "skipped": 1,
+  "attempts": 4,
+  "parent_feedback": [],
+  "question_versions": [
+    {
+      "id": "ST-C01-01",
+      "version": "1.1.0",
+      "sha256": "55597a243579d22e9fdd2e539bda7d25a3a0f72e57c637c7f28da77ee5757cbd",
+      "concept": "C01",
+      "source": "wiki/sources/project-research.md"
+    }
+  ],
+  "note": "仅为观察记录，不代表掌握或教育效果。"
+}

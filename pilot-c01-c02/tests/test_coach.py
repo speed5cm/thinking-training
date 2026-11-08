@@ -52,6 +52,15 @@ class CoachTest(unittest.TestCase):
         with self.assertRaises(coach.Stop): coach.run(args('start',mode='C01'))
         self.assertFalse((self.root/'records/child_a/events.jsonl').exists())
 
+    def test_real_published_reviews_allow_all_modes(self):
+        # 复制正式审核记录到隔离目录，不构造或修改审核内容。
+        for review in (SOURCE / 'reviews').glob('*@*.json'):
+            shutil.copy2(review, self.root / 'reviews' / review.name)
+        for mode in ('diagnosis', 'C01', 'C02'):
+            learner = 'published_' + mode
+            coach.run(args('start', learner, mode=mode))
+            self.assertEqual(coach.run(args('show', learner))['id'], coach.MODES[mode][0])
+
     def test_ai_cannot_approve(self):
         self.approve_fixture('ST-C01-01')
         p=self.root/'reviews/ST-C01-01@1.1.0.json'; x=json.loads(p.read_text()); x['transitions'][1]['actor_type']='ai'; p.write_text(json.dumps(x))

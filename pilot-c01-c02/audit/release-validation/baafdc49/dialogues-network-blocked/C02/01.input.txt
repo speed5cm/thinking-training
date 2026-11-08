@@ -1,0 +1,1 @@
+这是成人模拟，不是儿童试教。这里的题卡和审核记录是正式发布版本的隔离副本。工作目录是 /tmp/thinking-release-baafdc49，必须在此目录操作，不能操作其他项目副本。请读取此目录下的 pilot-c01-c02/skills/child-thinking-coach/SKILL.md，使用化名 diag_C02 开始诊断，只显示允许儿童看到的内容。

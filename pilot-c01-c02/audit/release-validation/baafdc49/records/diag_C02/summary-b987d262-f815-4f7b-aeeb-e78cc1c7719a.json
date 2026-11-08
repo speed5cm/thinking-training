@@ -1,0 +1,25 @@
+{
+  "session_id": "b987d262-f815-4f7b-aeeb-e78cc1c7719a",
+  "mode": "diagnosis",
+  "completed": 1,
+  "skipped": 1,
+  "attempts": 2,
+  "parent_feedback": [],
+  "question_versions": [
+    {
+      "id": "PILOT-DIAG-C01",
+      "version": "1.1.0",
+      "sha256": "c9e7c40e7faf06ba1812aa9488a1bd371feec1f4d954e10c77cca519e35d0b79",
+      "concept": "C01",
+      "source": "wiki/sources/project-research.md"
+    },
+    {
+      "id": "PILOT-DIAG-C02",
+      "version": "1.1.0",
+      "sha256": "c5d5170eea735f98c685104412097a25b4d2cbc4bfbc98e71b20db0a833b69c5",
+      "concept": "C02",
+      "source": "wiki/sources/project-research.md"
+    }
+  ],
+  "note": "仅为观察记录，不代表掌握或教育效果。"
+}
