@@ -1,0 +1,1164 @@
+{
+  "schema_version": 1,
+  "history": [
+    {
+      "version": 1,
+      "plan_sha256": "442274b74291b7fe50095201f784bbc6303ea0431455dce5e48e5667a88d45fa",
+      "created_at": "2026-11-08T11:56:48.165023+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "dc2d7eb04bdd3de649246e5224ded60e0440620eb08c52958a77138153eec4b0",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "learner_digest": "dc2d7eb04bdd3de649246e5224ded60e0440620eb08c52958a77138153eec4b0",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "无先修，按用户要求以正式训练采集观察；诊断独立且未实施。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施，正式证据为零，理解及个人偏好 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": []
+    },
+    {
+      "version": 2,
+      "plan_sha256": "7a2cf38a9af4e55b183e71c61aee67abc19b700d369ba0b4a3b1f84b45f2d479",
+      "created_at": "2026-11-08T11:57:38.831772+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "096f31aee88c4497833b1d1f53361d5230dbd623acb67aeddb7204879a178cb5",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "096f31aee88c4497833b1d1f53361d5230dbd623acb67aeddb7204879a178cb5",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "一次正式 C01 独立正确且理由充分；继续开放探究核实方法，动态回答不作为正式证据，不标掌握。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 3,
+      "plan_sha256": "16aa64927f14fcf565dfa39696d29c84ea055197797842b8f62f199078026d56",
+      "created_at": "2026-11-08T11:58:22.965539+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "fec0dc152914a1bea922a8ff573232dbf6eca184c89c06baf65eee44ea1bfb41",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "fec0dc152914a1bea922a8ff573232dbf6eca184c89c06baf65eee44ea1bfb41",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "一次正式 C01 独立正确且理由充分；动态探究提出多种可能及相关核实方法，继续检查观察能支持的范围。动态回答不计正式证据，不标掌握。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 4,
+      "plan_sha256": "d345992e0277614ef816f987559978475e510fa2c92ee6171e737c83613c686f",
+      "created_at": "2026-11-08T11:59:09.666650+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "72a2e49293ed055239dd15dac52344141caa6a9ef71117eb6bdad1e9e8a3d93a",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "72a2e49293ed055239dd15dac52344141caa6a9ef71117eb6bdad1e9e8a3d93a",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "学习者明确疲劳，当前暂停。恢复先重验资料、门禁及路线，并恢复未答动态问题；既有一次正式证据不构成掌握。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 5,
+      "plan_sha256": "87e88c972b2408823511e34115591492de47058d13c0ef81ce331492b8d4b2a0",
+      "created_at": "2026-11-08T11:59:53.426927+00:00",
+      "inputs": {
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "learner_digest": "47ebecc34ac5ddc8edd1bab2c9511935052d02393d665c3745f80217c5799eca",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "47ebecc34ac5ddc8edd1bab2c9511935052d02393d665c3745f80217c5799eca",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "学习者请求继续；重新检查资料与门禁通过，先恢复 C01 未答动态问题。仅一次正式证据，不标掌握或授权 C02。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 6,
+      "plan_sha256": "9b83b04a30c34c9edcc298d6bd3769aa46971d235f917120304ab09bfa51c073",
+      "created_at": "2026-11-08T12:02:22.745073+00:00",
+      "inputs": {
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "learner_digest": "51350f867df8c9547bf3440088495faaeb3b12d4c6bb54ceb3ffcefbfa750de1",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "51350f867df8c9547bf3440088495faaeb3b12d4c6bb54ceb3ffcefbfa750de1",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "继续请求未包含作答；保留 C01 未答动态问题，不推断跳过。按最新输入重新保存路线，动态练习不计正式证据。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 7,
+      "plan_sha256": "596d7c13e6a1c66bd7ee11ccbe62454d54fafd18813dda27250faec55f9cd91e",
+      "created_at": "2026-11-08T12:03:22.123927+00:00",
+      "inputs": {
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "learner_digest": "d62f1de423f183cc0da96f5619d65185b7594654b507aca8a080409aaa00d12a",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "d62f1de423f183cc0da96f5619d65185b7594654b507aca8a080409aaa00d12a",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "动态追问回答不知道，具体卡点 unknown；维持 C01 并拆小为区分观察时间，不以一次困难推断稳定能力。原有一次正式证据不足以掌握。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    },
+    {
+      "version": 8,
+      "plan_sha256": "b04d1c9a88ea3c980077d93b368cb26f68f08efe4b245313b1069280d05a01bc",
+      "created_at": "2026-11-08T12:04:01.091084+00:00",
+      "inputs": {
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "learner_digest": "6150b19b70edfeb301b0a0a13ed037daea2cbe8b03190850938bd790f66306ee",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8"
+      },
+      "plan": {
+        "schema_version": 1,
+        "learner": "synthetic-agent",
+        "curriculum_digest": "348a9ba2a03fe326b22b02766867c87b1b743f837bb0c71317632ab69232b7a5",
+        "evidence_digest": "d9df064c8c863be3824948c5e683a72d02e8ee50a1b2d48a50c1399b6ea2a9f8",
+        "learner_digest": "6150b19b70edfeb301b0a0a13ed037daea2cbe8b03190850938bd790f66306ee",
+        "steps": [
+          {
+            "kind": "introduce",
+            "concept": "C01",
+            "reason": "动态探究连续两次不理解，停止当前认知追问，等待学习者选择更简单的小例子或休息；具体原因 unknown，不增加正式证据，不升级。",
+            "wiki_pages": [
+              "wiki/concepts/observation-vs-inference.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C02",
+            "reason": "事实辨析后比较稳定属性，须先满足 C01 正式证据及家长确认门禁。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/attribute-comparison.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C03",
+            "reason": "比较后明确分类标准并检验反例。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/classification-counterexample.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C04",
+            "reason": "比较后观察变化并检验给定规律。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/pattern-rule.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C05",
+            "reason": "分类和规律之后有序列举，检查遗漏。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/systematic-enumeration.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C06",
+            "reason": "观察及枚举之后检验条件方向。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/conditional-reasoning.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C07",
+            "reason": "在观察和条件推理之后检查证据及替代解释。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/evidence-and-alternatives.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C08",
+            "reason": "依据证据组织观点、理由及公平复述。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/structured-argument.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C09",
+            "reason": "以枚举和条件推理分解目标及限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/constraint-decomposition.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C10",
+            "reason": "以论证和约束分解比较角色需求与代价。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/perspectives-tradeoffs.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C11",
+            "reason": "未来生成实质不同的构想，再检验限制。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/divergent-ideas.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C12",
+            "reason": "分解与发散之后按标准测试和迭代。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/prototype-testing.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C13",
+            "reason": "以枚举、证据、分解支撑陌生情境策略选择。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/strategy-transfer.md"
+            ]
+          },
+          {
+            "kind": "introduce",
+            "concept": "C14",
+            "reason": "未来结合已学任务计划、自查与反思。 仅未来建议，进入时重验发布及先修。",
+            "wiki_pages": [
+              "wiki/concepts/plan-monitor-reflect.md"
+            ]
+          }
+        ],
+        "gaps": [
+          "起点诊断未实施；现有一次正式 C01 H0 正确且理由充分，迁移及稳定能力 unknown。",
+          "C01 当前仅一张正式训练卡，不足以提供不同卡的掌握证据；C02 未获先修授权，C03—C14 未发布。"
+        ],
+        "revision_suggestions": []
+      },
+      "review_queue": [
+        {
+          "concept": "C01",
+          "evidence_session": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+          "evidence_at": "2026-11-08T11:57:38.626224+00:00",
+          "due_at": "2026-11-09T11:57:38.626224+00:00",
+          "status": "pending",
+          "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握"
+        }
+      ]
+    }
+  ]
+}

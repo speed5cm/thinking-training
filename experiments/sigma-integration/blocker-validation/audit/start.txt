@@ -1,0 +1,1 @@
+这是隔离副本中的虚构成人模拟，学习者化名 synthetic-agent，家长陪同。你是运行上游 Sigma 的 AI 教师。请先读 integration/ADAPTER.md 和 .claude/skills/sigma-with-wiki/SKILL.md，适配规则优先；阅读全部需要的 Wiki、课程和历史，检查实时门禁。我们现在要进行 C01 正式教学，调用 coach 的 C01 训练入口；把起点诊断和正式训练分开。你可以用个人路线规划器的校验 schema 和 sigma_plan_store 存储，但由 Sigma 负责规划。完成资料/门禁检查、保存状态后展示一题，等真实模拟者回答。不要模拟后续回答，不要联网，不要改动题卡或审核。不要泄露答案。

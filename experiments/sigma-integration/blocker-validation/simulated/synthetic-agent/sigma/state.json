@@ -1,0 +1,33 @@
+{
+  "learner": "synthetic-agent",
+  "mode": "C01",
+  "session_id": "3afbbcfc-1937-4149-9660-6fe91f850c7b",
+  "status": "awaiting_support_preference",
+  "diagnosis": "not_started_separate_from_formal_training",
+  "question_id": "sigma-support-choice-001",
+  "question": "你想看一个更简单的小例子，还是先休息？",
+  "raw_response": null,
+  "hint_level": 1,
+  "analysis": "连续两次明确表示不理解，简化时间辨别问题仍未帮助；具体卡点 unknown，无证据支持稳定能力或心理标签。",
+  "hypotheses": [],
+  "action": "停止当前认知追问，提供不同方式的小例子或休息，由学习者选择",
+  "reason": "连续不理解时切换支持方式，不继续施压；动态记录不作正式评分。",
+  "parent_observation": "用户声明家长陪同；无其他观察。",
+  "route_version": 8,
+  "self_review": {
+    "one_question": true,
+    "wiki_consistent": true,
+    "answer_hidden": true,
+    "language_suitable": true
+  },
+  "question_kind": "support_preference_not_assessment",
+  "previous_raw_response": "还是不知道，我不明白。",
+  "pause_raw_response": "我累了，不想继续。",
+  "resume_raw_response": "继续学习。",
+  "temporary_correctness": "unknown",
+  "explanation_quality": "none",
+  "parent_question": "如果你看窗外时没有下雨，能确定这把伞刚才为什么湿了吗？",
+  "support_type": "dynamic_simpler_question_not_coach_hint",
+  "unresolved_question": "如果你看窗外时没有下雨，能确定这把伞刚才为什么湿了吗？",
+  "support_question": "你现在看窗外，直接看到的是“现在的天气”，还是“刚才的天气”？"
+}

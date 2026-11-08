@@ -1,0 +1,33 @@
+test_capture_fields_isolation_duplicate_and_completion (test_learning_evidence.EvidenceTests.test_capture_fields_isolation_duplicate_and_completion) ... ok
+test_diagnosis_and_revoked_cards_block (test_learning_evidence.EvidenceTests.test_diagnosis_and_revoked_cards_block) ... ok
+test_evaluation_needs_transfer_and_distinct_sessions_and_cards (test_learning_evidence.EvidenceTests.test_evaluation_needs_transfer_and_distinct_sessions_and_cards) ... ok
+test_last_attempt_captures_actual_hints_and_support (test_learning_evidence.EvidenceTests.test_last_attempt_captures_actual_hints_and_support) ... ok
+test_parent_confirmation_and_c02_gate (test_learning_evidence.EvidenceTests.test_parent_confirmation_and_c02_gate) ... ok
+test_recommendation_is_only_c01_and_respects_live_gate (test_learning_evidence.EvidenceTests.test_recommendation_is_only_c01_and_respects_live_gate) ... ok
+test_same_card_repeated_cannot_prove_mastery (test_learning_evidence.EvidenceTests.test_same_card_repeated_cannot_prove_mastery) ... ok
+test_citations_and_early_review (test_personal_roadmap.PersonalRoadmapTests.test_citations_and_early_review) ... ok
+test_example_valid_and_no_teaching_authorization (test_personal_roadmap.PersonalRoadmapTests.test_example_valid_and_no_teaching_authorization) ... ok
+test_live_profile_change_invalidates_plan (test_personal_roadmap.PersonalRoadmapTests.test_live_profile_change_invalidates_plan) ... ok
+test_prerequisites_and_complete_coverage (test_personal_roadmap.PersonalRoadmapTests.test_prerequisites_and_complete_coverage) ... ok
+test_proposed_actions_cannot_grant_mastery_or_teaching (test_personal_roadmap.PersonalRoadmapTests.test_proposed_actions_cannot_grant_mastery_or_teaching) ... ok
+test_stale_or_other_learner_rejected (test_personal_roadmap.PersonalRoadmapTests.test_stale_or_other_learner_rejected) ... ok
+test_changed_card_or_missing_review_blocks (test_roadmap.RoadmapTests.test_changed_card_or_missing_review_blocks) ... ok
+test_complete_graph_and_publication (test_roadmap.RoadmapTests.test_complete_graph_and_publication) ... ok
+test_cycle_and_dangling_relationship_fail (test_roadmap.RoadmapTests.test_cycle_and_dangling_relationship_fail) ... ok
+test_html_is_escaped_and_standalone (test_roadmap.RoadmapTests.test_html_is_escaped_and_standalone) ... ok
+test_missing_page_and_invalid_source_fail (test_roadmap.RoadmapTests.test_missing_page_and_invalid_source_fail) ... ok
+test_direct_c02_is_blocked_but_diagnosis_is_separate (test_sigma_blockers.GateIntegration.test_direct_c02_is_blocked_but_diagnosis_is_separate) ... ok
+test_duplicate_start_and_live_release_revocation (test_sigma_blockers.GateIntegration.test_duplicate_start_and_live_release_revocation) ... ok
+test_release_lock_serializes_revoke_and_start (test_sigma_blockers.GateIntegration.test_release_lock_serializes_revoke_and_start) ... ok
+test_synthetic_valid_confirmation_and_stale_confirmation (test_sigma_blockers.GateIntegration.test_synthetic_valid_confirmation_and_stale_confirmation) ... ok
+test_wiki_change_stales_real_stored_plan (test_sigma_blockers.GateIntegration.test_wiki_change_stales_real_stored_plan) ... ok
+test_version_staleness_and_due_queue (test_sigma_blockers.PlanHistory.test_version_staleness_and_due_queue) ... ok
+test_fabricated_quote_does_not_save (test_tutor_loop.TutorLoopTests.test_fabricated_quote_does_not_save) ... ok
+test_pause_resume_and_raw_evidence (test_tutor_loop.TutorLoopTests.test_pause_resume_and_raw_evidence) ... ok
+test_revoked_published_card_blocks_resume (test_tutor_loop.TutorLoopTests.test_revoked_published_card_blocks_resume) ... ok
+test_roadmap_digest_tracks_tutor_without_promoting_mastery (test_tutor_loop.TutorLoopTests.test_roadmap_digest_tracks_tutor_without_promoting_mastery) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.985s
+
+OK

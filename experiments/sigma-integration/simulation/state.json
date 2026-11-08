@@ -1,0 +1,40 @@
+{
+  "updated_at": "2026-11-08T10:55:42.148560+00:00",
+  "learner": "sigma-sim",
+  "simulation": true,
+  "parent_accompanied": true,
+  "route_version": 1,
+  "phase": "awaiting_support_choice",
+  "concept": "C02",
+  "pending_question": {
+    "id": "PILOT-DIAG-C02",
+    "version": "1.1.0",
+    "text": "甲卡有一个红圆形；乙卡有一个蓝圆形。说一个相同点和一个不同点。",
+    "response": "它们形状相同，因为颜色不一样。",
+    "hints": []
+  },
+  "analysis": "孩子明确报告不理解；本次unknown/none，不判错误或固定能力。此前跨维度理由假设仍待验证。",
+  "hypotheses": [
+    {
+      "hypothesis": "可能在理由中混用比较维度，也可能只是口头连接词使用不清。",
+      "status": "待验证",
+      "evidence": "它们形状相同，因为颜色不一样。"
+    }
+  ],
+  "action": "等待孩子选择；选例子后调用coach demo，选休息后pause；当前不自动给提示或跳题",
+  "reason": "再次表示不理解，且曾疲劳暂停，优先降低负担，不强迫继续",
+  "parent_observations": "用户声明家长陪同；其他unknown",
+  "resume": "孩子愿意恢复时重新survey、核验发布及先修，coach resume/progress；保留PILOT-DIAG-C02及待答理由追问，不自动跳过。",
+  "mastery": "unknown",
+  "pending_followup": {
+    "text": "我们再看看你的理由，你愿意用另一种方式说明吗？",
+    "response": "我还是不明白，我不会。",
+    "support": "中性理由追问；未调用hint，无H1—H3提示"
+  },
+  "pause_response": "我累了，不想再想了。",
+  "resume_request": "继续学习。",
+  "pending_support_choice": {
+    "text": "你想看看一个不同的小例子，还是先休息？",
+    "response": null
+  }
+}

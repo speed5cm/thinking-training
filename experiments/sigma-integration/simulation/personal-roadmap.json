@@ -1,0 +1,130 @@
+{
+  "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+  "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "learner_digest": "ca2f41d41b3f6d1c3496b37eea24fa8a3905671c989e6a7ac95223acb7353207",
+  "schema_version": 1,
+  "learner": "sigma-sim",
+  "steps": [
+    {
+      "kind": "introduce",
+      "concept": "C01",
+      "reason": "C01本题H0正确且理由有效，仅为起点线索；后续仍按推荐采集或巩固，不能标掌握。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C02",
+      "reason": "事实辨析后再比较稳定属性；须先取得C01证据与家长确认。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/attribute-comparison.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C03",
+      "reason": "比较属性后才确定分类标准并检验反例。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/classification-counterexample.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C04",
+      "reason": "沿W03叙事在属性比较后检验生成规则。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/pattern-rule.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C05",
+      "reason": "结合分类与规律，用有序列表避免遗漏。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/systematic-enumeration.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C06",
+      "reason": "在事实与枚举基础上检查条件方向。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/conditional-reasoning.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C07",
+      "reason": "基于事实与条件推理审查证据和替代解释。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/evidence-and-alternatives.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C08",
+      "reason": "证据判断后组织理由并公平倾听。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/structured-argument.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C09",
+      "reason": "枚举与条件推理后分解目标和限制。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C10",
+      "reason": "论证与约束基础上比较不同需求和取舍。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/perspectives-tradeoffs.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C11",
+      "reason": "沿W09叙事，在明确约束后产生不同方案；索引关系为穿插关系。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/divergent-ideas.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C12",
+      "reason": "约束与发散之后按标准测试原型。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/prototype-testing.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C13",
+      "reason": "整合枚举、证据与约束，选择跨情境策略。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/strategy-transfer.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C14",
+      "reason": "沿W11—12集中规划反思；可贯穿的元认知不视为提前授权。 仅为未来候选，进入前必须重新校验发布和先修。",
+      "wiki_pages": [
+        "wiki/concepts/plan-monitor-reflect.md"
+      ]
+    }
+  ],
+  "gaps": [
+    "已收到一次C01诊断回答，不能证明掌握；C02诊断待答，无正式训练证据或家长掌握确认。",
+    "C01只有一张已发布训练卡，不能满足不同题卡与陌生迁移证据。",
+    "C02先修未满足；C03—C14未发布，只列未来范围。"
+  ],
+  "revision_suggestions": [
+    "待真实模拟回答后分析并更新；正式测评仅coach执行，完成后capture。",
+    "允许范围内才安排不同情境与延迟复习；没有学习证据，不虚构复习日期。"
+  ]
+}

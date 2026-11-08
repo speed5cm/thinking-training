@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "learner": "fiction-demo",
+  "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+  "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "learner_digest": "5695476960317bbc34837266848e7ce3728b3c49bf63c12beb4aa896580fef6c",
+  "steps": [
+    {
+      "kind": "introduce",
+      "concept": "C01",
+      "reason": "诊断显示易将推测当事实，先练可核查线索及说出依据；一次诊断不构成掌握。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "review",
+      "concept": "C01",
+      "reason": "在进入比较前回看事实与猜测；日期依实际记录再定，需已发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C14",
+      "reason": "先规划未来可穿插的计划与自查，与 C01 的核实动作相连；目前无已发布题卡。",
+      "wiki_pages": [
+        "wiki/concepts/plan-monitor-reflect.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C11",
+      "reason": "利用喜欢图形的兴趣，未来穿插比较不同构想；先产生不同方案，再考虑限制，目前无已发布题卡。",
+      "wiki_pages": [
+        "wiki/concepts/divergent-ideas.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C02",
+      "reason": "观察之后按多个属性比较，为分类和规律提供共同语言；C01 须先满足实际进阶规则。",
+      "wiki_pages": [
+        "wiki/concepts/attribute-comparison.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C04",
+      "reason": "兴趣可支持解释并检验给定规律，但诊断表现不允许跳过先修；安排在分类之前以保持参与。",
+      "wiki_pages": [
+        "wiki/concepts/pattern-rule.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C03",
+      "reason": "在比较基础上区分两个分类条件及反例，为不遗漏的枚举铺路。",
+      "wiki_pages": [
+        "wiki/concepts/classification-counterexample.md"
+      ]
+    },
+    {
+      "kind": "review",
+      "concept": "C02",
+      "reason": "在分类与规律之后回顾比较依据；须使用通过门禁的材料且不将复习当掌握。",
+      "wiki_pages": [
+        "wiki/concepts/attribute-comparison.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C05",
+      "reason": "把分类与规律的检查习惯合并到固定维度、逐项枚举，检验遗漏。",
+      "wiki_pages": [
+        "wiki/concepts/systematic-enumeration.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C06",
+      "reason": "在枚举和观察基础上检验条件及反例，避免从结果倒推原因。",
+      "wiki_pages": [
+        "wiki/concepts/conditional-reasoning.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C07",
+      "reason": "把事实与推测、条件推理用于检查证据范围和替代解释，回应诊断中急于下结论。",
+      "wiki_pages": [
+        "wiki/concepts/evidence-and-alternatives.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C08",
+      "reason": "先有证据及其局限，再用观点、理由、例子和复述对方来练口头表达。",
+      "wiki_pages": [
+        "wiki/concepts/structured-argument.md"
+      ]
+    },
+    {
+      "kind": "review",
+      "concept": "C01",
+      "reason": "在证据与论证附近回看事实与推测，连接熟悉的核查动作；只能用已发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C09",
+      "reason": "用已有枚举和条件推理整理目标与限制，再逐项核查方案。",
+      "wiki_pages": [
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "interleave",
+      "concept": "C14",
+      "reason": "将自查与 C09 的逐项核查相连；仅是未来规划，题卡未发布时不能安排正式练习。",
+      "wiki_pages": [
+        "wiki/concepts/plan-monitor-reflect.md",
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C10",
+      "reason": "在论证和分解之后比较角色需求、标准及代价，避免把偏好当事实。",
+      "wiki_pages": [
+        "wiki/concepts/perspectives-tradeoffs.md"
+      ]
+    },
+    {
+      "kind": "interleave",
+      "concept": "C11",
+      "reason": "在 C09 之后回到不同构想并对照限制，为原型测试作准备；等待已发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/divergent-ideas.md",
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C12",
+      "reason": "结合分解出的限制与不同构想，规划按标准测试和迭代，等待已发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/prototype-testing.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C13",
+      "reason": "在枚举、证据和分解后，规划跨情境选择策略；迁移须有已发布任务与多次证据。",
+      "wiki_pages": [
+        "wiki/concepts/strategy-transfer.md"
+      ]
+    }
+  ],
+  "gaps": [
+    "C01/C02 各仅一张已发布训练卡，不足以满足不同题卡和陌生情境的掌握候选；C03—C14 尚无已发布题卡。",
+    "起点诊断只有一次，无法推断稳定强弱或确认先修掌握；尚无可靠的个人复习日期。"
+  ],
+  "revision_suggestions": [
+    "请课程负责人审查 C06 对 C05 的硬先修：C06 的逆推反例与 C03 分类反例的语义关联可供审议，但不能据此自动删除 C05 依赖。"
+  ]
+}
