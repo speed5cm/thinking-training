@@ -6,6 +6,20 @@
 - **先修**：[[concepts/observation-vs-inference]], [[concepts/systematic-enumeration]]
 - **概念定义（项目原创表述）**：“如果A则B”表示当A成立时可推出B；不能仅因B成立就断言A。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "逻辑推理",
+    "批判性思考"
+  ],
+  "hard_prerequisites": [
+    "C01",
+    "C05"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 写出前件A和后件B→检查已知条件→可用反例检验逆向说法。
 

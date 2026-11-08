@@ -6,6 +6,20 @@
 - **先修**：[[concepts/classification-counterexample]], [[concepts/pattern-rule]]
 - **概念定义（项目原创表述）**：固定一个维度，逐项列出合法情况，确保不重复、不遗漏。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "逻辑推理",
+    "独立解决/元认知"
+  ],
+  "hard_prerequisites": [
+    "C03",
+    "C04"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 确定选项和限制→按第一位分组→逐个列出→核数并检查。
 

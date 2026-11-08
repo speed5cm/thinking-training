@@ -6,6 +6,19 @@
 - **先修**：[[concepts/attribute-comparison]]
 - **概念定义（项目原创表述）**：分类按明确属性确定集合归属；反例用于检验“所有……”一类全称断言。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "逻辑推理",
+    "观察分析"
+  ],
+  "hard_prerequisites": [
+    "C02"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 定义类别→检查每个实例→处理交集/只属于一类→寻找不符合断言的例子。
 

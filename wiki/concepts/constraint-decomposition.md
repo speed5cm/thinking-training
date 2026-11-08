@@ -6,6 +6,20 @@
 - **先修**：[[concepts/systematic-enumeration]], [[concepts/conditional-reasoning]]
 - **概念定义（项目原创表述）**：复杂问题可拆为目标、已知条件、必须条件、上限限制和检查步骤。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "独立解决/元认知",
+    "逻辑推理"
+  ],
+  "hard_prerequisites": [
+    "C05",
+    "C06"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 读目标→标出“必须/至少/最多”→画表或时间线→枚举或计算→逐项校验。
 

@@ -6,6 +6,20 @@
 - **先修**：[[concepts/attribute-comparison]], [[concepts/constraint-decomposition]]
 - **概念定义（项目原创表述）**：面对目标先产生多个实质不同的候选，不急于立刻筛掉想法；随后再检验可行性。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "创造性思维",
+    "语言表达"
+  ],
+  "hard_prerequisites": [],
+  "interleavable": [
+    "C02",
+    "C09"
+  ]
+}
+-->
+
 ## 教学动作
 改变形态、组合方式、使用者或功能→列至少3种→选区别最大的2种。
 

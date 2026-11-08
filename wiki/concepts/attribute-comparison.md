@@ -6,6 +6,19 @@
 - **先修**：[[concepts/observation-vs-inference]]
 - **概念定义（项目原创表述）**：比较不是笼统说“像/不像”，而是指定颜色、形状、数量、功能等具体维度。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "观察分析",
+    "语言表达"
+  ],
+  "hard_prerequisites": [
+    "C01"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 先说比较标准→逐项比较→总结两同一异。
 

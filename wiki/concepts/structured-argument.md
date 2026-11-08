@@ -6,6 +6,19 @@
 - **先修**：[[concepts/evidence-and-alternatives]]
 - **概念定义（项目原创表述）**：通过观点—理由—例子说明判断，并公平复述不同立场。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "语言表达",
+    "批判性思考"
+  ],
+  "hard_prerequisites": [
+    "C07"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 说观点→列两种不同理由→举例→复述另一方合理理由→必要时修正。
 

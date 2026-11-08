@@ -2,6 +2,10 @@
 
 **日期**：2026-11-04。**定位**：课程研究、教学设计与可供 Sigma Tutor 使用的原创知识库，不包含完整软件系统。
 
+课程骨架与路线图：见 `docs/roadmap-design.md` 和 `roadmap/roadmap.html`。运行 `python3 scripts/generate_roadmap.py` 更新，`--check` 校验；路线图不是教学授权，正式试点仍须由原 coach 和家长执行门禁。12周计划为参考安排。
+
+C01/C02 学习证据、家长确认与下一步建议的最小闭环见 `docs/minimal-evidence-design.md`。当前题卡不足以形成跨题迁移掌握候选。
+
 ## 建议阅读顺序
 1. `references/sources.md`：官方教材和研究来源，明确版权与适配范围。
 2. `references/pedagogy.md`：证据、首次诊断、Sigma儿童教学约束、提示与评估规则。

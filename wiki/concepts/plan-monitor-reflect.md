@@ -6,6 +6,19 @@
 - **先修**：[[concepts/observation-vs-inference]], [[concepts/constraint-decomposition]]
 - **概念定义（项目原创表述）**：遇到任务前选择计划，过程中检查目标与条件，结束后解释有效策略与改进点。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "独立解决/元认知"
+  ],
+  "hard_prerequisites": [],
+  "interleavable": [
+    "C01",
+    "C09"
+  ]
+}
+-->
+
 ## 教学动作
 开始前一句话说计划→过程暂停自查→结束记录成功证据和下一步。
 

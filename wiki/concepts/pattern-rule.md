@@ -6,6 +6,18 @@
 - **先修**：[[concepts/attribute-comparison]]
 - **概念定义（项目原创表述）**：在给定或明确说明的生成规则下继续序列，并能检验规则；有限个已知项不一定唯一决定后项。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "逻辑推理"
+  ],
+  "hard_prerequisites": [
+    "C02"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 列相邻差→解释生成规则→检验各项→推算下一项。
 

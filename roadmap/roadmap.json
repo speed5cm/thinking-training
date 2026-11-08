@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "authority": "wiki/index.md and wiki/concepts/*.md",
+  "notice": "静态快照；正式教学前须重新执行现有试点门禁和家长陪同流程。可用不表示先修已掌握。",
+  "ability_domains": [
+    "创造性思维",
+    "批判性思考",
+    "独立解决/元认知",
+    "观察分析",
+    "语言表达",
+    "逻辑推理"
+  ],
+  "concepts": [
+    {
+      "id": "C01",
+      "name": "观察事实与推测",
+      "wiki_page": "wiki/concepts/observation-vs-inference.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R04",
+        "R06"
+      ],
+      "teaching_goal": "面对两个新场景能各说出3条事实+1条推测，并提出一条核实方法。",
+      "abilities": [
+        "观察分析",
+        "批判性思考"
+      ],
+      "hard_prerequisites": [],
+      "interleavable": [],
+      "published_cards": [
+        {
+          "id": "ST-C01-01",
+          "version": "1.1.0",
+          "sha256": "55597a243579d22e9fdd2e539bda7d25a3a0f72e57c637c7f28da77ee5757cbd"
+        }
+      ],
+      "teaching_status": "pilot_published",
+      "formal_teaching_available": true
+    },
+    {
+      "id": "C02",
+      "name": "多属性比较",
+      "wiki_page": "wiki/concepts/attribute-comparison.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R01",
+        "R04"
+      ],
+      "teaching_goal": "对陌生材料能选至少2个稳定属性并说清异同。",
+      "abilities": [
+        "观察分析",
+        "语言表达"
+      ],
+      "hard_prerequisites": [
+        "C01"
+      ],
+      "interleavable": [],
+      "published_cards": [
+        {
+          "id": "ST-C02-01",
+          "version": "1.1.0",
+          "sha256": "bfabaf653d13113faf5d72a7ff9adc822e6df336c8d40f69c553b589822ae349"
+        }
+      ],
+      "teaching_status": "pilot_published",
+      "formal_teaching_available": true
+    },
+    {
+      "id": "C03",
+      "name": "分类与反例",
+      "wiki_page": "wiki/concepts/classification-counterexample.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R01",
+        "R02"
+      ],
+      "teaching_goal": "能完成2条件分类、找出一个真实的反例并说明逻辑作用。",
+      "abilities": [
+        "逻辑推理",
+        "观察分析"
+      ],
+      "hard_prerequisites": [
+        "C02"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C04",
+      "name": "规律识别与检验",
+      "wiki_page": "wiki/concepts/pattern-rule.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R01",
+        "R02"
+      ],
+      "teaching_goal": "在指定规则下无提示完成两道新题并解释生成步骤。",
+      "abilities": [
+        "逻辑推理"
+      ],
+      "hard_prerequisites": [
+        "C02"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C05",
+      "name": "系统枚举",
+      "wiki_page": "wiki/concepts/systematic-enumeration.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R02",
+        "R07"
+      ],
+      "teaching_goal": "新搭配题中能列出全部组合并解释为何完整。",
+      "abilities": [
+        "逻辑推理",
+        "独立解决/元认知"
+      ],
+      "hard_prerequisites": [
+        "C03",
+        "C04"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C06",
+      "name": "条件推理及逆推陷阱",
+      "wiki_page": "wiki/concepts/conditional-reasoning.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R01",
+        "R07"
+      ],
+      "teaching_goal": "三组新情境正确分辨正向推论与无效逆推，并能举例说明。",
+      "abilities": [
+        "逻辑推理",
+        "批判性思考"
+      ],
+      "hard_prerequisites": [
+        "C01",
+        "C05"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C07",
+      "name": "证据可靠性与替代解释",
+      "wiki_page": "wiki/concepts/evidence-and-alternatives.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R04",
+        "R06",
+        "R07"
+      ],
+      "teaching_goal": "能针对两则新主张指出一个证据局限和一个可行核实动作。",
+      "abilities": [
+        "批判性思考",
+        "观察分析"
+      ],
+      "hard_prerequisites": [
+        "C01",
+        "C06"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C08",
+      "name": "结构化论证与倾听",
+      "wiki_page": "wiki/concepts/structured-argument.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R04",
+        "R05",
+        "R09"
+      ],
+      "teaching_goal": "能提供两个关联理由及一个不歪曲的反方理由。",
+      "abilities": [
+        "语言表达",
+        "批判性思考"
+      ],
+      "hard_prerequisites": [
+        "C07"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C09",
+      "name": "复杂问题与约束分解",
+      "wiki_page": "wiki/concepts/constraint-decomposition.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R02",
+        "R07"
+      ],
+      "teaching_goal": "能整理全部约束并说明为什么所列方案有效且无遗漏。",
+      "abilities": [
+        "独立解决/元认知",
+        "逻辑推理"
+      ],
+      "hard_prerequisites": [
+        "C05",
+        "C06"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C10",
+      "name": "多视角与方案权衡",
+      "wiki_page": "wiki/concepts/perspectives-tradeoffs.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R05",
+        "R08"
+      ],
+      "teaching_goal": "能公平呈现至少两方需求和一个有理由的取舍。",
+      "abilities": [
+        "批判性思考",
+        "语言表达"
+      ],
+      "hard_prerequisites": [
+        "C08",
+        "C09"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C11",
+      "name": "创造性发散",
+      "wiki_page": "wiki/concepts/divergent-ideas.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R08",
+        "R04"
+      ],
+      "teaching_goal": "能提出3个不同且合理解释的构想，能选一个符合约束。",
+      "abilities": [
+        "创造性思维",
+        "语言表达"
+      ],
+      "hard_prerequisites": [],
+      "interleavable": [
+        "C02",
+        "C09"
+      ],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C12",
+      "name": "原型测试与迭代",
+      "wiki_page": "wiki/concepts/prototype-testing.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R08",
+        "R06"
+      ],
+      "teaching_goal": "能定义测试、留下结果记录并作有理由的调整。",
+      "abilities": [
+        "创造性思维",
+        "独立解决/元认知"
+      ],
+      "hard_prerequisites": [
+        "C09",
+        "C11"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C13",
+      "name": "跨情境策略选择",
+      "wiki_page": "wiki/concepts/strategy-transfer.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R02",
+        "R06",
+        "R07"
+      ],
+      "teaching_goal": "在至少2类从未做过的任务中独立使用恰当策略，H0—H1。",
+      "abilities": [
+        "独立解决/元认知",
+        "逻辑推理",
+        "批判性思考"
+      ],
+      "hard_prerequisites": [
+        "C05",
+        "C07",
+        "C09"
+      ],
+      "interleavable": [],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    },
+    {
+      "id": "C14",
+      "name": "计划、监控与反思",
+      "wiki_page": "wiki/concepts/plan-monitor-reflect.md",
+      "source_registry": "references/sources.md",
+      "sources": [
+        "R06",
+        "R09"
+      ],
+      "teaching_goal": "能指认一次自己的错误原因，选择一个下一次可执行动作，并在后续新题运用。",
+      "abilities": [
+        "独立解决/元认知"
+      ],
+      "hard_prerequisites": [],
+      "interleavable": [
+        "C01",
+        "C09"
+      ],
+      "published_cards": [],
+      "teaching_status": "blocked_no_published_card",
+      "formal_teaching_available": false
+    }
+  ]
+}

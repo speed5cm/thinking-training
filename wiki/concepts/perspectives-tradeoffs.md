@@ -6,6 +6,20 @@
 - **先修**：[[concepts/structured-argument]], [[concepts/constraint-decomposition]]
 - **概念定义（项目原创表述）**：不同角色可能有不同需求；选择方案需要说明标准、收益和代价。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "批判性思考",
+    "语言表达"
+  ],
+  "hard_prerequisites": [
+    "C08",
+    "C09"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 分别说两方需求→提出备选→明确评价标准→比较取舍。
 

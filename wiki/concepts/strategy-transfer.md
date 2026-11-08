@@ -6,6 +6,22 @@
 - **先修**：[[concepts/systematic-enumeration]], [[concepts/evidence-and-alternatives]], [[concepts/constraint-decomposition]]
 - **概念定义（项目原创表述）**：不依赖旧题表面特征，识别新任务中隐含的结构并自主选择策略。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "独立解决/元认知",
+    "逻辑推理",
+    "批判性思考"
+  ],
+  "hard_prerequisites": [
+    "C05",
+    "C07",
+    "C09"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 先说题目要做什么→从列举/画图/检验证据中选方法→执行→复核→必要时换策略。
 

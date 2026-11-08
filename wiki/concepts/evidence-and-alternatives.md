@@ -6,6 +6,20 @@
 - **先修**：[[concepts/observation-vs-inference]], [[concepts/conditional-reasoning]]
 - **概念定义（项目原创表述）**：证据只能支持与其范围相符的结论；判断信息来源、样本范围和可能混杂因素。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "批判性思考",
+    "观察分析"
+  ],
+  "hard_prerequisites": [
+    "C01",
+    "C06"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 写出主张→找现有事实→判断信息来源/样本→想替代解释→提出下一步核实。
 

@@ -6,6 +6,20 @@
 - **先修**：[[concepts/constraint-decomposition]], [[concepts/divergent-ideas]]
 - **概念定义（项目原创表述）**：低成本制作可测试的原型，事先定评价标准，记录结果并改一次。
 
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "创造性思维",
+    "独立解决/元认知"
+  ],
+  "hard_prerequisites": [
+    "C09",
+    "C11"
+  ],
+  "interleavable": []
+}
+-->
+
 ## 教学动作
 选方案→画草图→做原型→按同一标准测试→只改一个关键因素再测。
 

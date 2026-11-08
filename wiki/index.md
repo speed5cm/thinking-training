@@ -1,5 +1,7 @@
 # Wiki Index — 思维训练知识点
 
+> 本目录是课程知识维护源；试点 Wiki 为 coach 兼容快照，变更须人工核对，见 `../docs/roadmap-design.md`。Roadmap 从本索引及概念页生成，12周为参考规划。
+
 > 采用 Wiki Ingest 的「一知识实体一页」及 `[[concepts/slug]]`链接模式。课程原创材料不从受限教材批量导入。
 
 | 编号 | 概念 | 主要周次 | 先修编号 |
