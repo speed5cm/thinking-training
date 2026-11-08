@@ -75,14 +75,20 @@ def gate(concept):
         read_text(target)
     return [{'path': str(p.relative_to(ROOT)), 'sha256': digest(p)} for p in required]
 
-def load_card(qid, concept=None):
+def load_card(qid, concept=None, version=None):
     path = card_path(qid)
+    if version is not None:
+        if not isinstance(version, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,63}', version) or '..' in version:
+            raise Stop('题卡版本无效')
+        path = ROOT / 'cards' / 'archive' / qid / (version + '.json')
     card = json_read(path)
     required = ('id','version','concept','lesson','age','difficulty','stem','answer','explanation','hints','common_errors','source','parallel_demo','status')
     if any(k not in card for k in required) or card['id'] != qid or card['status'] != 'draft':
         raise Stop('题卡格式不完整')
     if card['concept'] not in ('C01','C02') or (concept and card['concept'] != concept):
         raise Stop('概念不匹配')
+    if version is not None and card['version'] != version:
+        raise Stop('归档题卡版本不匹配')
     if not isinstance(card['hints'], list) or len(card['hints']) != 3 or any(not isinstance(x,str) or not x.strip() for x in card['hints']):
         raise Stop('题卡必须有三个提示')
     if card['source'] != 'wiki/sources/project-research.md':
@@ -185,16 +191,16 @@ def authorize_c02_locked(folder):
     try:
         records = evidence.load_evidence(folder)
         seen = set()
+        eligible_records = []
         for record in records:
             key = (record['session_id'], record['card']['id'])
             if key in seen: raise Stop('重复证据')
             seen.add(key)
-            evidence.current_card(record['concept'], record['card'])
-        if evidence.evaluate(records, 'C01')['mastery'] != 'mastered_candidate':
+            if evidence.current_card(record['concept'], record['card']): eligible_records.append(record)
+        if evidence.evaluate(eligible_records, 'C01')['mastery'] != 'mastered_candidate':
             raise Stop('C01 掌握证据不足，C02 不可授权')
         confirmation = json_read(folder / 'mastery-confirmation.json')
-        if (confirmation.get('concept') != 'C01' or confirmation.get('confirmation') != 'parent'
-                or confirmation.get('evidence_digest') != evidence.evidence_digest(records)):
+        if not evidence.confirmation_valid(confirmation, evidence.c01_digest(records), evidence.evidence_digest(records)):
             raise Stop('C01 家长确认缺失或已过期')
         curriculum = evidence.roadmap.build(ROOT.parent)
         c02 = next(x for x in curriculum['concepts'] if x['id'] == 'C02')

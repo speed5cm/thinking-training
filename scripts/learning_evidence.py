@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Capture pilot observations and make conservative, non-executing recommendations."""
 import argparse
+import contextlib
 import datetime as dt
 import fcntl
 import hashlib
@@ -9,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('coach_for_evidence', ROOT / 'pilot-c01-c02/scripts/coach.py')
@@ -40,12 +42,20 @@ def load_evidence(folder):
         raise EvidenceError('证据文件损坏，停止处理') from exc
 
 def current_card(concept, ref):
-    if concept not in ('C01', 'C02') or ref['id'] not in coach.MODES[concept]:
+    if concept not in ('C01', 'C02'):
         raise EvidenceError('不属于已发布训练范围')
     coach.gate(concept)
-    card, sha = coach.load_card(ref['id'], concept)
-    if ref['version'] != card['version'] or ref['sha256'] != sha:
-        raise EvidenceError('历史题卡版本与当前发布不一致')
+    if ref['id'] in coach.MODES[concept]:
+        card, sha = coach.load_card(ref['id'], concept)
+        if ref['version'] == card['version']:
+            if ref['sha256'] != sha:
+                raise EvidenceError('题卡摘要不匹配')
+            return True
+    card, sha = coach.load_card(ref['id'], concept, version=ref['version'])
+    if ref['sha256'] != sha:
+        raise EvidenceError('历史题卡归档摘要不匹配')
+    # Authentic old records remain visible but require separate review before reuse.
+    return False
 
 def capture(learner, session_id, extra):
     if not isinstance(extra, dict) or set(extra) != {'reason_quote', 'transfer', 'parent_feedback'}:
@@ -58,7 +68,8 @@ def capture(learner, session_id, extra):
         or (transfer['parent_verified_novel'] and (transfer['status'] != 'yes' or not transfer['observation'].strip()))):
         raise EvidenceError('补充字段格式无效')
     folder = get_folder(learner)
-    with (folder / '.lock').open('a') as lock:
+    with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
+        fcntl.flock(publication, fcntl.LOCK_SH)
         fcntl.flock(lock, fcntl.LOCK_EX)
         events = coach.load_events(folder)
         starts = [x for x in events if x.get('type') == 'start' and x.get('session_id') == session_id]
@@ -70,7 +81,8 @@ def capture(learner, session_id, extra):
         if len(questions) != 1 or questions[0]['concept'] != concept:
             raise EvidenceError('会话题卡不符合试点范围')
         ref = questions[0]
-        current_card(concept, ref)
+        if not current_card(concept, ref):
+            raise EvidenceError('只能采集当前已发布题卡的会话')
         session_events = [x for x in events if x.get('session_id') == session_id]
         attempts = [i for i, e in enumerate(session_events) if e.get('type') == 'attempt' and e.get('question') == ref['id']]
         if not attempts:
@@ -122,51 +134,90 @@ def evaluate(records, concept):
 def evidence_digest(records):
     return hashlib.sha256(json.dumps(records, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
 
-def assess(learner):
+def c01_digest(records):
+    return evidence_digest([record for record in records if record['concept'] == 'C01'])
+
+def confirmation_valid(confirmation, c01_sha, all_sha):
+    if confirmation.get('concept') != 'C01' or confirmation.get('confirmation') != 'parent':
+        return False
+    if confirmation.get('digest_scope') == 'C01':
+        return confirmation.get('evidence_digest') == c01_sha
+    # Legacy confirmations are safe only while their original full snapshot matches.
+    return 'digest_scope' not in confirmation and confirmation.get('evidence_digest') == all_sha
+
+def assess(learner, already_locked=False):
     folder = get_folder(learner)
-    with (folder / '.lock').open('a') as lock:
-        fcntl.flock(lock, fcntl.LOCK_SH)
+    with contextlib.ExitStack() as stack:
+        if not already_locked:
+            publication = stack.enter_context((coach.ROOT / '.publication.lock').open('a'))
+            lock = stack.enter_context((folder / '.lock').open('a'))
+            fcntl.flock(publication, fcntl.LOCK_SH)
+            fcntl.flock(lock, fcntl.LOCK_SH)
         records = load_evidence(folder)
         seen = set()
+        eligible_records = []
         for record in records:
             key = (record['session_id'], record['card']['id'])
             if key in seen:
                 raise EvidenceError('重复证据，停止评估')
             seen.add(key)
-            current_card(record['concept'], record['card'])
-        return {'assessments': [evaluate(records, c) for c in ('C01', 'C02')],
+            if current_card(record['concept'], record['card']):
+                eligible_records.append(record)
+        return {'assessments': [evaluate(eligible_records, c) for c in ('C01', 'C02')],
+                'historical_evidence_pending_review': len(records) - len(eligible_records),
                 'evidence_digest': evidence_digest(records),
+                'c01_evidence_digest': c01_digest(records),
                 'training_status': coach.status(coach.session(coach.load_events(folder)))}
 
 def confirm_c01(learner):
     """Explicit parent confirmation, valid only for the exact current evidence."""
     folder = get_folder(learner)
-    with (folder / '.lock').open('a') as lock:
+    with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
+        fcntl.flock(publication, fcntl.LOCK_SH)
         fcntl.flock(lock, fcntl.LOCK_EX)
         records = load_evidence(folder)
         seen = set()
+        eligible_records = []
         for record in records:
             key = (record['session_id'], record['card']['id'])
             if key in seen:
                 raise EvidenceError('重复证据，停止确认')
             seen.add(key)
-            current_card(record['concept'], record['card'])
-        if evaluate(records, 'C01')['mastery'] != 'mastered_candidate':
+            if current_card(record['concept'], record['card']):
+                eligible_records.append(record)
+        if evaluate(eligible_records, 'C01')['mastery'] != 'mastered_candidate':
             raise EvidenceError('C01 证据不足，不能确认掌握')
-        record = {'concept': 'C01', 'evidence_digest': evidence_digest(records),
+        record = {'concept': 'C01', 'digest_scope': 'C01', 'evidence_digest': c01_digest(records),
                   'confirmed_at': dt.datetime.now(dt.timezone.utc).isoformat(),
                   'confirmation': 'parent'}
         path = folder / 'mastery-confirmation.json'
-        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(fd, 'w', encoding='utf-8') as f:
-            json.dump(record, f, ensure_ascii=False)
-            f.write('\n')
-            f.flush()
-            os.fsync(f.fileno())
-        return {'confirmed': 'C01', 'note': '证据发生变化后需重新评估和确认。'}
+        fd, temporary = tempfile.mkstemp(prefix='.confirmation-', dir=folder)
+        try:
+            os.fchmod(fd, 0o600)
+            with os.fdopen(fd, 'w', encoding='utf-8') as f:
+                json.dump(record, f, ensure_ascii=False)
+                f.write('\n')
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temporary, path)
+            directory_fd = os.open(folder, os.O_RDONLY)
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        return {'confirmed': 'C01', 'note': 'C01 证据发生变化后需重新评估和确认。'}
 
-def recommend(learner):
-    assessment = assess(learner)
+def recommend(learner, already_locked=False):
+    if not already_locked:
+        folder = get_folder(learner)
+        with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
+            fcntl.flock(publication, fcntl.LOCK_SH)
+            fcntl.flock(lock, fcntl.LOCK_SH)
+            return recommend(learner, already_locked=True)
+    assessment = assess(learner, already_locked=already_locked)
     data = roadmap.build(ROOT)
     items = {c['id']: c for c in data['concepts']}
     first = assessment['assessments'][0]
@@ -178,8 +229,7 @@ def recommend(learner):
             confirmation = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
         except (ValueError, UnicodeError):
             confirmation = {}
-        if (confirmation.get('confirmation') != 'parent' or confirmation.get('concept') != 'C01'
-            or confirmation.get('evidence_digest') != assessment['evidence_digest']):
+        if not confirmation_valid(confirmation, assessment['c01_evidence_digest'], assessment['evidence_digest']):
             return {'action': 'parent_review', 'concept': None, 'reason': 'C01 候选须家长复核确认', 'assessment': assessment}
         second = items['C02']
         if second['hard_prerequisites'] != ['C01'] or not second['formal_teaching_available']:

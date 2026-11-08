@@ -38,15 +38,39 @@ def parse_date(value):
     if date.tzinfo is None: raise Invalid('证据时间必须带时区')
     return date.astimezone(dt.timezone.utc)
 
-def queue(records):
+def task_id(item):
+    return sha([item['concept'], item['evidence_session'], item['evidence_at']])
+
+def event_task_id(event, history):
+    if 'task_id' in event:
+        return event['task_id']
+    # Existing experimental records bind completions to a plan and concept.
+    for item in history:
+        if item['version'] == event.get('plan_version'):
+            matches = [q for q in item['review_queue'] if q['concept'] == event.get('concept')]
+            if len(matches) == 1:
+                return task_id(matches[0])
+    raise Invalid('历史复习事件无法定位任务，停止处理')
+
+def queue(records, history, events):
     latest={}
     for r in records:
         when=parse_date(r['captured_at'])
         if r['concept'] not in latest or when > latest[r['concept']][0]: latest[r['concept']]=(when,r)
-    return [{'concept':cid,'evidence_session':r['session_id'], 'evidence_at':when.isoformat(),
-             'due_at':(when+dt.timedelta(days=1)).isoformat(), 'status':'pending',
-             'reason':'已有正式训练观察；一天后复习为实验安排，不表示掌握'}
-            for cid,(when,r) in sorted(latest.items())]
+    result = [dict(q) for q in history[-1]['review_queue']] if history else []
+    for item in result:
+        item['task_id'] = task_id(item)
+    completed_sessions = {event['session_id'] for event in events}
+    for cid,(when,r) in sorted(latest.items()):
+        old = [q for q in result if q['concept'] == cid]
+        if r['session_id'] in completed_sessions or any(q['evidence_session'] == r['session_id'] for q in old):
+            continue
+        item = {'concept':cid,'evidence_session':r['session_id'], 'evidence_at':when.isoformat(),
+                'due_at':(when+dt.timedelta(days=1)).isoformat(), 'status':'pending',
+                'reason':'已有正式训练观察；一天后复习为实验安排，不表示掌握'}
+        item['task_id'] = task_id(item)
+        result.append(item)
+    return result
 
 def operate(action, learner, candidate=None, session=None):
     folder=evidence.get_folder(learner); dest=folder/'sigma';dest.mkdir(mode=0o700,exist_ok=True)
@@ -64,7 +88,7 @@ def operate(action, learner, candidate=None, session=None):
             # Recheck Wiki and snapshots while holding the shared authorization locks.
             if planner.context(learner, already_locked=True) != ctx: raise Invalid('规划输入发生变化，请重试')
             item={'version':len(store['history'])+1,'plan_sha256':sha(plan),'created_at':dt.datetime.now(dt.timezone.utc).isoformat(),
-                  'inputs':{k:ctx[k] for k in ('curriculum_digest','learner_digest','evidence_digest')},'plan':plan,'review_queue':queue(records)}
+                  'inputs':{k:ctx[k] for k in ('curriculum_digest','learner_digest','evidence_digest')},'plan':plan,'review_queue':queue(records,store['history'],store.get('review_events',[]))}
             store['history'].append(item);write(path,store)
         if not store['history']: return {'status':'missing','review_queue':[]}
         item=store['history'][-1]
@@ -73,16 +97,18 @@ def operate(action, learner, candidate=None, session=None):
             matching=[r for r in records if r['session_id'] == session]
             if len(matching) != 1: raise Invalid('须引用唯一已采集正式证据')
             record=matching[0]
-            pending=[q for q in item['review_queue'] if q['concept']==record['concept'] and q['evidence_session'] != session and parse_date(record['captured_at']) > parse_date(q['evidence_at'])]
             events=store.setdefault('review_events',[])
-            if len(pending) != 1 or any(e['plan_version']==item['version'] and e['concept']==record['concept'] for e in events):
+            completed = {event_task_id(e, store['history']) for e in events}
+            pending=[q for q in item['review_queue'] if q['concept']==record['concept'] and q['evidence_session'] != session and task_id(q) not in completed and parse_date(record['captured_at']) > parse_date(q['evidence_at'])]
+            if len(pending) != 1 or any(e['session_id'] == session for e in events):
                 raise Invalid('没有可由此证据完成的复习')
-            events.append({'plan_version':item['version'], 'concept':record['concept'], 'session_id':session,'evidence_at':record['captured_at']})
+            events.append({'task_id':task_id(pending[0]), 'plan_version':item['version'], 'concept':record['concept'], 'session_id':session,'evidence_at':record['captured_at']})
             write(path,store)
         if item['plan_sha256'] != sha(item['plan']): raise Invalid('规划内容摘要不匹配')
         stale=any(item['inputs'][k] != ctx[k] for k in item['inputs'])
         now=dt.datetime.now(dt.timezone.utc)
-        reviews=[{**q,'due':parse_date(q['due_at']) <= now, 'status':'completed' if any(e['plan_version']==item['version'] and e['concept']==q['concept'] for e in store.get('review_events',[])) else 'pending'} for q in item['review_queue']]
+        completed = {event_task_id(e, store['history']) for e in store.get('review_events',[])}
+        reviews=[{**q,'task_id':task_id(q),'due':parse_date(q['due_at']) <= now, 'status':'completed' if task_id(q) in completed else 'pending'} for q in item['review_queue']]
         return {'status':'stale' if stale else 'current','version':item['version'],'plan_sha256':item['plan_sha256'], 'inputs':item['inputs'],'review_queue':reviews,'notice':'复习安排非掌握判定或教学授权；须重新检查实时门禁。'}
 
 def main():

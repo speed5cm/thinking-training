@@ -101,6 +101,18 @@ class EvidenceTests(unittest.TestCase):
             with patch.object(mod, 'evidence_digest', return_value='changed'):
                 self.assertEqual(mod.recommend('a')['action'], 'parent_review')
 
+    def test_confirmation_scope_and_legacy_fail_closed(self):
+        c01 = [{'concept': 'C01', 'session_id': 'synthetic-1'}]
+        both = c01 + [{'concept': 'C02', 'session_id': 'synthetic-2'}]
+        scoped = {'concept': 'C01', 'confirmation': 'parent', 'digest_scope': 'C01',
+                  'evidence_digest': mod.c01_digest(c01)}
+        legacy = {'concept': 'C01', 'confirmation': 'parent',
+                  'evidence_digest': mod.evidence_digest(c01)}
+        self.assertTrue(mod.confirmation_valid(scoped, mod.c01_digest(both), mod.evidence_digest(both)))
+        self.assertFalse(mod.confirmation_valid(legacy, mod.c01_digest(both), mod.evidence_digest(both)))
+        self.assertTrue(mod.confirmation_valid(legacy, mod.c01_digest(c01), mod.evidence_digest(c01)))
+        self.assertFalse(mod.confirmation_valid({**scoped, 'digest_scope': 'unknown'}, mod.c01_digest(both), mod.evidence_digest(both)))
+
     def test_recommendation_is_only_c01_and_respects_live_gate(self):
         data = {'concepts':[{'id':'C01','formal_teaching_available':True}, {'id':'C02','formal_teaching_available':True}]}
         with patch.object(mod.roadmap, 'build', return_value=data):
