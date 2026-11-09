@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Atomic Sigma session snapshot with a C01 synthetic content gate."""
+"""Atomic Sigma session snapshot with synthetic content and progression gates."""
 import argparse
 import copy
 import datetime as dt
@@ -198,16 +198,17 @@ def validate_new_events(previous, current, auth, blocked):
             required = {'type', 'concept', 'session_id', 'question_id', 'purpose', 'text', 'wiki_sources', 'authorization_sha256'}
             optional = {'review_task_id', 'context', 'dimensions', 'answer_basis', 'practice'}
             if (not required <= set(event) or set(event) - required - optional or qid in questions or pending
-                    or event['concept'] != 'C01' or event['purpose'] not in ('teaching', 'assessment')
+                    or event['concept'] != auth['concept'] or event['purpose'] not in ('teaching', 'assessment')
                     or not nonempty(event['session_id']) or event['session_id'] != previous['session'] or not nonempty(event['text'])
                     or event['authorization_sha256'] != auth['authorization_sha256']):
                 raise Invalid('问题字段、用途、授权或顺序无效')
             if 'review_task_id' in event and not nonempty(event['review_task_id']):
                 raise Invalid('复习任务 ID 无效')
             sources = event['wiki_sources']
-            required_sources = {'wiki/concepts/observation-vs-inference.md', 'pilot-c01-c02/wiki/concepts/C01.md'}
+            basis = authorization.concept_basis(event['concept'])
+            required_sources = basis['required_sources']
             if (not isinstance(sources, dict) or not required_sources <= set(sources)
-                    or not set(sources) <= set(authorization.FILES)):
+                    or not set(sources) <= set(basis['files'])):
                 raise Invalid('Wiki 来源不完整或未授权')
             for path, digest in sources.items():
                 if not isinstance(digest, str) or digest != evidence.coach.digest(authorization.ROOT / path):
@@ -332,14 +333,31 @@ def operate(learner, proposed=None, expected=None):
         blocked = None
         if added:
             try:
-                auth = authorization.check('C01', learner)
+                first = added[0]
+                if is_lifecycle:
+                    if not authorization.synthetic_learner(learner):
+                        raise authorization.Invalid('仅支持隔离合成学习者')
+                    prior_questions = [e for e in previous['turns'] if e.get('type') == 'question']
+                    concept = prior_questions[-1].get('concept') if prior_questions else None
+                elif first.get('type') == 'question':
+                    concept = first.get('concept')
+                else:
+                    matches = [e for e in previous['turns'] if e.get('type') == 'question'
+                               and e.get('question_id') == first.get('question_id')]
+                    concept = matches[0].get('concept') if len(matches) == 1 else None
+                auth = authorization.check(concept, learner) if concept is not None else None
                 # Reauthorization after a question cannot retroactively authorize its answer.
                 if added[0].get('type') == 'answer':
                     matches = [e for e in previous['turns'] if e.get('type') == 'question' and e.get('question_id') == added[0].get('question_id')]
                     if len(matches) == 1 and matches[0].get('authorization_sha256') != auth['authorization_sha256']:
                         blocked = 'authorization_or_content_changed'
-            except (authorization.Invalid, evidence.coach.Stop, OSError, ValueError, TypeError, KeyError):
+            except (authorization.Invalid, evidence.EvidenceError, evidence.coach.Stop, OSError, ValueError, TypeError, KeyError):
                 blocked = 'authorization_or_content_changed'
+            if not blocked and first.get('type') in ('question', 'support', 'answer', 'analysis'):
+                try:
+                    evidence.authorize_concept_locked(learner, concept)
+                except (authorization.Invalid, evidence.EvidenceError, evidence.coach.Stop, OSError, ValueError, TypeError, KeyError) as exc:
+                    raise Invalid('路线、先修或概念门禁不可用: ' + str(exc)) from exc
         if legacy_answer:
             blocked = 'legacy_session_unverified'
         if blocked and is_lifecycle:

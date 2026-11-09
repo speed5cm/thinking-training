@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture pilot observations and make conservative, non-executing recommendations."""
+"""Recompute isolated dynamic evidence and enforce concept gates."""
 import argparse
 import contextlib
 import datetime as dt
@@ -7,10 +7,8 @@ import fcntl
 import hashlib
 import importlib.util
 import json
-import os
 from pathlib import Path
 import sys
-import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('coach_for_evidence', ROOT / 'pilot-c01-c02/scripts/coach.py')
@@ -41,215 +39,13 @@ def load_evidence(folder):
     except (ValueError, UnicodeError) as exc:
         raise EvidenceError('证据文件损坏，停止处理') from exc
 
-def current_card(concept, ref):
-    if concept not in ('C01', 'C02'):
-        raise EvidenceError('不属于已发布训练范围')
-    coach.gate(concept)
-    if ref['id'] in coach.MODES[concept]:
-        card, sha = coach.load_card(ref['id'], concept)
-        if ref['version'] == card['version']:
-            if ref['sha256'] != sha:
-                raise EvidenceError('题卡摘要不匹配')
-            return True
-    card, sha = coach.load_card(ref['id'], concept, version=ref['version'])
-    if ref['sha256'] != sha:
-        raise EvidenceError('历史题卡归档摘要不匹配')
-    # Authentic old records remain visible but require separate review before reuse.
-    return False
-
-def capture(learner, session_id, extra):
-    if not isinstance(extra, dict) or set(extra) != {'reason_quote', 'transfer', 'parent_feedback'}:
-        raise EvidenceError('补充字段须为 reason_quote、transfer、parent_feedback')
-    transfer = extra['transfer']
-    if (not isinstance(extra['reason_quote'], str) or not isinstance(extra['parent_feedback'], str)
-        or not isinstance(transfer, dict) or set(transfer) != {'status', 'observation', 'parent_verified_novel'}
-        or transfer['status'] not in ('unknown', 'no', 'yes') or not isinstance(transfer['observation'], str)
-        or type(transfer['parent_verified_novel']) is not bool
-        or (transfer['parent_verified_novel'] and (transfer['status'] != 'yes' or not transfer['observation'].strip()))):
-        raise EvidenceError('补充字段格式无效')
-    folder = get_folder(learner)
-    with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
-        fcntl.flock(publication, fcntl.LOCK_SH)
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        events = coach.load_events(folder)
-        starts = [x for x in events if x.get('type') == 'start' and x.get('session_id') == session_id]
-        if len(starts) != 1 or starts[0].get('mode') not in ('C01', 'C02'):
-            raise EvidenceError('会话不存在或不是正式 C01/C02 训练')
-        start = starts[0]
-        concept = start['mode']
-        questions = start['questions']
-        if len(questions) != 1 or questions[0]['concept'] != concept:
-            raise EvidenceError('会话题卡不符合试点范围')
-        ref = questions[0]
-        if not current_card(concept, ref):
-            raise EvidenceError('只能采集当前已发布题卡的会话')
-        session_events = [x for x in events if x.get('session_id') == session_id]
-        attempts = [i for i, e in enumerate(session_events) if e.get('type') == 'attempt' and e.get('question') == ref['id']]
-        if not attempts:
-            raise EvidenceError('会话尚无作答')
-        if coach.status(session_events) != 'completed':
-            raise EvidenceError('会话尚未结束；结束后采集最后一次作答')
-        i = attempts[-1]
-        attempt = session_events[i]
-        previous = [x for x in session_events[:i] if x.get('question') == ref['id']]
-        hints = [x['level'] for x in previous if x.get('type') == 'hint']
-        support = [x['type'] for x in previous if x.get('type') in ('demo', 'final_explanation')]
-        records = load_evidence(folder)
-        if any(r.get('session_id') == session_id and r.get('card', {}).get('id') == ref['id'] for r in records):
-            raise EvidenceError('该会话题卡已经采集')
-        ai = attempt['ai_assessment']
-        record = {'schema_version': 1, 'captured_at': dt.datetime.now(dt.timezone.utc).isoformat(),
-                  'session_id': session_id, 'concept': concept,
-                  'card': {k: ref[k] for k in ('id', 'version', 'sha256')},
-                  'raw_response': attempt['raw_response'], 'reason_quote': extra['reason_quote'],
-                  'ai_temporary_correctness': ai['correctness'], 'explanation_quality': ai['explanation'],
-                  'hint_level': max(hints, default=0), 'prior_attempts': len(attempts) - 1, 'prior_support': support,
-                  'transfer': transfer, 'coach_parent_feedback': [x['text'] for x in session_events if x.get('type') == 'parent_feedback'],
-                  'parent_feedback': extra['parent_feedback']}
-        fd = os.open(folder / 'evidence.jsonl', os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
-        with os.fdopen(fd, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(record, ensure_ascii=False, separators=(',', ':')) + '\n')
-            f.flush()
-            os.fsync(f.fileno())
-        return {'captured': True, 'session_id': session_id, 'concept': concept, 'note': '采集不代表掌握'}
-
 def evidence_digest(records):
     return hashlib.sha256(json.dumps(records, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
 
-def destination_basis(learner):
-    """Read the C02 content authorization and curriculum under publication lock."""
-    import concept_authorization as authorization
-    try:
-        auth = authorization.check('C02', learner)
-    except (authorization.Invalid, authorization.evidence.coach.Stop, OSError, ValueError, KeyError, TypeError) as exc:
-        raise EvidenceError('C02 授权不可用: ' + str(exc)) from exc
-    data = roadmap.build(ROOT)
-    c02 = next(c for c in data['concepts'] if c['id'] == 'C02')
-    if c02['hard_prerequisites'] != ['C01'] or not c02['formal_teaching_available']:
-        raise EvidenceError('C02 先修或发布状态不满足')
-    # A confirmation is tied to the complete current root Wiki and C02 authorization.
-    paths = [ROOT / 'wiki/index.md', ROOT / 'curriculum/12-week-plan.md',
-             ROOT / 'references/sources.md', ROOT / 'references/pedagogy.md']
-    paths += sorted((ROOT / 'wiki/concepts').glob('*.md'))
-    wiki = {str(p.relative_to(ROOT)): coach.digest(p) for p in paths}
-    return {'authorization': auth, 'wiki_digest': evidence_digest([wiki]), 'prerequisites': c02['hard_prerequisites']}
+DYNAMIC_RULE_VERSION = 'dynamic-candidate-v1'
 
 
-def confirmation_valid(confirmation, candidate, destination):
-    return (isinstance(confirmation, dict) and confirmation.get('concept') == 'C01'
-            and confirmation.get('confirmation') == 'synthetic_simulation'
-            and confirmation.get('rule_version') == candidate.get('rule_version')
-            and confirmation.get('evidence_digest') == candidate.get('evidence_digest')
-            and confirmation.get('destination_digest') == evidence_digest([destination]))
-
-
-def assess(learner, already_locked=False):
-    folder = get_folder(learner)
-    with contextlib.ExitStack() as stack:
-        if not already_locked:
-            publication = stack.enter_context((coach.ROOT / '.publication.lock').open('a'))
-            lock = stack.enter_context((folder / '.lock').open('a'))
-            fcntl.flock(publication, fcntl.LOCK_SH)
-            fcntl.flock(lock, fcntl.LOCK_SH)
-        dynamic = dynamic_candidate(learner, already_locked=True)
-        records = load_evidence(folder)
-        return {'assessments': [{'concept':'C01',
-                  'mastery':'mastered_candidate' if dynamic['candidate'] else 'pending_confirmation',
-                  'learning_progress':{'evidence_opportunities':len(dynamic['evidence'])},
-                  'dynamic_candidate':dynamic}],
-                'historical_evidence_pending_review':len(records),
-                'evidence_digest':dynamic['evidence_digest'],
-                'c01_evidence_digest':dynamic['evidence_digest'],
-                'training_status':coach.status(coach.session(coach.load_events(folder)))}
-
-
-def confirm_c01(learner, synthetic_confirmation=False):
-    """Record an explicitly labeled synthetic simulation, never a real identity."""
-    import concept_authorization as authorization
-    if not synthetic_confirmation or not authorization.synthetic_learner(learner):
-        raise EvidenceError('仅接受显式标记的合成模拟确认')
-    folder = get_folder(learner)
-    with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
-        fcntl.flock(publication, fcntl.LOCK_SH)
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        candidate = dynamic_candidate(learner, already_locked=True)
-        if not candidate['candidate']:
-            raise EvidenceError('C01 动态证据不足，不能确认')
-        destination = destination_basis(learner)
-        record = {'concept':'C01', 'confirmation':'synthetic_simulation',
-                  'rule_version':candidate['rule_version'], 'evidence_digest':candidate['evidence_digest'],
-                  'destination_digest':evidence_digest([destination]),
-                  'confirmed_at':dt.datetime.now(dt.timezone.utc).isoformat()}
-        path = folder / 'mastery-confirmation.json'
-        fd, temporary = tempfile.mkstemp(prefix='.confirmation-', dir=folder)
-        try:
-            os.fchmod(fd, 0o600)
-            with os.fdopen(fd, 'w', encoding='utf-8') as f:
-                json.dump(record, f, ensure_ascii=False); f.write('\n'); f.flush(); os.fsync(f.fileno())
-            os.replace(temporary, path)
-            directory_fd = os.open(folder, os.O_RDONLY)
-            try: os.fsync(directory_fd)
-            finally: os.close(directory_fd)
-        finally:
-            if os.path.exists(temporary): os.unlink(temporary)
-        return {'confirmed':'C01', 'confirmation':'synthetic_simulation',
-                'rule_version':record['rule_version'], 'evidence_digest':record['evidence_digest'],
-                'note':'仅为合成模拟，不验证真实家长身份。'}
-
-
-def recommend(learner, already_locked=False):
-    if not already_locked:
-        folder = get_folder(learner)
-        with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
-            fcntl.flock(publication, fcntl.LOCK_SH); fcntl.flock(lock, fcntl.LOCK_SH)
-            return recommend(learner, already_locked=True)
-    assessment = assess(learner, already_locked=True)
-    candidate = assessment['assessments'][0]['dynamic_candidate']
-    if not candidate['conditions']['authorization']['met']:
-        return {'action':'blocked', 'concept':None, 'reason':'C01 授权不可用', 'assessment':assessment}
-    if not candidate['conditions']['record_integrity']['met']:
-        return {'action':'blocked', 'concept':None, 'reason':'动态会话记录不完整或冲突', 'assessment':assessment}
-    if not candidate['candidate']:
-        return {'action':'collect_or_reinforce', 'concept':'C01', 'reason':'C01 动态证据不足', 'assessment':assessment}
-    try:
-        destination = destination_basis(learner)
-    except (OSError, ValueError, KeyError, TypeError, coach.Stop) as exc:
-        return {'action':'blocked', 'concept':None, 'reason':'C02 授权、Wiki 或先修不可用: '+str(exc), 'assessment':assessment}
-    path = get_folder(learner) / 'mastery-confirmation.json'
-    try: confirmation = json.loads(path.read_text(encoding='utf-8'))
-    except (OSError, ValueError, UnicodeError): confirmation = {}
-    if not confirmation_valid(confirmation, candidate, destination):
-        return {'action':'parent_review', 'concept':None, 'reason':'C01 候选须明确的合成模拟确认', 'assessment':assessment}
-    return {'action':'consider_next', 'concept':'C02', 'reason':'合成模拟确认有效；入口仍须复核规划、先修和授权', 'assessment':assessment}
-
-
-def authorize_c02_locked(learner):
-    """Caller holds publication and learner locks through the actual use point."""
-    import validate_personal_roadmap as planner
-    import sigma_plan_store as plans
-    recommendation = recommend(learner, already_locked=True)
-    if recommendation['action'] != 'consider_next' or recommendation['concept'] != 'C02':
-        raise EvidenceError('C02 入口阻断: ' + recommendation['reason'])
-    folder = get_folder(learner)
-    history = plans.read(folder / 'sigma' / 'plan-history.json')
-    if history.get('schema_version') != 1 or not isinstance(history.get('history'), list) or not history['history']:
-        raise EvidenceError('缺少已确认的合成路线')
-    item = history['history'][-1]
-    if (item.get('confirmation_kind') != 'synthetic_simulation' or not item.get('confirmation_nonce')
-            or item.get('plan_sha256') != plans.sha(item.get('plan'))):
-        raise EvidenceError('路线确认无效')
-    context = planner.context(learner, already_locked=True)
-    keys = ('curriculum_digest','learner_digest','evidence_digest')
-    if item.get('inputs') != {k:context[k] for k in keys}:
-        raise EvidenceError('路线许可已过期，必须重新确认')
-    planner.validate(item['plan'], context, learner)
-    return {'allowed':'C02', 'confirmation':'synthetic_simulation',
-            'rule_version':recommendation['assessment']['assessments'][0]['dynamic_candidate']['rule_version']}
-
-DYNAMIC_RULE_VERSION = 'C01-dynamic-candidate-v1'
-
-
-def dynamic_candidate(learner, already_locked=False):
+def dynamic_candidate(learner, already_locked=False, concept='C01'):
     """Recompute an isolated candidate from the authoritative session snapshot; never authorize."""
     import concept_authorization as authorization
     import sigma_session_store as sessions
@@ -264,17 +60,25 @@ def dynamic_candidate(learner, already_locked=False):
             fcntl.flock(publication, fcntl.LOCK_SH); fcntl.flock(lock, fcntl.LOCK_SH)
         snapshot = sessions.read_folder(folder)
         try:
-            auth = authorization.check('C01', learner)
+            auth = authorization.check(concept, learner)
             auth_error = ''
         except (authorization.Invalid, authorization.evidence.coach.Stop, coach.Stop, OSError, ValueError, KeyError, TypeError) as exc:
             auth, auth_error = None, str(exc)
-        return aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization)
+        return aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization, concept)
 
 
-def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization):
+def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization, concept='C01'):
     """Pure with respect to records; validates citations against current authorized files."""
     turns = snapshot['turns']
-    digest = evidence_digest([{'rule_version': DYNAMIC_RULE_VERSION, 'snapshot': snapshot,
+    assessment_ids = {e.get('question_id') for e in turns if e.get('type') == 'question'
+                      and e.get('concept') == concept and e.get('purpose') == 'assessment'}
+    last = max((i for i, e in enumerate(turns) if e.get('question_id') in assessment_ids), default=-1)
+    # Prior questions can be cited as transfer or support context. Later routine
+    # teaching does not change the evidence; corrections to prior context do.
+    context_ids = {e.get('question_id') for e in turns[:last + 1] if e.get('type') == 'question'}
+    relevant = [e for i, e in enumerate(turns) if e.get('question_id') in context_ids
+                or (i <= last and e.get('type') in ('session_start', 'session_end', 'session_resume'))]
+    digest = evidence_digest([{'rule_version': DYNAMIC_RULE_VERSION, 'concept': concept, 'turns': relevant,
                                'authorization': auth, 'authorization_error': auth_error}])
     questions, answers, analyses, invalid, interrupted = {}, {}, {}, set(), set()
     errors, timeline, active, previous_end, starts = [], {}, None, None, set()
@@ -353,7 +157,7 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization):
 
     items = []
     for qid, (qi, q) in questions.items():
-        if q.get('concept') != 'C01' or q.get('purpose') != 'assessment':
+        if q.get('concept') != concept or q.get('purpose') != 'assessment':
             continue
         reasons = []
         answer = answers.get(qid)
@@ -368,8 +172,8 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization):
             if (not sessions.nonempty(q['text']) or not sessions.nonempty(q['context']) or not sessions.nonempty(q['answer_basis'])
                 or type(q['practice']) is not bool or not isinstance(q['dimensions'], list) or not q['dimensions']
                 or len(set(q['dimensions'])) != len(q['dimensions']) or any(d not in sessions.DIMENSIONS for d in q['dimensions'])
-                or not {'wiki/concepts/observation-vs-inference.md', 'pilot-c01-c02/wiki/concepts/C01.md'} <= set(q['wiki_sources'])
-                or not set(q['wiki_sources']) <= set(authorization.FILES)):
+                or not authorization.concept_basis(concept)['required_sources'] <= set(q['wiki_sources'])
+                or not set(q['wiki_sources']) <= set(authorization.concept_basis(concept)['files'])):
                 raise ValueError('题目声明不完整')
             for path, sha in q['wiki_sources'].items():
                 if coach.digest(authorization.ROOT / path) != sha: raise ValueError('Wiki 摘要变化')
@@ -380,6 +184,10 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization):
                 sessions.validate_dimensions(value['dimensions'], q, answer[1]['text'])
                 supports = [e for e in turns[:ai] if e.get('type') == 'support']
                 sessions.validate_observations(value['observations'], q, answer[1]['text'], turns[:ai], supports)
+                for observation in ('repetition', 'novel_transfer', 'misconception'):
+                    for ref in value['observations'][observation]['related_question_ids']:
+                        if ref not in questions or questions[ref][1].get('concept') != concept:
+                            raise ValueError('关联问题必须属于同一概念')
                 if value['dimensions']['novel_application']['status'] == 'supported' and value['observations']['novel_transfer']['status'] != 'yes':
                     raise ValueError('陌生应用缺少迁移判断')
         except (sessions.Invalid, OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
@@ -470,33 +278,103 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization):
         blockers if blockers else [x for x in items if x['semantic_usable']], '存在未解决或未知的关键混淆')
     conditions['authorization'] = {'met': bool(auth), 'evidence_ids': [auth['authorization_sha256']] if auth else [], 'reason': auth_error if not auth else ''}
     conditions['record_integrity'] = {'met': not errors, 'evidence_ids': [], 'reason': '；'.join(dict.fromkeys(errors))}
-    return {'concept': 'C01', 'rule_version': DYNAMIC_RULE_VERSION, 'evidence_digest': digest,
+    return {'concept': concept, 'rule_version': DYNAMIC_RULE_VERSION, 'evidence_digest': digest,
             'snapshot_revision': snapshot['revision'], 'candidate': all(c['met'] for c in conditions.values()),
             'conditions': conditions,
             'evidence': [{k: v for k, v in x.items() if k not in ('answer_time', 'analysis_order', 'semantic_usable')} for x in items],
             'note': '只读合成候选，不是掌握、家长确认或教学授权；语义判断仍须 Sigma 复核。'}
 
 
+def current_plan_locked(learner):
+    """Verify the published route while publication and learner locks are held."""
+    import sigma_plan_store as plans
+    import validate_personal_roadmap as planner
+    history = plans.read(get_folder(learner) / 'sigma' / 'plan-history.json').get('history')
+    if not isinstance(history, list) or not history:
+        raise EvidenceError('缺少已确认路线')
+    item = history[-1]
+    ctx = planner.context(learner, already_locked=True)
+    keys = ('curriculum_digest', 'learner_digest', 'evidence_digest')
+    if (item.get('confirmation_kind') != 'synthetic_simulation' or not item.get('confirmation_nonce')
+            or item.get('plan_sha256') != plans.sha(item.get('plan'))
+            or item.get('inputs') != {k: ctx[k] for k in keys}):
+        raise EvidenceError('路线无效或已过期')
+    planner.validate(item['plan'], ctx, learner)
+    return item, ctx
+
+
+def confirmation_path(folder, concept):
+    return folder / 'sigma' / ('mastery-' + concept + '.json')
+
+
+def confirmed_locked(learner, concept, item):
+    candidate = dynamic_candidate(learner, already_locked=True, concept=concept)
+    try:
+        record = json.loads(confirmation_path(get_folder(learner), concept).read_text(encoding='utf-8'))
+    except (OSError, ValueError, UnicodeError):
+        return False
+    return (candidate['candidate'] and isinstance(record, dict)
+            and record.get('concept') == concept and record.get('confirmation') == 'synthetic_simulation'
+            and record.get('rule_version') == candidate['rule_version']
+            and record.get('evidence_digest') == candidate['evidence_digest']
+            and record.get('plan_sha256') == item['plan_sha256'])
+
+
+def authorize_concept_locked(learner, concept):
+    """Recheck route, earlier confirmations, prerequisites and content at use."""
+    import concept_authorization as authorization
+    item, ctx = current_plan_locked(learner)
+    concepts = {c['id']: c for c in ctx['curriculum']['concepts']}
+    order = [s['concept'] for s in item['plan']['steps'] if s['kind'] == 'introduce']
+    if concept not in concepts or concept not in order:
+        raise EvidenceError('概念不在当前路线')
+    authorization.check(concept, learner)
+    required = set(order[:order.index(concept)]) | set(concepts[concept]['hard_prerequisites'])
+    for prerequisite in required:
+        if not confirmed_locked(learner, prerequisite, item):
+            raise EvidenceError('先前概念证据或家长确认无效: ' + prerequisite)
+    return {'allowed': concept, 'plan_sha256': item['plan_sha256']}
+
+
+def confirm_dynamic(learner, concept, synthetic_confirmation=False):
+    import concept_authorization as authorization
+    import sigma_plan_store as plans
+    if not synthetic_confirmation or not authorization.synthetic_learner(learner):
+        raise EvidenceError('仅接受显式标记的合成模拟确认')
+    folder = get_folder(learner)
+    with (coach.ROOT / '.publication.lock').open('a') as publication, (folder / '.lock').open('a') as lock:
+        fcntl.flock(publication, fcntl.LOCK_SH); fcntl.flock(lock, fcntl.LOCK_EX)
+        authorize_concept_locked(learner, concept)
+        item, _ = current_plan_locked(learner)
+        candidate = dynamic_candidate(learner, already_locked=True, concept=concept)
+        if not candidate['candidate']:
+            raise EvidenceError('动态证据不足，不能确认')
+        if confirmed_locked(learner, concept, item):
+            raise EvidenceError('该证据已确认，不能重复确认')
+        record = {'concept': concept, 'confirmation': 'synthetic_simulation',
+                  'rule_version': candidate['rule_version'], 'evidence_digest': candidate['evidence_digest'],
+                  'plan_sha256': item['plan_sha256'], 'confirmed_at': dt.datetime.now(dt.timezone.utc).isoformat()}
+        plans.write(confirmation_path(folder, concept), record)
+        return record
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('capture', 'assess', 'confirm-c01', 'recommend', 'dynamic-candidate'))
+    parser.add_argument('action', choices=('confirm', 'check', 'dynamic-candidate'))
     parser.add_argument('--learner', required=True)
-    parser.add_argument('--session')
+    parser.add_argument('--concept', default='C01')
     parser.add_argument('--synthetic-confirmation', action='store_true')
     args = parser.parse_args()
     try:
-        if args.action == 'capture':
-            if not args.session:
-                raise EvidenceError('capture 需要 --session 和标准输入 JSON')
-            result = capture(args.learner, args.session, json.load(sys.stdin))
-        elif args.action == 'dynamic-candidate':
-            result = dynamic_candidate(args.learner)
-        elif args.action == 'assess':
-            result = assess(args.learner)
-        elif args.action == 'confirm-c01':
-            result = confirm_c01(args.learner, args.synthetic_confirmation)
-        else:
-            result = recommend(args.learner)
+        if args.action == 'dynamic-candidate':
+            result = dynamic_candidate(args.learner, concept=args.concept)
+        elif args.action == 'confirm':
+            result = confirm_dynamic(args.learner, args.concept, args.synthetic_confirmation)
+        elif args.action == 'check':
+            folder = get_folder(args.learner)
+            with (coach.ROOT / '.publication.lock').open('a') as pub, (folder / '.lock').open('a') as lock:
+                fcntl.flock(pub, fcntl.LOCK_SH); fcntl.flock(lock, fcntl.LOCK_SH)
+                result = authorize_concept_locked(args.learner, args.concept)
         print(json.dumps(result, ensure_ascii=False, indent=2))
     except (EvidenceError, coach.Stop, roadmap.Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print('停止：' + str(exc), file=sys.stderr)

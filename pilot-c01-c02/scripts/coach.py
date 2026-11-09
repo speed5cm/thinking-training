@@ -5,13 +5,11 @@ import datetime as dt
 import fcntl
 import hashlib
 import importlib.util
-import types
 import json
 import os
 from pathlib import Path
 import re
 import sys
-import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 MODES = {'diagnosis': ['PILOT-DIAG-C01', 'PILOT-DIAG-C02'], 'C01': ['ST-C01-01'], 'C02': ['ST-C02-01']}
@@ -170,33 +168,18 @@ def current(ev):
     i=sum(e['type'] in ('complete','skip') for e in ev)
     return start['questions'][i] if i < len(start['questions']) else None
 
-def after_last_question(ev):
-    i = max((i for i,e in enumerate(ev) if e['type'] in ('start','complete','skip')), default=0)
-    return ev[i+1:]
-
 def save_summary(folder, ev):
     summary={'session_id':ev[0]['session_id'],'mode':ev[0]['mode'],'completed':sum(x['type']=='complete' or (x['type']=='attempt' and x.get('session_completed') is True) for x in ev),'skipped':sum(x['type']=='skip' for x in ev),'attempts':sum(x['type']=='attempt' for x in ev),'parent_feedback':[x['text'] for x in ev if x['type']=='parent_feedback'],'question_versions':ev[0]['questions'],'note':'仅为观察记录，不代表掌握或教育效果。'}
     (folder / ('summary-' + ev[0]['session_id'] + '.json')).write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     return summary
 
-def authorize_c02_locked(folder):
-    """Caller holds the learner lock and publication read lock; no nested locks."""
-    if not re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', folder.name):
-        raise Stop('C02 仅支持隔离合成测试，C01 掌握证据不足')
-    sys.path.insert(0, str(ROOT.parent / 'scripts'))
-    try:
-        import learning_evidence as evidence
-    except ImportError as exc:
-        raise Stop('C02 授权失败：' + str(exc)) from exc
-    try:
-        evidence.authorize_c02_locked(folder.name)
-    except (ImportError, evidence.coach.Stop, OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
-        raise Stop('C02 授权失败：' + str(exc)) from exc
-
-
 def run(args):
     if not re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', args.learner):
         raise Stop('仅允许隔离合成学习者；真实儿童入口关闭')
+    # Historical records remain readable and an existing session can be closed,
+    # but fixed cards are no longer an entry point for dynamic Sigma teaching.
+    if args.action not in ('progress', 'pause', 'end', 'feedback'):
+        raise Stop('固定题卡训练入口已关闭；隔离验证使用 Sigma 动态会话与实时门禁')
     folder=learner_dir(args.learner)
     folder.mkdir(mode=0o700, parents=True, exist_ok=True)
     # Release writers MUST hold .publication.lock exclusively throughout changes.
@@ -204,16 +187,6 @@ def run(args):
         fcntl.flock(publication, fcntl.LOCK_SH)
         fcntl.flock(lock, fcntl.LOCK_EX)
         events=load_events(folder); ev=session(events); st=status(ev)
-        if args.action == 'start':
-            if st in ('active','paused'): raise Stop('已有未结束训练，请继续或结束')
-            if args.mode == 'C02': authorize_c02_locked(folder)
-            qs=[]; reads=[]
-            for qid in MODES[args.mode]:
-                concept='C01' if 'C01' in qid else 'C02'
-                reads.extend(gate(concept)); card,sha=load_card(qid,concept)
-                qs.append({'id':qid,'version':card['version'],'sha256':sha,'concept':concept,'source':card['source']})
-            append(folder, {'type':'start','session_id':str(uuid.uuid4()),'mode':args.mode,'questions':qs,'gate_reads':reads})
-            return {'status':'active','message':'训练已开始；使用 show 展示第一题。'}
         if args.action == 'progress':
             return {'status':st,'session_id':ev[0]['session_id'] if ev else None,'mode':ev[0]['mode'] if ev else None,'current':current(ev) if ev and st != 'completed' else None,'events':len(ev)}
         if not ev: raise Stop('没有可操作的训练')
@@ -234,69 +207,6 @@ def run(args):
             if st != 'active': raise Stop('训练已暂停')
             append(folder, {'type':'pause','session_id':ev[0]['session_id'],'reason':args.text or '暂停'})
             return {'status':'paused'}
-        if args.action == 'resume':
-            if st != 'paused': raise Stop('训练未暂停')
-        elif st != 'active': raise Stop('训练已暂停，请先继续')
-        q=current(ev)
-        if ev[0]['mode'] == 'C02' or (q and q['concept'] == 'C02'):
-            authorize_c02_locked(folder)
-        if q is None:
-            if args.action == 'resume':
-                append(folder, {'type':'resume','session_id':ev[0]['session_id']})
-                return {'message':'全部题已处理，可结束训练。'}
-            raise Stop('题目已处理完，请结束训练')
-        reads=gate(q['concept']); card,sha=load_card(q['id'],q['concept'])
-        if sha != q['sha256'] or card['version'] != q['version'] or card['source'] != q['source']:
-            raise Stop('题卡或来源版本与会话不一致，停止训练')
-        if args.action == 'resume':
-            append(folder, {'type':'resume','session_id':ev[0]['session_id'],'gate_reads':reads})
-            return {'status':'active','current_question':q['id'],'message':'已从检查点恢复；使用 show 查看当前题。'}
-        if args.action == 'show':
-            append(folder, {'type':'show','session_id':ev[0]['session_id'],'question':q['id'],'gate_reads':reads})
-            return {'id':q['id'],'version':q['version'],'stem':card['stem']}
-        recent=after_last_question(ev)
-        if not any(x['type']=='show' for x in recent): raise Stop('请先展示当前题')
-        if args.action == 'attempt':
-            if [x['ai_assessment']['correctness'] for x in recent if x['type']=='attempt'][-2:] == ['incorrect', 'incorrect']:
-                raise Stop('已连续受挫，请选择示范、跳过或暂停')
-            last = sum(x['type'] in ('skip','complete') for x in ev) + 1 == len(ev[0]['questions'])
-            accepted = last and args.correctness == 'correct' and args.explanation == 'valid'
-            append(folder, {'type':'attempt','session_id':ev[0]['session_id'],'question':q['id'],'raw_response':args.response,'ai_assessment':{'correctness':args.correctness,'explanation':args.explanation},'session_completed':accepted})
-            if accepted:
-                summary=save_summary(folder,session(load_events(folder)))
-                return {'status':'completed','message':'训练已结束；一次答对不代表掌握。','summary':summary}
-            message='答案与理由已分别记录；尚不能据此认定掌握。'
-            prior=[x['ai_assessment']['correctness'] for x in recent if x['type']=='attempt']
-            if (prior + [args.correctness])[-2:] == ['incorrect', 'incorrect']: message='可以暂停、跳过或查看独立平行示范，不必继续追问。'
-            return {'message':message}
-        if args.action == 'hint':
-            if not any(x['type']=='attempt' for x in recent): raise Stop('请先让孩子尝试；不知道也可记录为尝试')
-            level=sum(x['type']=='hint' for x in recent)+1
-            if level > 3: raise Stop('提示已用完，请选择示范、跳过或暂停')
-            append(folder, {'type':'hint','session_id':ev[0]['session_id'],'question':q['id'],'level':level})
-            if level == 3:
-                return {'level': level, 'hint': card['hints'][2], 'parallel_demo': card['parallel_demo'], 'support': 'parallel_demo'}
-            return {'level':level,'hint':card['hints'][level-1]}
-        if args.action == 'demo':
-            if not any(x['type']=='attempt' for x in recent): raise Stop('请先让孩子尝试')
-            append(folder, {'type':'demo','session_id':ev[0]['session_id'],'question':q['id'],'kind':'parallel'})
-            return {'parallel_demo':card['parallel_demo']}
-        if args.action == 'explain':
-            attempts = sum(x['type']=='attempt' for x in recent)
-            hints = sum(x['type']=='hint' for x in recent)
-            if not args.consent or (attempts < 2 and hints < 3):
-                raise Stop('完整讲解需要孩子明确同意，且至少尝试两次或使用三级提示')
-            append(folder, {'type':'final_explanation','session_id':ev[0]['session_id'],'question':q['id'],'support':'full_explanation','consent':True})
-            return {'answer':card['answer'],'explanation':card['explanation'],'support':'full_explanation'}
-        if args.action in ('skip','complete'):
-            if args.action=='complete' and not any(x['type']=='attempt' for x in recent): raise Stop('尚无作答')
-            last = len([x for x in ev if x['type'] in ('skip','complete')]) + 1 == len(ev[0]['questions'])
-            append(folder, {'type':args.action,'session_id':ev[0]['session_id'],'question':q['id'],'session_completed':last})
-            if last:
-                summary=save_summary(folder,session(load_events(folder)))
-                return {'status':'completed','message':'训练已结束。','summary':summary}
-            return {'status':'active','message':'已记录；如有下一题请使用 show。'}
-        raise Stop('未知操作')
 
 def main():
     parser=argparse.ArgumentParser(description='儿童思维训练：仅已发布的试点题卡')

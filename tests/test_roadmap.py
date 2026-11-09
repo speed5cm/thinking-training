@@ -22,7 +22,8 @@ class RoadmapTests(unittest.TestCase):
         data = roadmap.build(self.root)
         items = {c['id']: c for c in data['concepts']}
         self.assertEqual(set(items), {f'C{i:02}' for i in range(1, 15)})
-        self.assertEqual({c['id'] for c in items.values() if c['formal_teaching_available']}, {'C01', 'C02'})
+        # The roadmap is informational; formal teaching remains closed for every concept.
+        self.assertEqual({c['id'] for c in items.values() if c['formal_teaching_available']}, set())
         self.assertEqual(set(data['ability_domains']), {a for c in items.values() for a in c['abilities']})
         self.assertEqual(items['C02']['hard_prerequisites'], ['C01'])
         self.assertEqual(items['C11']['interleavable'], ['C02', 'C09'])

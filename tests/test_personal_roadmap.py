@@ -80,9 +80,9 @@ class PersonalRoadmapTests(unittest.TestCase):
             (Path(tmp) / 'tutor-state.json').write_text('{"status":"paused"}', encoding='utf-8')
             self.assertEqual(planner.context('synthetic-demo')['learner_digest'], before)
 
-    @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={'authorization_sha256':'a' * 64})
+    @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={'concept':'C01', 'authorization_sha256':'a' * 64})
     def test_sigma_snapshot_and_planning_basis_invalidate_plan(self, _check):
-        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)), mock.patch.object(planner.evidence, 'authorize_concept_locked', return_value={'allowed':'C01'}):
             snap, rev = begin(planner.sigma_session, 'synthetic-demo')
             snap['state']['question'] = '原题'
             result = planner.sigma_session.operate('synthetic-demo', snap, rev)
@@ -97,16 +97,14 @@ class PersonalRoadmapTests(unittest.TestCase):
             snap['turns'].append(question_event(ROOT, 'q1', text='下一题', auth_sha='a' * 64, session_id=snap['session']))
             result = planner.sigma_session.operate('synthetic-demo', snap, rev)
             snap, rev = snapshot(result), result['revision']
-            with self.assertRaises(planner.Invalid):
-                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
+            planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
             ctx = planner.context('synthetic-demo')
             for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'): plan[key] = ctx[key]
             snap['turns'].append(event('answer', 'q1', text='回答', session_id=snap['session']))
             snap['turns'].append(event('analysis', 'q1', analysis={'reason': '普通教学观察'}, session_id=snap['session']))
             result = planner.sigma_session.operate('synthetic-demo', snap, rev)
             snap, rev = snapshot(result), result['revision']
-            with self.assertRaises(planner.Invalid):
-                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
+            planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
             ctx = planner.context('synthetic-demo')
             for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'): plan[key] = ctx[key]
             snap['state']['planning_basis'] = {'C01': '需要复习'}

@@ -1,7 +1,9 @@
 """C01 dynamic candidates: synthetic files and simulated times only."""
 import copy
 import datetime as dt
+import json
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -17,6 +19,25 @@ from concept_authorization_fixture import write_authorization, question_event, e
 WIKI = 'pilot-c01-c02/wiki/concepts/C01.md'
 QUOTE = '可直接核查的描述和对原因、经历、意图的猜测不同。'
 
+def publish_initial_plan(root, folder):
+    def call(script, action, *args):
+        result = subprocess.run([sys.executable, str(root / 'scripts' / script), action,
+                                 '--learner', 'synthetic', *args], cwd=root,
+                                capture_output=True, text=True, timeout=30, check=True)
+        return json.loads(result.stdout)
+    ctx = call('validate_personal_roadmap.py', 'context')
+    plan = json.loads((root / 'examples/ai-roadmap/fiction-plan.json').read_text())
+    plan['learner'] = 'synthetic'
+    for key in ('curriculum_digest', 'learner_digest', 'evidence_digest'):
+        plan[key] = ctx[key]
+    steps = {step['concept']:step for step in plan['steps'] if step['kind'] == 'introduce'}
+    plan['steps'] = [steps[concept['id']] for concept in ctx['curriculum']['concepts']]
+    path = folder / 'initial-plan.json'
+    path.write_text(json.dumps(plan, ensure_ascii=False), encoding='utf-8')
+    prepared = call('sigma_plan_store.py', 'prepare', '--plan', str(path))
+    call('sigma_plan_store.py', 'publish', '--plan', str(path), '--confirmed-sha',
+         prepared['plan_sha256'], '--synthetic-confirmation')
+
 class DynamicCandidate(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
@@ -27,8 +48,11 @@ class DynamicCandidate(unittest.TestCase):
         for obj, name, val in ((store.authorization, 'ROOT', self.root), (evidence.coach, 'ROOT', self.root / 'pilot-c01-c02'), (evidence, 'get_folder', lambda _: self.folder)):
             p = mock.patch.object(obj, name, val); p.start(); self.addCleanup(p.stop)
         self.snap = {'state': {}, 'session': '', 'turns': []}; self.rev = 0
-        self.now = dt.datetime(2030, 1, 1, 4, tzinfo=dt.timezone.utc)
+        # Fixture timestamps precede the real clock so subprocess writes cannot
+        # appear to travel backwards after the simulated sessions.
+        self.now = dt.datetime(2020, 1, 1, 4, tzinfo=dt.timezone.utc)
         self.commit([{'type':'session_start'}])
+        publish_initial_plan(self.root, self.folder)
 
     def commit(self, events):
         obj = copy.deepcopy(self.snap); obj['turns'].extend(copy.deepcopy(events))

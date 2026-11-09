@@ -50,7 +50,7 @@ class ReviewPersistence(unittest.TestCase):
             candidate = root / 'proposal.json'; candidate.write_text('{}')
             ctx = {k:'snapshot' for k in ('curriculum_digest','evidence_digest','learner_digest')}
             ctx['curriculum'] = {'concepts':[{'id':'C01'}]}
-            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'), mock.patch.object(plans.sessions.authorization, 'check', return_value={'authorization_sha256':'a' * 64}):
+            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'), mock.patch.object(plans.sessions.authorization, 'check', return_value={'concept':'C01', 'authorization_sha256':'a' * 64}), mock.patch.object(plans.evidence, 'authorize_concept_locked', return_value={'allowed':'C01'}):
                 self.publish(candidate)
                 snap, rev = begin(plans.sessions, 'synthetic')
                 snap['turns'].append(question_event(ROOT, 'q1', auth_sha='a' * 64, session_id=snap['session']))
@@ -92,19 +92,24 @@ class ReviewPersistence(unittest.TestCase):
             now = dt.datetime.now(dt.timezone.utc)
             records = [{'concept':'C01','session_id':'old','card':{},'captured_at':(now-dt.timedelta(days=2)).isoformat()}]
             ctx = {k:'snapshot' for k in ('curriculum_digest','evidence_digest','learner_digest')}
-            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', side_effect=lambda f: records), mock.patch.object(plans.evidence, 'current_card', return_value=True), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'):
+            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', side_effect=lambda f: records), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'):
                 first = self.publish(candidate)
-                records.append({'concept':'C01','session_id':'review','card':{},'captured_at':now.isoformat()})
-                completed = plans.operate('complete-review','synthetic',session='review')
-                self.assertEqual(completed['review_queue'][0]['status'], 'completed')
+                self.assertEqual(first['review_queue'], [])
+                path = folder / 'sigma/plan-history.json'
+                store = json.loads(path.read_text())
+                old_time = records[0]['captured_at']
+                old_task = {'concept':'C01', 'evidence_session':'old', 'evidence_at':old_time,
+                            'due_at':now.isoformat(), 'status':'pending', 'reason':'历史任务'}
+                store['history'][0]['review_queue'].append(old_task)
+                store['review_events'] = [{'plan_version':1, 'concept':'C01', 'session_id':'review',
+                                           'evidence_at':now.isoformat()}]
+                path.write_text(json.dumps(store))
                 republished = self.publish(candidate)
                 self.assertEqual(len(republished['review_queue']), 1)
                 self.assertEqual(republished['review_queue'][0]['status'], 'completed')
-                self.assertEqual(republished['review_queue'][0]['task_id'], first['review_queue'][0]['task_id'])
-                path = folder / 'sigma/plan-history.json'
+                self.assertEqual(republished['review_queue'][0]['task_id'], plans.task_id(old_task))
                 store = json.loads(path.read_text())
-                del store['review_events'][0]['task_id']
-                path.write_text(json.dumps(store))
+                self.assertNotIn('task_id', store['review_events'][0])
                 self.assertEqual(plans.operate('status','synthetic')['review_queue'][0]['status'], 'completed')
                 with self.assertRaises(plans.Invalid):
                     plans.operate('complete-review','synthetic',session='review')

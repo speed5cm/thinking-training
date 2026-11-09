@@ -45,7 +45,8 @@ class SigmaIntegration(unittest.TestCase):
                 return call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate), '--confirmed-sha', pending['plan_sha256'], '--synthetic-confirmation')
             published = publish()
             self.assertEqual(published['status'], 'current')
-            self.assertTrue(published['review_queue'][0]['due'])
+            # Historical fixed-card evidence does not create new review tasks.
+            self.assertEqual(published['review_queue'], [])
             # Routine coach events do not change formal evidence or the plan.
             (folder / 'events.jsonl').write_text(json.dumps({'type':'parent_feedback','text':'普通记录'}, ensure_ascii=False) + '\n')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
@@ -59,7 +60,7 @@ class SigmaIntegration(unittest.TestCase):
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '4', data=snapshot)
             resumed = call('sigma_session_store.py', 'read', *learner)
             self.assertEqual(resumed['turns'][-1]['question_id'], 'q2')
-            self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'stale')
+            self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
             snapshot['state']['planning_basis'] = {'C01':'需要复习'}
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '5', data=snapshot)
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'stale')

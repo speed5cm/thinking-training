@@ -27,8 +27,11 @@ def context(learner, already_locked=False):
             fcntl.flock(lock, fcntl.LOCK_SH)
             return context(learner, already_locked=True)
     curriculum = base.build()
-    assessment = evidence.assess(learner, already_locked=already_locked)
-    recommendation = evidence.recommend(learner, already_locked=already_locked)
+    # The published route determines order; live mastery is checked separately
+    # for the specific concept at the use point, not by a C01/C02 recommendation.
+    assessment = {'notice': '按当前概念单独重算动态候选；规划快照不授予掌握。'}
+    recommendation = {'action': 'follow_roadmap', 'concept': None,
+                      'reason': 'Sigma 沿已确认路线选择概念并在使用点重新核验。'}
     # Bind full Wiki text and pedagogy, not just extracted metadata.
     paths = ['wiki/index.md', 'curriculum/12-week-plan.md', 'references/pedagogy.md', 'references/sources.md']
     paths += [c['wiki_page'] for c in curriculum['concepts']]
@@ -37,7 +40,7 @@ def context(learner, already_locked=False):
     # Raw coach events include routine questions and answers. Formal evidence and
     # parent confirmation are bound independently; transient activity is not a
     # reason to invalidate the whole plan.
-    names = ('planner-profile.md', 'evidence.jsonl', 'mastery-confirmation.json')
+    names = ('planner-profile.md',)
     learner_files = {name: (folder / name).read_text(encoding='utf-8') if (folder / name).is_file() else None for name in names}
     sigma = folder / 'sigma'
     if sigma.exists():
@@ -45,13 +48,12 @@ def context(learner, already_locked=False):
         basis = snapshot['state'].get('planning_basis')
         if basis is not None:
             learner_files['sigma/planning_basis'] = basis
-    try:
-        destination = evidence.destination_basis(learner)
-    except (evidence.EvidenceError, OSError, ValueError, KeyError, TypeError) as exc:
-        destination = {'unavailable': str(exc)}
     return {'curriculum': curriculum, 'curriculum_digest': digest(contents),
             'learner_digest': digest(learner_files),
-            'evidence_digest': digest([assessment['evidence_digest'], destination]), 'assessment': assessment,
+            # Learning observations matter to the route only when Sigma records a
+            # substantive planning_basis. Live mastery and authorization are
+            # independently rechecked at the point of use.
+            'evidence_digest': digest({'planning_basis': learner_files.get('sigma/planning_basis')}), 'assessment': assessment,
             'current_recommendation': recommendation}
 
 def validate(plan, ctx, learner):

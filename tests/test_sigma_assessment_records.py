@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import sigma_session_store as store
 from concept_authorization_fixture import write_authorization, question_event, event
+from test_dynamic_candidate import publish_initial_plan
 
 UNKNOWN = {'status':'unknown', 'answer_quote':'', 'wiki_path':'', 'wiki_quote':''}
 
@@ -41,6 +42,7 @@ class AssessmentRecords(unittest.TestCase):
         self.snap = {'state':{}, 'session':'', 'turns':[]}
         self.rev = 0
         self.commit([{'type':'session_start'}])
+        publish_initial_plan(self.root, self.folder)
 
     def event(self, event_type, qid, **values):
         return event(event_type, qid, session_id=self.snap['session'], **values)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""C01/C02 synthetic content authorization. No authority to approve human records."""
+"""Synthetic concept content authorization. No authority to approve human records."""
 import argparse
 import fcntl
 import json
@@ -26,11 +26,48 @@ class Invalid(ValueError):
 def synthetic_learner(learner):
     return isinstance(learner, str) and bool(re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', learner))
 
+def concept_basis(concept):
+    """Derive the required sources from the indexed curriculum, never from a card."""
+    if not isinstance(concept, str) or not re.fullmatch(r'C\d{2}', concept):
+        raise Invalid('概念编号无效')
+    index = (ROOT / 'wiki/index.md').read_text(encoding='utf-8')
+    matches = re.findall(r'^\| ' + re.escape(concept) + r' \| \[\[concepts/([^\]]+)\]\]', index, re.M)
+    if len(matches) != 1 or not re.fullmatch(r'[A-Za-z0-9_-]+', matches[0]):
+        raise Invalid('概念不在 Wiki 索引或索引不唯一')
+    page = 'wiki/concepts/' + matches[0] + '.md'
+    text = (ROOT / page).read_text(encoding='utf-8')
+    if not re.search(r'^# ' + re.escape(concept) + r'\s', text, re.M):
+        raise Invalid('概念页编号不匹配')
+    goal = re.search(r'\*\*掌握判据\*\*：([^\n]+)', text)
+    source = re.search(r'\*\*来源索引\*\*：([^\n]+)', text)
+    definition = re.search(r'\*\*概念定义（项目原创表述）\*\*：([^\n]+)', text)
+    pilot = 'pilot-c01-c02/wiki/concepts/' + concept + '.md'
+    if (ROOT / pilot).is_file():
+        # Preserve the established authorization contract for existing pilot pages.
+        files = [p for p in FILES if p not in (FILES[1], 'pilot-c01-c02/wiki/concepts/C01.md')]
+        files.insert(1, page)
+        files.insert(-1, pilot)
+        scope = re.search(r'## Core Thesis\s*\n([^\n]+)', (ROOT / pilot).read_text(encoding='utf-8'))
+        required_sources = {page, pilot}
+    else:
+        files = ['wiki/index.md', page, 'curriculum/12-week-plan.md',
+                 'references/sources.md', 'references/pedagogy.md']
+        scope = definition
+        required_sources = {page}
+    if not goal or not source or not scope:
+        raise Invalid('概念目标、范围或来源缺失')
+    sources = re.findall(r'R\d\d', source.group(1))
+    if not sources:
+        raise Invalid('概念来源缺失')
+    return {'files': files, 'required_sources': required_sources, 'goal': goal.group(1).strip(),
+            'scope': scope.group(1).strip(), 'sources': sources}
+
 def check(concept, learner):
     """Caller holds the shared publication lock through use; only synthetic records count."""
-    if concept not in ('C01', 'C02') or not synthetic_learner(learner):
-        raise Invalid('概念授权仅适用于 C01/C02 隔离合成测试')
-    files = FILES if concept == 'C01' else C02_FILES
+    if not synthetic_learner(learner):
+        raise Invalid('概念授权仅适用于隔离合成测试')
+    basis = concept_basis(concept)
+    files = basis['files']
     record = evidence.coach.json_read(ROOT / ('pilot-c01-c02/concept-authorizations/' + concept + '.json'))
     required = {'schema_version', 'concept', 'version', 'review', 'status', 'teaching_goal', 'scope', 'sources', 'content_sha256'}
     if (not isinstance(record, dict) or set(record) != required or type(record['schema_version']) is not int
@@ -52,22 +89,16 @@ def check(concept, learner):
         path = ROOT / rel
         if not isinstance(hashes[rel], str) or not re.fullmatch(r'[0-9a-f]{64}', hashes[rel]) or evidence.coach.digest(path) != hashes[rel]:
             raise Invalid('授权内容已变化：' + rel)
-    evidence.coach.gate(concept)
-    root_page = (ROOT / files[1]).read_text(encoding='utf-8')
-    pilot_page = (ROOT / ('pilot-c01-c02/wiki/concepts/' + concept + '.md')).read_text(encoding='utf-8')
-    goal = re.search(r'\*\*掌握判据\*\*：([^\n]+)', root_page)
-    scope = re.search(r'## Core Thesis\s*\n([^\n]+)', pilot_page)
-    if not goal or not scope or record['teaching_goal'] != goal.group(1).strip() or record['scope'] != scope.group(1).strip():
+    if record['teaching_goal'] != basis['goal'] or record['scope'] != basis['scope']:
         raise Invalid('教学目标或范围依据缺失')
-    expected_sources = ['R04', 'R06'] if concept == 'C01' else ['R01', 'R04']
-    if record['sources'] != expected_sources or any(x not in root_page for x in record['sources']):
+    if record['sources'] != basis['sources']:
         raise Invalid('来源依据缺失')
     return {'concept': concept, 'version': record['version'], 'review_kind': review['kind'], 'status': 'active',
             'authorization_sha256': evidence.evidence_digest([record])}
 
 def revoke(concept='C01'):
     """Revoke an existing simulated record; never create or approve one."""
-    if concept not in ('C01', 'C02'): raise Invalid('概念不在隔离试点范围')
+    concept_basis(concept)
     path = ROOT / ('pilot-c01-c02/concept-authorizations/' + concept + '.json')
     with (evidence.coach.ROOT / '.publication.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
@@ -92,7 +123,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=('check', 'revoke'))
     parser.add_argument('--learner')
-    parser.add_argument('--concept', choices=('C01', 'C02'), default='C01')
+    parser.add_argument('--concept', default='C01')
     args = parser.parse_args()
     try:
         if args.action == 'revoke': result = revoke(args.concept)

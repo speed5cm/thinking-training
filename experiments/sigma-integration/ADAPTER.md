@@ -3,10 +3,10 @@
 本文件优先于仓库内 `experiments/sigma-integration/upstream/SKILL.md` 中冲突的段落；无冲突的 survey、问题循环、回顾和误区追踪沿用原版。上游原文件 Git blob `4deba6755b43a7e469b08cb2d51b9608e217bc8d`，许可证与引用文件随原件保存。本文件是验证适配，不是正式上线。
 
 1. 成人陪同，使用化名。Sigma 会话存到 `pilot-c01-c02/records/<化名>/sigma/`；不可使用上游全局路径或旧跨话题画像。状态须在每次提出问题前、回答后、暂停/结束时持久化，保留原话、问题、提示、分析、假设、动作、原因、家长观察和路线版本；未答问题恢复原题。此验证适配不用于真实儿童。
-2. 根 Wiki 没有 overview 和上游类型标记：读取 `wiki/index.md`、全部 14 页、`curriculum/12-week-plan.md`，由 `python3 scripts/generate_roadmap.py --check` 检查结构。14 页是课程范围，不等于授权进入。保留每概念 Wiki Pages；上游缺 overview 的 plain `/sigma` 回退禁止使用。每次进入或恢复概念重读根 Wiki 和试点概念、相关资料；冲突或缺失即停止。
-3. 用 Sigma 的路线推理生成候选，输出符合 `examples/ai-roadmap/fiction-plan.json` schema 的候选文件，并通过下述 `prepare`/`publish` 路径校验和发布；规划只是建议。停止调用独立 Planner Skill，保留其校验器。不能凭诊断标 mastered、跳过先修、凭 80% 或自评宣布掌握。以 `learning_evidence.py recommend`、证据聚合、家长确认和 coach 即时门禁为权威。C01 动态候选不要求不同已发布题卡；仅在模拟确认、当前路线、C02 合成授权、Wiki、先修和即时门禁通过时，才可模拟进入 C02。
-4. 使用 Sigma 的问题、回答分析、追问、提示、例子、跨情境与复习过程，AI 自审适龄、只问一个问题、符合 Wiki、不泄露正式题答案。动态教学题不计晋级证据；事前声明且保存的动态评估题由下述聚合计算隔离候选。Coach 题卡和历史采集保留，不计入新动态晋级；不能把动态题写成已审核卡。对连续不理解提供不同方式、平行示范或休息；疲劳、拒绝或挫败立即停止并保存。只在具体证据支持时记录待验证假设；引用原话须逐字来自已保存的对应回答，不确定时写 unknown。未知即 unknown，禁止学习风格、心理和稳定能力标签，不强迫填误区表。
-5. 不自动打开浏览器；HTML 和可视化只在需要时生成，不用上游固定每轮重写 HTML。继续学习须重新 survey、重验发布和先修，并先恢复未答问题；复习只在已允许的概念上进行。对未发布内容，未来路线可列但不得将其作为正式教学或测评题。
+2. 根 Wiki 没有 overview 和上游类型标记：读取 `wiki/index.md`、全部 14 页、`curriculum/12-week-plan.md`，由 `python3 scripts/generate_roadmap.py --check` 检查结构。14 页是课程范围，不等于授权进入。保留每概念 Wiki Pages；上游缺 overview 的 plain `/sigma` 回退禁止使用。每次进入或恢复概念重读根概念页、存在的试点概念页及授权清单中的相关资料；冲突或缺失即停止。
+3. 用 Sigma 的路线推理生成候选，输出符合 `examples/ai-roadmap/fiction-plan.json` schema 的候选文件，并通过下述 `prepare`/`publish` 路径校验和发布；规划只是建议。不能凭诊断、自评或 80% 宣布掌握。当前概念用 `learning_evidence.py dynamic-candidate --concept <ID> --learner <化名>` 检查证据，达标后等待明确的合成模拟家长确认，再用 `confirm --concept <ID> --learner <化名> --synthetic-confirmation` 记录。确认成功后 Sigma 沿现有有效路线自主选择下一概念，先重读其 Wiki，再执行 `check --concept <ID>`；失败即停止。新问题的会话提交在锁内再次检查路线、之前概念的有效确认、先修和授权。该预检不替代提交时检查。路线有效时不重新发布或要求再次确认路线。
+4. 使用 Sigma 的问题、回答分析、追问、提示、例子、跨情境与复习过程，AI 自审适龄、只问一个问题、符合 Wiki。动态教学题不计晋级证据；事前声明且保存的动态评估题由下述聚合计算隔离候选。Coach 固定题卡训练入口关闭；历史记录保留，不计入新动态晋级。对连续不理解提供不同方式、平行示范或休息；疲劳、拒绝或挫败立即停止并保存。只在具体证据支持时记录待验证假设；引用原话须逐字来自已保存的对应回答，不确定时写 unknown。未知即 unknown，禁止学习风格、心理和稳定能力标签，不强迫填误区表。
+5. 不自动打开浏览器；HTML 和可视化只在需要时生成，不用上游固定每轮重写 HTML。继续学习须重新 survey、重验路线、授权和先修，并先恢复未答问题；复习只在已允许的概念上进行。未授权内容可列入未来路线，但不得作为教学或测评题。
 
 ## 强制会话存储协议
 
@@ -18,9 +18,9 @@
 
 提交时新事件不得包含 `recorded_at`，存储程序在锁内生成 UTC `recorded_at`；历史事件的时间与内容不可覆盖。每次提交成功后必须以返回的 `state`、`session`、`turns` 和 `revision` 为下一次提交的基础，因为返回值包含存储生成的会话 ID 和时间；冲突时重新读取。时间取自运行环境系统时钟，只表明本程序的记录时间，不验证真实发生时间、操作人身份或抗系统时钟篡改；时钟倒退时拒绝写入。
 
-`turns` 使用追加事件。以下契约只用于 C01 隔离合成验证；教学循环、出题、追问、提示和评价继续由上游 Sigma 执行，程序只验证记录与授权，不生成题目或评分。`question_id` 在整个快照内唯一，`session_id` 必须等于存储程序返回的当前活动会话 ID；同一时间只允许一个未答问题。每个新增问题必须先提交成功，才能展示、提示或接收原答。追问是新问题，仍须先保存。旧快照不自动改写；旧问题缺少本契约所需字段时不得用于新动态评估。
+`turns` 使用追加事件。以下契约只用于隔离合成验证；教学循环、出题、追问、提示和评价继续由上游 Sigma 执行，程序只验证记录与授权，不生成题目或评分。`question_id` 在整个快照内唯一，`session_id` 必须等于存储程序返回的当前活动会话 ID；同一时间只允许一个未答问题。每个新增问题必须先提交成功，才能展示、提示或接收原答。追问是新问题，仍须先保存。旧快照不自动改写；旧问题缺少本契约所需字段时不得用于新动态评估。
 
-问题事件：`{"type":"question","concept":"C01","session_id":"合成会话ID","question_id":"唯一ID","purpose":"teaching|assessment","text":"原题","wiki_sources":{"wiki/concepts/observation-vs-inference.md":"该文件SHA-256","pilot-c01-c02/wiki/concepts/C01.md":"该文件SHA-256"},"authorization_sha256":"实时授权记录摘要"}`。`authorization_sha256` 使用 `concept_authorization.py check` 返回值；`wiki_sources` 至少含上述两个概念页，也可包含授权文件清单中的其他来源，摘要须与实时文件一致。可附 `review_task_id`。评估题还须在展示前保存 `context`（情境）、`dimensions`（本题考查的维度数组）、`answer_basis`（可接受答案或判断依据）及 `practice`（是否为生成性实践，布尔值）。保存后用途和题目不可修改，教学题不得转为评估题。Sigma 仍须自行检查适龄、题意、多解、来源与实质重复；这些字段不证明题目质量。
+问题事件：`{"type":"question","concept":"当前概念ID","session_id":"合成会话ID","question_id":"唯一ID","purpose":"teaching|assessment","text":"原题","wiki_sources":{"概念页路径":"该文件SHA-256"},"authorization_sha256":"实时授权记录摘要"}`。`authorization_sha256` 使用 `concept_authorization.py check --concept <ID>` 返回值；`wiki_sources` 至少含根概念页以及存在的试点概念页，也可包含授权文件清单中的其他来源，摘要须与实时文件一致。可附 `review_task_id`。评估题还须在展示前保存 `context`（情境）、`dimensions`（本题考查的维度数组）、`answer_basis`（可接受答案或判断依据）及 `practice`（是否为生成性实践，布尔值）。保存后用途和题目不可修改，教学题不得转为评估题。Sigma 仍须自行检查适龄、题意、多解、来源与实质重复；这些字段不证明题目质量。
 
 题目已保存后，在展示提示或其他支持前追加 `{"type":"support","session_id":"合成会话ID","question_id":"唯一ID","event_id":"唯一事件ID","kind":"hint|example|demonstration|clarification|other","text":"完整支持原文"}`。揭示解题方向的追问或示范须如实记录为支持，不能仅凭 `clarification` 标签认定无提示。收到回答后在同次提交中依次追加 `{"type":"answer","session_id":"合成会话ID","question_id":"唯一ID","text":"完整原答"}` 和 `{"type":"analysis","session_id":"合成会话ID","question_id":"唯一ID","analysis":{...}}`。教学分析为非空对象；评估分析含 `dimensions` 和 `observations`；`dimensions` 必须有 `accuracy`、`explanation`、`novel_application`、`discrimination` 四项，每项为 `{"status":"supported|not_supported|unknown","answer_quote":"原答引用","wiki_path":"来源路径","wiki_quote":"来源原文"}`。已判断的维度必须逐字引用该题原答及其已声明 Wiki 来源；未声明考查或无法判断的维度写 `unknown`，引用可留空。引用只能验证文字存在，不能验证推理、陌生性或题目质量。
 
@@ -32,7 +32,7 @@
 
 若问题保存后授权撤销、内容变化、授权依据缺失，或重新授权的记录摘要与出题时不一致，停止教学和评价；已发生的原答通过一次独立提交保存两个事件：`answer` 和 `{"type":"interruption","session_id":"合成会话ID","question_id":"唯一ID","reason":"authorization_or_content_changed"}`。此提交只能关联先前保存且尚未回答的问题，不能改变 `state`、`session`、历史或加入分析、提示、新问题和其他事件。程序在锁内复查授权或出题时摘要，正常授权下不能伪造该中断路径；中断题恢复授权后也不得补评或作为有效晋级证据。若提交冲突或失败，先重读快照，保留存储生成的时间和会话 ID，用同一原答核对是否已保存，不盲目覆盖；未保存时再次按中断路径提交。原答保存成功不表示评价完成。旧快照没有会话边界但存在先前已保存的未答问题时，也可只追加同一问题的原答和 `interruption`，此时原因须为 `legacy_session_unverified`；旧事件不会被补造时间，该题不能补评或作为晋级证据。
 
-`state.planning_basis` 是可选 JSON 对象，只记录影响概念顺序、长期复习需求或教学目标的实质性变化；及时更新真实理解变化，不能为了避免重规划隐瞒。每轮分析、进度显示、短期提示、选例子、下一题教学动作和暂停放在其他状态或追加事件中，不能放入 planning_basis；选择平行例子本身不应写入 `planning_basis`。路线摘要绑定完整动态快照、模拟确认、授权及 Wiki；当前普通问答、状态或修订号变化也可能保守地使路线过期。Wiki 和正式授权每次仍须实时检查。
+`state.planning_basis` 是可选 JSON 对象，只记录影响概念顺序、长期复习需求或教学目标的实质性变化；及时更新真实理解变化，不能为了避免重规划隐瞒。每轮分析、进度显示、短期提示、选例子、下一题教学动作和暂停放在其他状态或追加事件中，不能放入 planning_basis。路线绑定 Wiki、规划画像及 planning_basis；动态证据和确认在使用点单独重算，普通问答与晋级不使路线自动过期。Wiki 和授权每次仍须实时检查。
 
 动态复习使用 `sigma_plan_store.py` 同一规划存储：从已保存的问答和 analysis 发现需要复习时，标准输入 `{"concept":"C01","question_id":"来源题ID","reason":"具体依据","interval_days":1}` 调用 `schedule-dynamic --learner <化名>`。`status` 的 `dynamic_reviews` 显示任务及到期状态，不因调度强制重发布路线。到期后 Sigma 自主设计动态题，question 事件额外写入 `review_task_id`；像普通问答一样原子保存 answer 和 analysis。然后标准输入 `{"task_id":"任务ID","question_id":"复习题ID","result":"correct|partial|incorrect","next_interval_days":2}` 调用 `complete-dynamic --learner <化名>`，一次原子操作完成任务并创建下一任务。默认可在正确后按 1、2、4、8、16、32 天延长，困难时缩短；由 Sigma 结合具体表现调整 1—32 天。重复提交、未到期或没有关联完整问答分析时停止并核对。复习任务与结果本身不是掌握或晋级授权；事前声明为评估且符合条件的复习题可以作为动态证据。会话保存与队列更新不是跨文件事务：若任一步失败，保留问答，读取两侧状态，确认任务是否完成后再继续，不声称两侧都已成功。
 
@@ -48,14 +48,10 @@
 
 发现新要求超出已审核材料、授权边界不清或与其冲突时，保留原版本和记录，停止受影响教学、复习及新路线发布，说明需要人工核对的具体问题；家长确认路线不能替代材料审核。规划可列未来概念，但不授予教学、正式题卡使用、先修完成或掌握资格；继续训练仍须实时检查现有门禁。
 
-## C01 概念授权的隔离首批实现
+## 概念授权的隔离合成实现
 
-本批只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的 C01 合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须运行 `python3 scripts/concept_authorization.py check --learner <化名>`，失败立即停止受影响活动；不能把该检查当作路线、先修、题卡发布或题目质量的替代。每个新 question 事件必须包含 `"concept":"C01"`，提交时会在发布锁内重验；动态复习安排和完成也重验。动态评估仅对隔离合成快照计算候选；`confirm-c01 --synthetic-confirmation` 显式标记模拟确认，再经同样标记的路线发布与 C02 实时门禁，才可模拟进入 C02。真实晋级和身份认证未开放。
+只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须检查当前概念的授权和路线门禁。每个新 question 事件包含当前路线的 `concept`，提交时在锁内重验；动态复习安排和完成也重验。真实晋级和身份认证未开放。
 
-记录位置为 `pilot-c01-c02/concept-authorizations/C01.json`，本仓库不预置有效授权。结构为 `schema_version: 1`、`concept: C01`、`version`、`review: {kind, actor, basis}`、`status`、`teaching_goal`、`scope`、`sources` 和 `content_sha256`。目标和范围须逐字等于根概念页的掌握判据及试点概念页 Core Thesis；来源为 R04、R06，摘要覆盖根索引、C01、课程、来源及教法、样题和试点 survey、概念与来源材料。具体必需文件以 `concept_authorization.py` 的 `FILES` 为准。内容变化、缺失、记录不完整或撤销均停止；模拟重新审核须创建新的测试记录及版本。`revoke` 只撤销已有合成记录，不提供批准接口。
+记录位置为 `pilot-c01-c02/concept-authorizations/<ID>.json`，本仓库不预置有效授权。结构为 `schema_version: 1`、`concept`、`version`、`review: {kind, actor, basis}`、`status`、`teaching_goal`、`scope`、`sources` 和 `content_sha256`。目标和来源来自根概念页；范围取存在的试点概念页 Core Thesis，否则取根概念定义。文件清单由 `concept_authorization.py` 的 `concept_basis` 派生。内容变化、缺失、记录不完整或撤销均停止；`revoke` 只撤销已有合成记录，不提供批准接口。
 
 `review.kind` 必须是 `synthetic_simulation`，它明确表示模拟，不能证明任何真实人工审核；AI 不得生成或宣称真实审核批准。真实人工审核的责任人、可信身份、记录防篡改、版本历史及撤销操作尚未实现，声称 `human` 的记录也会被拒绝。发布锁仅协调遵守锁协议的程序，不能阻止直接修改文件；摘要不能证明审核身份或内容的语义正确，也不能强制约束绕过存储接口直接输出的 Agent。须继续按协议先持久化、重新 survey 和检查，隔离端到端验收及可信审核流程完成之前不能用于真实儿童。
-
-## C02 隔离入口
-
-C02 需要单独的 `pilot-c01-c02/concept-authorizations/C02.json` 合成模拟授权；使用 `concept_authorization.py check --concept C02 --learner synthetic` 核验内容版本、C02 目标、范围、R01/R04 来源和摘要，`revoke --concept C02` 撤销。仓库不预置有效授权，真实人工审核身份不可验证。动态会话记录仍只支持 C01；隔离 C02 通过现有已发布 Coach 题卡操作，不表示已经实现 C02 动态教学。Coach 开始及活动使用点在发布锁和学习者锁内重新检查动态候选、模拟确认、路线、C02 授权、Wiki、先修和题卡。`formal_gate.py` 只是预检，不能取代 Coach 使用点检查。所有 Coach 入口限制 `synthetic` 系列化名。

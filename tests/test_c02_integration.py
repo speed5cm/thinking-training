@@ -74,11 +74,11 @@ class C02Integration(unittest.TestCase):
         self.assertEqual([p.returncode for p in processes], [1, 1], output)
 
     def test_old_card_records_remain_archived_and_never_satisfy_dynamic_rule(self):
-        result = self.evidence('assess')
+        result = self.evidence('dynamic-candidate', '--concept', 'C01')
         self.assertEqual(result.returncode, 0, result.stderr)
         assessment = json.loads(result.stdout)
-        self.assertEqual(assessment['historical_evidence_pending_review'], 2)
-        self.assertEqual(assessment['assessments'][0]['mastery'], 'pending_confirmation')
+        self.assertFalse(assessment['candidate'])
+        self.assertEqual(assessment['evidence'], [])
         self.assertNotEqual(self.coach('start', '--mode', 'C02').returncode, 0)
         self.assertTrue((self.folder / 'evidence.jsonl').is_file())
 

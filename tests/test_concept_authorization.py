@@ -8,6 +8,7 @@ import tempfile
 import unittest
 
 from concept_authorization_fixture import write_authorization, question_event, event
+from test_dynamic_candidate import publish_initial_plan
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,23 +26,26 @@ class ConceptAuthorization(unittest.TestCase):
             start = {'state':{}, 'session':'', 'turns':[{'type':'session_start'}]}
             def run_commit(data, revision):
                 return run('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=data)
-            self.assertNotEqual(run_commit(start, 0).returncode, 0)
+            started = json.loads(run_commit(start, 0).stdout)
             path = write_authorization(root)
+            publish_initial_plan(root, root / 'pilot-c01-c02/records/synthetic')
             self.assertEqual(run('concept_authorization.py', 'check', '--learner', 'synthetic').returncode, 0)
             self.assertNotEqual(run('concept_authorization.py', 'check', '--learner', 'child').returncode, 0)
             original = json.loads(path.read_text())
+            question = {k:started[k] for k in ('state','session','turns')}
+            candidate = {**question, 'turns':question['turns'] + [question_event(root, 'q1', session_id=question['session'])]}
             for change in ({'review': {'kind':'human', 'actor':'someone', 'basis':'claim'}},
                            {'review': {'kind':'ai', 'actor':'agent', 'basis':'claim'}},
                            {'sources': []}, {'scope': ''}, {'status':'revoked'}, {'content_sha256': {}}):
                 path.write_text(json.dumps({**original, **change}, ensure_ascii=False))
-                self.assertNotEqual(run_commit(start, 0).returncode, 0, change)
+                self.assertNotEqual(run_commit(candidate, 1).returncode, 0, change)
             path.write_text(json.dumps(original, ensure_ascii=False))
             source = root / 'references/pedagogy.md'
             source.write_text(source.read_text() + '\nchanged\n')
-            self.assertNotEqual(run_commit(start, 0).returncode, 0)
+            self.assertNotEqual(run_commit(candidate, 1).returncode, 0)
             write_authorization(root, version='synthetic-2')
-            started = json.loads(run_commit(start, 0).stdout)
-            question = {k:started[k] for k in ('state','session','turns')}
+            # The Wiki input changed, so the route must also be republished.
+            publish_initial_plan(root, root / 'pilot-c01-c02/records/synthetic')
             bad = {**question, 'turns':question['turns'] + [{'question':'bypass'}]}
             self.assertNotEqual(run_commit(bad, 1).returncode, 0)
             for concept in (None, 'C02'):

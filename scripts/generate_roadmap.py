@@ -2,7 +2,6 @@
 """Build a conservative, static curriculum projection from the root Wiki."""
 import argparse
 import html
-import importlib.util
 import json
 import re
 import sys
@@ -74,33 +73,19 @@ def build(root=ROOT):
         reached |= ready
     if len(reached) != len(concepts):
         raise Invalid('循环依赖或不可达路径: ' + ', '.join(sorted(set(slug_to_id.values()) - reached)))
-    # Reuse the existing pilot gate; this is a snapshot, not authorization to teach.
-    spec = importlib.util.spec_from_file_location('pilot_coach', root / 'pilot-c01-c02/scripts/coach.py')
-    coach = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(coach)
+    # A curriculum projection is not a live authorization decision.
     for c in concepts:
-        cid = c['id']
         c['published_cards'] = []
-        c['teaching_status'] = 'blocked_no_published_card'
-        if cid in ('C01', 'C02'):
-            try:
-                coach.gate(cid)
-                for qid in coach.MODES[cid]:
-                    card, sha = coach.load_card(qid, cid)
-                    c['published_cards'].append({'id': qid, 'version': card['version'], 'sha256': sha})
-                c['teaching_status'] = 'pilot_published'
-            except (coach.Stop, OSError, ValueError, KeyError, TypeError):
-                c['published_cards'] = []
-                c['teaching_status'] = 'blocked_pilot_gate'
-        c['formal_teaching_available'] = c['teaching_status'] == 'pilot_published'
-    return {'schema_version': 1, 'authority': 'wiki/index.md and wiki/concepts/*.md', 'notice': '静态快照；正式教学前须重新执行现有试点门禁和家长陪同流程。可用不表示先修已掌握。', 'ability_domains': sorted(DOMAINS), 'concepts': concepts}
+        c['teaching_status'] = 'requires_live_authorization'
+        c['formal_teaching_available'] = False
+    return {'schema_version': 1, 'authority': 'wiki/index.md and wiki/concepts/*.md', 'notice': '静态课程快照，不授予教学许可；教学前须实时检查路线、先修及概念授权。', 'ability_domains': sorted(DOMAINS), 'concepts': concepts}
 
 def render(data):
     esc = lambda x: html.escape(str(x), quote=True)
     cards = []
     for c in data['concepts']:
         dep = lambda key: '、'.join(c[key]) or '无'
-        state = '试点题卡已发布（须现场再验）' if c['formal_teaching_available'] else '不可进入正式教学'
+        state = '须现场检查概念授权、路线与先修'
         cards.append(f'<article><h2>{esc(c["id"])} · {esc(c["name"])}</h2><strong class="{"ready" if c["formal_teaching_available"] else "blocked"}">{state}</strong><p>硬性先修：{esc(dep("hard_prerequisites"))}；可穿插：{esc(dep("interleavable"))}</p><p>能力：{esc("、".join(c["abilities"]))}</p><p>目标：{esc(c["teaching_goal"])}</p><p>来源：{esc("、".join(c["sources"]))} · <a href="../{esc(c["wiki_page"])}">概念 Wiki</a></p></article>')
     return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>思维能力 Roadmap</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:1050px;margin:auto;padding:1.5rem;color:#172a35;background:#f3f6f6} main{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem} article{background:white;border:1px solid #d1dcdc;border-radius:10px;padding:1rem} h2{font-size:1.1rem;margin:0 0 .5rem}.ready{color:#14644e}.blocked{color:#9a3c21} p{margin:.5rem 0}</style></head><body><h1>思维能力 Roadmap</h1><p>' + esc(data['notice']) + '</p><p>硬性先修用于完整概念学习；可穿插关系不阻断早期练习。12 周计划仅供参考。</p><main>' + ''.join(cards) + '</main></body></html>\n'
 
@@ -119,7 +104,7 @@ def main():
             for path, content in outputs.items():
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(content, encoding='utf-8')
-        print(f'通过：{len(data["concepts"])} 概念；{sum(c["formal_teaching_available"] for c in data["concepts"])} 个试点可用快照')
+        print(f'通过：{len(data["concepts"])} 概念；教学许可须现场检查')
     except (Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print(f'Roadmap 验证失败：{exc}', file=sys.stderr)
         return 1
