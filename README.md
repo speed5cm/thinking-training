@@ -30,6 +30,6 @@ C01/C02 学习证据、家长确认与下一步建议的最小闭环见 `docs/mi
 
 ## Sigma 教学与规划（仅隔离验证）
 
-Sigma 是唯一 AI 教学与规划核心。验证时先阅读 `experiments/sigma-integration/upstream/SKILL.md` 和优先级更高的 `experiments/sigma-integration/ADAPTER.md`；正式题卡由 Coach 执行，正式证据和规划校验由相应脚本处理。规划须先准备候选、展示给家长并取得明确确认，再经 Sigma 规划存储发布。路线不授予教学或掌握资格。
+Sigma 是唯一 AI 教学与规划核心。从仓库根目录启动支持项目 `AGENTS.md` 的 Codex 会话，请求“开始 Sigma 隔离验证”（使用虚构学习者）；项目指令会引导读取 `skills/child-sigma-tutor/SKILL.md`，再读取上游 Skill 和优先级更高的适配协议。也可手动让 Agent 读取该入口文件。入口依赖 Python 3 和仓库内文件，不是独立可执行程序；正式题卡由 Coach 执行，正式证据和规划校验由相应脚本处理。规划须先准备候选、展示给家长并取得明确确认，再经 Sigma 规划存储发布。路线不授予教学或掌握资格。
 
 **儿童正式入口尚未开放。** 在真实 Agent 端到端验收完成并解决发布阻断前，仅可使用隔离合成数据验证，不得面向真实儿童使用。个人记录目录不进 Git，但并非加密存储。现有阻断和历史结果见 `docs/sigma-release-blockers-2026-11-09.md`。

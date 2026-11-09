@@ -1,6 +1,6 @@
 # 隔离验证适配：Sigma + 儿童试点
 
-本文件优先于同副本 `.claude/skills/sigma-with-wiki/SKILL.md` 中冲突的段落；无冲突的 survey、问题循环、回顾和误区追踪沿用原版。上游原文件 Git blob `4deba6755b43a7e469b08cb2d51b9608e217bc8d`，许可证与引用文件随原件保存。本文件是验证适配，不是正式上线。
+本文件优先于仓库内 `experiments/sigma-integration/upstream/SKILL.md` 中冲突的段落；无冲突的 survey、问题循环、回顾和误区追踪沿用原版。上游原文件 Git blob `4deba6755b43a7e469b08cb2d51b9608e217bc8d`，许可证与引用文件随原件保存。本文件是验证适配，不是正式上线。
 
 1. 成人陪同，使用化名。Sigma 会话存到 `pilot-c01-c02/records/<化名>/sigma/`；不可使用上游全局路径或旧跨话题画像。状态须在每次提出问题前、回答后、暂停/结束时持久化，保留原话、问题、提示、分析、假设、动作、原因、家长观察和路线版本；未答问题恢复原题。此验证适配不用于真实儿童。
 2. 根 Wiki 没有 overview 和上游类型标记：读取 `wiki/index.md`、全部 14 页、`curriculum/12-week-plan.md`，由 `python3 scripts/generate_roadmap.py --check` 检查结构。14 页是课程范围，不等于授权进入。保留每概念 Wiki Pages；上游缺 overview 的 plain `/sigma` 回退禁止使用。每次进入或恢复概念重读根 Wiki 和试点概念、相关资料；冲突或缺失即停止。
