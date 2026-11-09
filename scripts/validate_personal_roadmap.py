@@ -39,10 +39,6 @@ def context(learner, already_locked=False):
     # reason to invalidate the whole plan.
     names = ('planner-profile.md', 'evidence.jsonl', 'mastery-confirmation.json')
     learner_files = {name: (folder / name).read_text(encoding='utf-8') if (folder / name).is_file() else None for name in names}
-    # Bind tutor decisions when present without invalidating existing plans with no tutor data.
-    tutor = folder / 'tutor-state.json'
-    if tutor.exists():
-        learner_files['tutor-state.json'] = tutor.read_text(encoding='utf-8')
     sigma = folder / 'sigma'
     if sigma.exists():
         snapshot = sigma_session.read_folder(folder)

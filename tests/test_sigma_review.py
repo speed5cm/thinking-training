@@ -15,6 +15,34 @@ plans = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(plans)
 
 class ReviewPersistence(unittest.TestCase):
+    def publish(self, candidate):
+        pending = plans.operate('prepare', 'test', candidate)
+        return plans.operate('publish', 'test', candidate, confirmed_sha=pending['plan_sha256'])
+
+    def test_confirmation_binds_candidate_and_live_inputs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); folder = root / 'learner'; folder.mkdir()
+            candidate = root / 'proposal.json'; candidate.write_text('{"step":1}')
+            ctx = {k:'one' for k in ('curriculum_digest','evidence_digest','learner_digest')}
+            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', side_effect=lambda *a, **kw: dict(ctx)), mock.patch.object(plans.planner, 'validate'):
+                with self.assertRaises(plans.Invalid): plans.operate('publish', 'test', candidate)
+                digest = plans.operate('prepare', 'test', candidate)['plan_sha256']
+                candidate.write_text('{"step":2}')
+                with self.assertRaises(plans.Invalid): plans.operate('publish', 'test', candidate, confirmed_sha=digest)
+                candidate.write_text('{"step":1}')
+                ctx['learner_digest'] = 'changed'
+                with self.assertRaises(plans.Invalid): plans.operate('publish', 'test', candidate, confirmed_sha=digest)
+                self.assertFalse((folder / 'sigma/plan-history.json').exists())
+                digest = plans.operate('prepare', 'test', candidate)['plan_sha256']
+                pending_path = folder / 'sigma/plan-pending.json'
+                pending_copy = pending_path.read_text()
+                self.assertEqual(plans.operate('publish', 'test', candidate, confirmed_sha=digest)['status'], 'current')
+                # A confirmed proposal is single-use even if pending-file cleanup fails.
+                pending_path.write_text(pending_copy)
+                with self.assertRaises(plans.Invalid):
+                    plans.operate('publish', 'test', candidate, confirmed_sha=digest)
+                self.assertEqual(len(json.loads((folder / 'sigma/plan-history.json').read_text())['history']), 1)
+
     def test_dynamic_review_completes_and_schedules_next_without_formal_evidence(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); folder = root / 'learner'; folder.mkdir()
@@ -22,7 +50,7 @@ class ReviewPersistence(unittest.TestCase):
             ctx = {k:'snapshot' for k in ('curriculum_digest','evidence_digest','learner_digest')}
             ctx['curriculum'] = {'concepts':[{'id':'C01'}]}
             with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'):
-                plans.operate('publish','test',candidate)
+                self.publish(candidate)
                 snap = {'state':{}, 'session':'', 'turns':[
                     {'type':'question','question_id':'q1','text':'问题'},
                     {'type':'answer','question_id':'q1','text':'不知道'},
@@ -60,11 +88,11 @@ class ReviewPersistence(unittest.TestCase):
             records = [{'concept':'C01','session_id':'old','card':{},'captured_at':(now-dt.timedelta(days=2)).isoformat()}]
             ctx = {k:'snapshot' for k in ('curriculum_digest','evidence_digest','learner_digest')}
             with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', side_effect=lambda f: records), mock.patch.object(plans.evidence, 'current_card', return_value=True), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'):
-                first = plans.operate('publish','test',candidate)
+                first = self.publish(candidate)
                 records.append({'concept':'C01','session_id':'review','card':{},'captured_at':now.isoformat()})
                 completed = plans.operate('complete-review','test',session='review')
                 self.assertEqual(completed['review_queue'][0]['status'], 'completed')
-                republished = plans.operate('publish','test',candidate)
+                republished = self.publish(candidate)
                 self.assertEqual(len(republished['review_queue']), 1)
                 self.assertEqual(republished['review_queue'][0]['status'], 'completed')
                 self.assertEqual(republished['review_queue'][0]['task_id'], first['review_queue'][0]['task_id'])

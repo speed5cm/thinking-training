@@ -13,14 +13,9 @@ import learning_evidence as evidence
 class Invalid(ValueError):
     pass
 
-LEGACY = ('state.json', 'session.md', 'turns.jsonl')
-
 def read_folder(folder):
     """Read with the learner lock already held, or from an atomically replaced file."""
-    dest = folder / 'sigma'
-    if any((dest / name).exists() for name in LEGACY):
-        raise Invalid('发现旧版 Sigma 会话文件；停止并人工核对迁移，不能自动覆盖或忽略')
-    return read(dest / 'session-snapshot.json')
+    return read(folder / 'sigma' / 'session-snapshot.json')
 
 def read(path):
     if not path.exists():

@@ -4,7 +4,11 @@
 
 当前 `generate_roadmap.py` 检查根 Wiki 的 14 页、关系、来源登记及发布快照，输出静态课程投影；不读画像、学习记录，不进行语义推理或动态复习。上游的 overview 和 Teaching 类型标记在本仓库不存在，适配为根索引、全部中文教学概念及 12 周叙事；不伪造缺失文件。上游的诊断预标掌握和约 80% 门槛不适用本儿童试点：现行跨机会、不同题卡、迁移及家长确认规则优先。上游单会话被化名目录取代。
 
-[Planner 工作流](../skills/ai-roadmap-planner/SKILL.md) 由 Codex 阅读和推理，产生个人建议；不增加 API 服务。`validate_personal_roadmap.py` 重新调用原课程生成器和证据模块，检查范围、每个概念一次、硬先修顺序、复习/穿插位置、概念引用、画像/记录及 Wiki 快照；当前建议从 `learning_evidence.recommend` 获取。它不判断自然语言的真实性、教学质量或掌握，不是教学执行器。课程源、个人建议、个人证据和题卡发布状态相互独立。更新是交互式代理工作流：学习后重新运行，不是后台自动调度。
+Sigma 按 [儿童适配协议](../experiments/sigma-integration/ADAPTER.md) 读取 Wiki 和证据、生成个人建议，统一使用 `sigma_plan_store.py prepare` 展示候选并等待家长确认，再用 `publish --confirmed-sha` 校验并发布。`validate_personal_roadmap.py` 检查课程范围、先修顺序、复习位置、引用和输入快照；建议来自 `learning_evidence.recommend`。校验不判断语义、教学质量或掌握，也不授予教学许可。正式题卡和证据由 Coach 及证据模块独立管理。儿童正式入口仍关闭。
+
+## 收敛后的依赖
+
+Sigma 读取上游 Skill 与儿童适配协议，通过会话存储保存逐轮记录，通过规划存储调用规划校验器；校验器读取课程生成器、Sigma 规划依据及正式证据。Coach 独立执行已审核题卡并在使用时检查发布和先修，证据模块采集 Coach 记录并处理家长掌握确认。旧 Tutor 状态机及独立 Planner 指令已移除；规划不再读取旧 Tutor 状态。运行记录目录中未发现旧 Tutor 会话，历史实验和验收报告作为历史证据保留。
 
 ## 虚构演示及复现
 

@@ -5,7 +5,7 @@ description: 在家长陪同下执行经人工发布的 C01 事实与推测、C0
 
 # 儿童思维教练
 
-只使用本试点脚本与已发布题卡；人工审核与家长陪同是前提。未通过门禁则停止，不编题、批准、发布或补充资料。不要向孩子显示题卡全文、成人答案、解释、审核文件或内部工具输出。此 Skill 在仓库试点目录，尚未全局安装。
+本文件是 Sigma 的正式题卡操作协议，不是独立 AI 教学入口。真实 Agent 端到端验收完成前仅供隔离合成验证，不面向儿童。Sigma 须先读取 `experiments/sigma-integration/ADAPTER.md`。只使用本试点脚本与已发布题卡；人工审核与家长陪同是前提。未通过门禁则停止，不编题、批准、发布或补充资料。不要向孩子显示题卡全文、成人答案、解释、审核文件或内部工具输出。此 Skill 在仓库试点目录，尚未全局安装。
 
 从项目根目录运行 `python3 pilot-c01-c02/scripts/coach.py <命令> --learner <化名>`。入口：`start --mode diagnosis|C01|C02`、`show`、`progress`、`pause`、`resume`、`skip`、`complete`、`end`、`feedback --text ...`。恢复、进度、完成均以脚本当前持久化返回值为准，不据聊天上下文猜测；脚本错误或没有 `status: completed` 时，不能说训练已经结束。最后一题的回答正确且理由有效时 `attempt` 自动返回 completed；否则最后一题经 `skip`/`complete` 返回 completed 后才可告知结束；重复完成是幂等的。中途可暂停或结束。
 

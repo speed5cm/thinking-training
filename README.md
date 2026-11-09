@@ -4,7 +4,7 @@
 
 课程骨架与路线图：见 `docs/roadmap-design.md` 和 `roadmap/roadmap.html`。运行 `python3 scripts/generate_roadmap.py` 更新，`--check` 校验；路线图不是教学授权，正式试点仍须由原 coach 和家长执行门禁。12周计划为参考安排。
 
-AI 个性化规划工作流、上游对照和虚构演示见 `docs/ai-roadmap-planner.md`；课程基础 Roadmap 与个人计划分别维护。
+Sigma 个性化规划与虚构示例见 `docs/ai-roadmap-planner.md`；课程基础 Roadmap 与个人计划分别维护。
 
 C01/C02 学习证据、家长确认与下一步建议的最小闭环见 `docs/minimal-evidence-design.md`。当前题卡不足以形成跨题迁移掌握候选。
 
@@ -28,6 +28,8 @@ C01/C02 学习证据、家长确认与下一步建议的最小闭环见 `docs/mi
 - 不依赖商业教材授权即可使用本包原创内容；不能因此重新分发来源教材本身。
 - 保护儿童隐私：仅记录学习行为，不记录真实姓名、学校、定位或不必要的敏感资料；家长有权查看和清除记录。
 
-## AI 思维导师
+## Sigma 教学与规划（仅隔离验证）
 
-在本仓库打开 Codex，告诉它“阅读 `skills/child-sigma-tutor/SKILL.md`，开始学习”，首次提供化名并由家长陪同；下次说“阅读该 Skill，继续学习”。也可说“暂停学习”“今天学到哪里”“查看学习路线”或“结束学习”。Agent 根据 Wiki 和记录组织对话，脚本保存每轮并执行现有先修与发布门禁；动态讨论不替代正式测评。个人记录在被 Git 忽略的化名目录中，并非加密存储。
+Sigma 是唯一 AI 教学与规划核心。验证时先阅读 `experiments/sigma-integration/upstream/SKILL.md` 和优先级更高的 `experiments/sigma-integration/ADAPTER.md`；正式题卡由 Coach 执行，正式证据和规划校验由相应脚本处理。规划须先准备候选、展示给家长并取得明确确认，再经 Sigma 规划存储发布。路线不授予教学或掌握资格。
+
+**儿童正式入口尚未开放。** 在真实 Agent 端到端验收完成并解决发布阻断前，仅可使用隔离合成数据验证，不得面向真实儿童使用。个人记录目录不进 Git，但并非加密存储。现有阻断和历史结果见 `docs/sigma-release-blockers-2026-11-09.md`。

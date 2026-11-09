@@ -34,7 +34,10 @@ class SigmaIntegration(unittest.TestCase):
             for key in ('curriculum_digest','evidence_digest','learner_digest'): plan[key] = ctx[key]
             candidate = folder / 'candidate.json'
             candidate.write_text(json.dumps(plan, ensure_ascii=False))
-            published = call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate))
+            def publish():
+                pending = call('sigma_plan_store.py', 'prepare', *learner, '--plan', str(candidate))
+                return call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate), '--confirmed-sha', pending['plan_sha256'])
+            published = publish()
             self.assertEqual(published['status'], 'current')
             self.assertTrue(published['review_queue'][0]['due'])
             # Routine coach events do not change formal evidence or the plan.
@@ -57,7 +60,7 @@ class SigmaIntegration(unittest.TestCase):
             ctx = call('validate_personal_roadmap.py', 'context', *learner)
             for key in ('curriculum_digest','evidence_digest','learner_digest'): plan[key] = ctx[key]
             candidate.write_text(json.dumps(plan, ensure_ascii=False))
-            call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate))
+            publish()
             scheduled = call('sigma_plan_store.py', 'schedule-dynamic', *learner, data={
                 'concept':'C01', 'question_id':'q1', 'reason':'需要复习', 'interval_days':1})
             task = scheduled['dynamic_reviews'][0]
@@ -89,7 +92,7 @@ class SigmaIntegration(unittest.TestCase):
             ctx = call('validate_personal_roadmap.py', 'context', *learner)
             for key in ('curriculum_digest','evidence_digest','learner_digest'): plan[key] = ctx[key]
             candidate.write_text(json.dumps(plan, ensure_ascii=False))
-            republished = call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate))
+            republished = publish()
             self.assertEqual((republished['status'], republished['version']), ('current', 3))
             completed = call('sigma_plan_store.py', 'complete-dynamic', *learner, data={
                 'task_id':task['task_id'],'question_id':'q3','result':'correct','next_interval_days':2})

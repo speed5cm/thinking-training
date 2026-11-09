@@ -72,6 +72,12 @@ class PersonalRoadmapTests(unittest.TestCase):
             with self.assertRaises(planner.Invalid):
                 planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
 
+    def test_old_tutor_state_is_not_a_planning_input(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
+            before = planner.context('fiction-demo')['learner_digest']
+            (Path(tmp) / 'tutor-state.json').write_text('{"status":"paused"}', encoding='utf-8')
+            self.assertEqual(planner.context('fiction-demo')['learner_digest'], before)
+
     def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
             snapshot = {'state': {'question': '原题'}, 'session': '记录', 'turns': []}
@@ -93,9 +99,6 @@ class PersonalRoadmapTests(unittest.TestCase):
             planner.sigma_session.operate('fiction-demo', snapshot, 3)
             with self.assertRaises(planner.Invalid):
                 planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
-            (Path(tmp) / 'sigma' / 'state.json').write_text('{}', encoding='utf-8')
-            with self.assertRaises(planner.sigma_session.Invalid):
-                planner.context('fiction-demo')
 
     def test_proposed_actions_cannot_grant_mastery_or_teaching(self):
         for kind in ('mastered', 'teach', 'skip'):
