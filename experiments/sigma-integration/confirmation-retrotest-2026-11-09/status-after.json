@@ -1,0 +1,36 @@
+{
+  "status": "current",
+  "version": 2,
+  "plan_sha256": "a00b7e79d1223fba3f5c6f3346763af7f6782903e0a28052618ebad01de6f72c",
+  "inputs": {
+    "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+    "learner_digest": "7c9e91b51d4b61007f48c660760c0f6f972d3442bb52fa075d240e41860bde58",
+    "evidence_digest": "ed8c9f1e03c6a690029feeaa0f30a4dfcfa62fae169fabdce6e35f91341af2d5"
+  },
+  "review_queue": [
+    {
+      "concept": "C01",
+      "evidence_session": "6a157a1f-d9e4-4c34-805f-d67fe7fe638c",
+      "evidence_at": "2026-11-09T02:43:58.181806+00:00",
+      "due_at": "2026-11-10T02:43:58.181806+00:00",
+      "status": "pending",
+      "reason": "已有正式训练观察；一天后复习为实验安排，不表示掌握",
+      "task_id": "cf0246383c402a54ae140393bb29a79c67048a618b9cd1128e217c6a34211195",
+      "due": false
+    }
+  ],
+  "dynamic_reviews": [
+    {
+      "task_id": "470ba207-7877-49c8-bd3e-bc3112db1567",
+      "concept": "C01",
+      "source_question_id": "fresh-001",
+      "reason": "虚构回答把盒子空了作为礼物肯定被拿走的依据；需在新情境复习区分可见状态与过去事件。",
+      "interval_days": 1,
+      "scheduled_at": "2026-11-09T02:42:14.872411+00:00",
+      "due_at": "2026-11-10T02:42:14.872411+00:00",
+      "status": "pending",
+      "due": false
+    }
+  ],
+  "notice": "复习安排非掌握判定或教学授权；须重新检查实时门禁。"
+}

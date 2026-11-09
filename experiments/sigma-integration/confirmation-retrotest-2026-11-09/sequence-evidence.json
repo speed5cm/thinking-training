@@ -1,0 +1,11 @@
+{
+  "prepare_output_written_utc": "2026-11-09T03:03:08.384943+00:00",
+  "simulated_confirmation_utc": "2026-11-09T03:03:20.792244+00:00",
+  "published_at_utc": "2026-11-09T03:03:29.774622+00:00",
+  "ordering_verified": true,
+  "confirmed_sha": "a00b7e79d1223fba3f5c6f3346763af7f6782903e0a28052618ebad01de6f72c",
+  "candidate_sha256_canonical": "a00b7e79d1223fba3f5c6f3346763af7f6782903e0a28052618ebad01de6f72c",
+  "version": 2,
+  "scope": "独立合成副本；原历史操作未追认。",
+  "evidence_limit": "prepare 时间依据文件修改时间；展示和模拟确认由当前 Agent 交互记录，模拟角色不验证真实身份。"
+}

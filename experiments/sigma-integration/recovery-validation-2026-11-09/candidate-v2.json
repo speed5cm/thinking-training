@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "learner": "test-startup-01",
+  "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+  "evidence_digest": "ed8c9f1e03c6a690029feeaa0f30a4dfcfa62fae169fabdce6e35f91341af2d5",
+  "learner_digest": "7c9e91b51d4b61007f48c660760c0f6f972d3442bb52fa075d240e41860bde58",
+  "steps": [
+    {
+      "kind": "introduce",
+      "concept": "C01",
+      "reason": "合成动态回答曾将空盒状态当成过去发生的证据；一次 Coach 回答与单张卡不能证明掌握，继续 C01。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "review",
+      "concept": "C01",
+      "reason": "保留已安排的动态复习，在新情境检查从可见状态推断过去的判断；复习不计正式证据。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C02",
+      "reason": "在 C01 实际达成先修门禁后，再比较稳定属性。",
+      "wiki_pages": [
+        "wiki/concepts/attribute-comparison.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C03",
+      "reason": "在比较基础上学习分类与反例。",
+      "wiki_pages": [
+        "wiki/concepts/classification-counterexample.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C04",
+      "reason": "在比较基础上识别并检验规律。",
+      "wiki_pages": [
+        "wiki/concepts/pattern-rule.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C05",
+      "reason": "在分类和规律之后学习系统枚举。",
+      "wiki_pages": [
+        "wiki/concepts/systematic-enumeration.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C06",
+      "reason": "结合观察与枚举检验条件推理。",
+      "wiki_pages": [
+        "wiki/concepts/conditional-reasoning.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C07",
+      "reason": "结合事实区分与条件推理检验证据。",
+      "wiki_pages": [
+        "wiki/concepts/evidence-and-alternatives.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C08",
+      "reason": "在证据判断基础上组织理由并倾听。",
+      "wiki_pages": [
+        "wiki/concepts/structured-argument.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C09",
+      "reason": "利用枚举及条件推理分解限制。",
+      "wiki_pages": [
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C10",
+      "reason": "在论证与约束分解之后比较视角和取舍。",
+      "wiki_pages": [
+        "wiki/concepts/perspectives-tradeoffs.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C11",
+      "reason": "将多种构想作为未来可穿插的目标；无发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/divergent-ideas.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C12",
+      "reason": "在分解与创造后规划原型测试。",
+      "wiki_pages": [
+        "wiki/concepts/prototype-testing.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C13",
+      "reason": "在枚举、证据与分解基础上规划策略迁移。",
+      "wiki_pages": [
+        "wiki/concepts/strategy-transfer.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C14",
+      "reason": "未来穿插计划和自查；无发布材料。",
+      "wiki_pages": [
+        "wiki/concepts/plan-monitor-reflect.md"
+      ]
+    }
+  ],
+  "gaps": [
+    "仅有一次合成 Coach 正式训练和动态模拟；单张卡、单次会话、无已验证陌生迁移，不足以判定 C01 掌握。",
+    "C01 每种训练仅一张发布卡，不能满足不同题卡掌握证据；C02 必须满足 C01 先修，C03—C14 尚无已发布题卡。"
+  ],
+  "revision_suggestions": []
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "path": "experiments/sigma-integration/startup-test-01/agent-session-snapshot.jsonl",
+    "commit": "e7415da",
+    "git_content_sha256": "aa0f190d254dae0814bb593c9dac1fd59ed2fc846a87276437faa5ebf14bbced",
+    "matches_reviewed_temp_backup": true,
+    "remote_read_with_github_connector": true
+  },
+  {
+    "path": "experiments/sigma-integration/startup-test-01/continuation/parent-agent-log-snapshot.jsonl",
+    "commit": "e7415da",
+    "git_content_sha256": "29d5b42d305ae9e8660d90512c6be17c3c4e979facb4f19015dcce3640c2cb7e",
+    "matches_reviewed_temp_backup": true,
+    "remote_read_with_github_connector": true
+  }
+]

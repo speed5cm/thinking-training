@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "revision": 17,
+  "state": {
+    "mode": "isolated_synthetic_replay",
+    "status": "formal_training_completed",
+    "concept": "C01",
+    "mastery": "unknown",
+    "support": "H0",
+    "candidate_sha256": "4af2fbdecf352b253e12ec3936f0b2b8e76577b4d641bd277829315c65f97f7e",
+    "candidate_status": "published",
+    "source_fixture": "experiments/sigma-integration/acceptance-2026-11-08/targeted/input-06.txt",
+    "parent_observation": "unknown",
+    "last_observation": "合成正式题回答及理由符合题卡；已采集一条合成训练证据，不能判掌握。",
+    "pause_reason": "已恢复",
+    "resume_result": "重新核验路线 v1 current、C01 门禁和原始问答；动态复习未到期；正式证据基线为零，Coach C01 已启动并展示题卡。",
+    "plan_version": 1,
+    "dynamic_review_task_id": "470ba207-7877-49c8-bd3e-bc3112db1567",
+    "coach_status": "completed",
+    "coach_card_id": "ST-C01-01",
+    "coach_session_id": "6a157a1f-d9e4-4c34-805f-d67fe7fe638c",
+    "formal_evidence_status": "captured_synthetic_only",
+    "plan_status": "stale",
+    "cross_store_note": "Coach 已完成；证据采集成功且仅含本次 Coach 回答；路线因证据摘要变化过期；动态复习仍 pending 且未到期。"
+  },
+  "session": "合成隔离测试，路线 v1 已模拟家长确认并发布；动态问答不属于正式证据。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "synthetic-q01",
+      "text": "照片里，椅子上放着一顶帽子。小明说：“刚才一定有人坐在这里。”这句话是照片能确认的事实，还是猜测？请说说依据。",
+      "concept": "C01",
+      "kind": "dynamic_diagnostic_fixture_replay",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "support": "H0",
+      "self_review": "适龄、单一主问题及理由、符合 C01、不泄露正式题答案；重放既有合成动态例题。"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-q01",
+      "text": "这是猜测，照片只能看到椅子上有帽子，不能看到刚才有没有人坐过。",
+      "source": "已保存的成人模拟夹具重放"
+    },
+    {
+      "type": "analysis",
+      "question_id": "synthetic-q01",
+      "analysis": {
+        "understanding": "将帽子在椅子上区分为照片可见信息，将刚才有人坐过区分为猜测。",
+        "reasoning": "回答明确指出照片不能看到刚才是否有人坐过；未补充题设没有给出的过去事实。",
+        "support": "H0；本次夹具回放没有提示。",
+        "next_step": "保持 C01，后续如获得允许可使用不同场景继续观察；不据此判掌握或解锁 C02。",
+        "limitations": "重放历史合成回答，不是独立新学习者表现；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "fresh-001",
+      "concept": "C01",
+      "kind": "dynamic_practice",
+      "text": "图片里，一个空盒子打开着。有人说：‘礼物一定已经被拿走了。’这句话是图片能确认的事实，还是猜测？请说说你的理由。",
+      "support": "H0",
+      "reason": "观察能否区分图片内容与对过去的推测；准备跨进程未答题恢复。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "self_review": "单一主问题及理由，适龄，符合 C01；不复述正式题卡情境或答案。"
+    },
+    {
+      "type": "answer",
+      "question_id": "fresh-001",
+      "text": "是真的，因为盒子空了，礼物肯定被拿走了。",
+      "source": "测试者生成的全新虚构回答，非真实儿童"
+    },
+    {
+      "type": "analysis",
+      "question_id": "fresh-001",
+      "analysis": {
+        "understanding": "回答把盒子空着作为礼物肯定被拿走的依据；当前可观察到的是将物品状态与过去过程联系起来。",
+        "reasoning": "原答说“因为盒子空了，礼物肯定被拿走了”，但题设没有给出过去是否有礼物或发生过什么。",
+        "support": "H0；回答前未提供提示。",
+        "next_step": "保持 C01，用追问检查是否存在其他可能；不据此判掌握或形成稳定能力标签。",
+        "limitations": "成人测试者生成的虚构回答，非真实儿童表现；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "fresh-002",
+      "text": "你注意到盒子是空的。我们再想一想：盒子空着，还可能是因为什么？",
+      "concept": "C01",
+      "kind": "dynamic_followup",
+      "support": "H1",
+      "reason": "针对 fresh-001 的回答，邀请考虑其他可能，帮助区分当前状态与过去发生的事情。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "self_review": "单一追问，适龄，不提供本题答案或正式题卡内容。"
+    },
+    {
+      "type": "answer",
+      "question_id": "fresh-002",
+      "text": "我不知道，能给我一点提示吗？",
+      "source": "测试者生成的虚构回答，非真实儿童"
+    },
+    {
+      "type": "analysis",
+      "question_id": "fresh-002",
+      "analysis": {
+        "understanding": "本次回答表示不知道，并主动请求提示；尚无对其他可能的具体解释。",
+        "reasoning": "原答直接表达不知道和需要提示；原因 unknown。",
+        "support": "已有 H1 追问；本次请求进一步提示。",
+        "next_step": "以简单平行情境帮助思考，再让其作答；不据此判断掌握。",
+        "limitations": "成人测试者生成的虚构回答，不是儿童表现；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "fresh-003",
+      "text": "没关系，我们换个例子：一个杯子从拿来后就没有装过水。现在杯子里有水吗？",
+      "concept": "C01",
+      "kind": "dynamic_parallel_support",
+      "support": "H2",
+      "reason": "fresh-002 请求提示；用更简单的平行情境帮助思考物品状态与经历。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "self_review": "一个简短适龄问题；平行情境不直接给出原题答案或正式题卡答案。"
+    },
+    {
+      "type": "answer",
+      "question_id": "fresh-003",
+      "text": "不一定，拿来的时候杯子里可能已经有水。",
+      "source": "测试者生成的虚构回答，非真实儿童"
+    },
+    {
+      "type": "analysis",
+      "question_id": "fresh-003",
+      "analysis": {
+        "understanding": "回答指出拿来时可能已有水，是对题设缺少初始状态的合理质疑。",
+        "reasoning": "题目只说拿来后没有装过水，未说明拿来时杯中是否有水，因此不能唯一判断现在是否有水。",
+        "support": "H2 平行情境；题设不充分，责任在出题。",
+        "next_step": "承认题设含糊，换初始状态和后续条件均明确的简单平行题；不以此判错或判掌握。",
+        "limitations": "成人测试者生成的虚构回答，非真实儿童表现；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "fresh-004",
+      "text": "你说得对，我刚才没有说清楚杯子拿来时有没有水。我们换一个：一个瓶子一开始是空的，后来一直没有往里面放东西。现在瓶子里有东西吗？",
+      "concept": "C01",
+      "kind": "dynamic_parallel_support",
+      "support": "H2",
+      "reason": "承认 fresh-003 的条件不充分，换初始状态及后续条件明确的平行情境。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "self_review": "一个低难度问题，条件充分；不直接给原题或正式题卡答案。"
+    },
+    {
+      "type": "answer",
+      "question_id": "fresh-004",
+      "text": "没有，一开始瓶子是空的，后来也没往里放东西。",
+      "source": "测试者生成的虚构回答，非真实儿童"
+    },
+    {
+      "type": "analysis",
+      "question_id": "fresh-004",
+      "analysis": {
+        "understanding": "在限定初始状态和后续过程的平行情境中，回答正确并引用了两个条件。",
+        "reasoning": "原答指出开始为空且之后未放东西，符合题设。",
+        "support": "H2；这是提供明确条件的简单平行情境。",
+        "next_step": "安排针对 fresh-001 具体判断的动态复习；本题不足以判定原问题已解决或 C01 掌握。",
+        "limitations": "成人测试者生成的虚构回答，非真实儿童表现；动态练习非正式证据；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "coach-c01-001",
+      "text": "桌上有一只打开的水杯，杯旁有水迹，窗户开着。哪一项只是猜测？A. 杯旁有水迹；B. 有人刚碰倒杯子；C. 窗户开着。",
+      "concept": "C01",
+      "kind": "coach_formal_training",
+      "coach_card_id": "ST-C01-01",
+      "card_version": "1.1.0",
+      "support": "H0",
+      "source": "coach.py show",
+      "reason": "按测试者指令启动已发布 C01 正式训练；先前动态练习不作为正式证据。"
+    },
+    {
+      "type": "answer",
+      "question_id": "coach-c01-001",
+      "text": "我选 B，水迹和窗户是题目给的，但有没有人碰倒杯子并没有说。",
+      "source": "测试者生成的新虚构回答，非真实儿童"
+    },
+    {
+      "type": "analysis",
+      "question_id": "coach-c01-001",
+      "analysis": {
+        "understanding": "虚构回答区分题目直接给出的信息与未交代的过去事件，选择与理由均符合题卡。",
+        "reasoning": "原答指出水迹和窗户是题设信息，题设未说明是否有人碰倒杯子。",
+        "support": "H0；这道正式题之前未调用 Coach 提示，但同一模拟会话之前有相关动态练习，不视为独立迁移。",
+        "next_step": "由 Coach 保存该合成原答并检查完成状态，再按协议采集和评估；单次表现不判掌握。",
+        "limitations": "测试者虚构回答，非真实儿童表现；动态问答不能计入正式证据。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "original": "experiments/sigma-integration/startup-test-01/agent-session-snapshot.jsonl",
+    "backup": "仅保存在受限临时目录，非长期归档",
+    "original_sha256": "aa0f190d254dae0814bb593c9dac1fd59ed2fc846a87276437faa5ebf14bbced",
+    "redacted": "experiments/sigma-integration/startup-test-01/agent-session-snapshot.redacted.jsonl",
+    "redacted_sha256": "bb9c2eb2d8dea185474bc586801b064b001910099dfaa706a92f4e23a125b6f7",
+    "records": 216,
+    "scope": "全部正文、路径、输出、线程标识和用户名均移除；仅保留事件类型、序号和逐条原始散列。"
+  },
+  {
+    "original": "experiments/sigma-integration/startup-test-01/continuation/parent-agent-log-snapshot.jsonl",
+    "backup": "仅保存在受限临时目录，非长期归档",
+    "original_sha256": "29d5b42d305ae9e8660d90512c6be17c3c4e979facb4f19015dcce3640c2cb7e",
+    "redacted": "experiments/sigma-integration/startup-test-01/continuation/parent-agent-log-snapshot.redacted.jsonl",
+    "redacted_sha256": "f901d4ca59ad79dd747fbceafcd88488fc5ce1a073a55937ec9cdb2cca38215b",
+    "records": 519,
+    "scope": "全部正文、路径、输出、线程标识和用户名均移除；仅保留事件类型、序号和逐条原始散列。"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "role": "simulated_parent",
+  "simulated": true,
+  "confirmed_sha": "a00b7e79d1223fba3f5c6f3346763af7f6782903e0a28052618ebad01de6f72c",
+  "confirmed_at_utc": "2026-11-09T03:03:20.792244+00:00",
+  "scope": "仅独立副本当前准备的候选；不追认其他操作。",
+  "text": "同意发布刚才展示的完整候选。"
+}

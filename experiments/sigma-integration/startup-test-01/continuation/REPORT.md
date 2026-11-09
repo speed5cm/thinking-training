@@ -23,4 +23,4 @@
 - 未验证 C02 真实晋级、新 C01 题卡或发布维护；未确认 C01 掌握。
 - 没有重规划或发布新版本；本轮模拟确认只绑定原候选 v1。
 
-`parent-agent-log-snapshot.jsonl` 是实际父 Agent 当前运行日志的中途快照，包含复制时之前的执行与交互，可能含环境和工具输出，应限制传播。`agent-resume.jsonl` 和 `.stderr` 保留独立进程失败的原始输出。`session-final.json`、`plan-final.json`、`evidence-final.json` 和 `coach-final.json` 是各自接口的真实读回，不是人为编造的 Agent 执行日志。
+`parent-agent-log-snapshot.redacted.jsonl` 为父 Agent 日志中途快照的脱敏事件索引，仅含类型、序号和原始记录散列，不含交互正文。原始快照已移出当前工作树，但仍存在于既有 Git 历史。`agent-resume.jsonl` 和 `.stderr` 保留独立进程失败的原始输出。`session-final.json`、`plan-final.json`、`evidence-final.json` 和 `coach-final.json` 是各自接口的真实读回，不是人为编造的 Agent 执行日志。

@@ -1,0 +1,10 @@
+{
+  "task_id": "470ba207-7877-49c8-bd3e-bc3112db1567",
+  "concept": "C01",
+  "source_question_id": "fresh-001",
+  "reason": "虚构回答把盒子空了作为礼物肯定被拿走的依据；需在新情境复习区分可见状态与过去事件。",
+  "interval_days": 1,
+  "scheduled_at": "2026-11-07T02:53:56.059768+00:00",
+  "due_at": "2026-11-08T02:53:56.059768+00:00",
+  "status": "pending"
+}

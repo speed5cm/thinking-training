@@ -1,0 +1,7 @@
+{
+  "exit_code": 1,
+  "stderr": "停止：复习任务不存在或已完成",
+  "unchanged": true,
+  "sha_before": "1ead32fe00d94e5013092c34754f8c7bf5c6d90d8719d781c512d3ed67d88a12",
+  "sha_after": "1ead32fe00d94e5013092c34754f8c7bf5c6d90d8719d781c512d3ed67d88a12"
+}
