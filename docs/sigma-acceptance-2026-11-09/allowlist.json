@@ -1,0 +1,212 @@
+[
+  {
+    "path": "skills/child-sigma-tutor/SKILL.md",
+    "sha256": "63ce8975a6b546d93dcef1823546df8dd609d33de91a32a35ae66007e8b67336",
+    "bytes": 1266
+  },
+  {
+    "path": "experiments/sigma-integration/upstream/SKILL.md",
+    "sha256": "20c84479ff69f515186be4510ea54694f8030dae0f4e09217ab809e9ea754e53",
+    "bytes": 43229
+  },
+  {
+    "path": "experiments/sigma-integration/ADAPTER.md",
+    "sha256": "2f83d37f25d61d0f49c105c70bbd14908cebedd5019d180e4a1fbd05e819e4dd",
+    "bytes": 19204
+  },
+  {
+    "path": "experiments/sigma-integration/formal_gate.py",
+    "sha256": "93471849095f044a7762d1c616a31aec72e3d9ebf6cf4b86a0228f021ebae0a0",
+    "bytes": 1303
+  },
+  {
+    "path": "wiki/index.md",
+    "sha256": "0e4b90ea2377baab2271c1d767c27fa2021ccdc085d3c0c54a7cce52940763a9",
+    "bytes": 1997
+  },
+  {
+    "path": "curriculum/12-week-plan.md",
+    "sha256": "8a3fbbb7c1f6434735e0e43ad02dc81e5215a7a5dbb078a97820db1cba5f1a75",
+    "bytes": 21906
+  },
+  {
+    "path": "references/sources.md",
+    "sha256": "628b1062b978f7876b5a48252298800251ab0de630280861f8b4d6b5187bdd1b",
+    "bytes": 11978
+  },
+  {
+    "path": "references/pedagogy.md",
+    "sha256": "eb7895fa21e49327aba2b3718eab269aa374d756c60a864a5aff52fef1fe3aae",
+    "bytes": 15121
+  },
+  {
+    "path": "question-bank/original-examples.md",
+    "sha256": "0e78f40e5aa15f72bce85e5bf8319a96a008d604a414fbc74fbc2fa074c1bc6f",
+    "bytes": 35649
+  },
+  {
+    "path": "pilot-c01-c02/wiki/index.md",
+    "sha256": "4597ae15e58a73ede70ecab197befc9b15ecdcfa522098ad44d3e9e8ae62ff76",
+    "bytes": 313
+  },
+  {
+    "path": "pilot-c01-c02/wiki/overview.md",
+    "sha256": "a9658aae55c2f54c647a83a1c5fc374ad56e2a1e20565375131da44541e5380d",
+    "bytes": 548
+  },
+  {
+    "path": "pilot-c01-c02/wiki/concepts/C01.md",
+    "sha256": "6d9b4cfd6e6c719eb4f296ffa4e9793e553e34521f4b703d9abf0bcdb7f85f18",
+    "bytes": 1701
+  },
+  {
+    "path": "pilot-c01-c02/wiki/concepts/C02.md",
+    "sha256": "c5276d1ee100dfe427d7fe31d738845be89c44524cfe86404934f2776f9131b5",
+    "bytes": 1610
+  },
+  {
+    "path": "pilot-c01-c02/wiki/sources/project-research.md",
+    "sha256": "8121622108709b38dc11839709ef40685411512cbfe5a095a2593c560dab184c",
+    "bytes": 562
+  },
+  {
+    "path": "pilot-c01-c02/scripts/coach.py",
+    "sha256": "98020edcd50810da19343bf1f83cf558d70c8addb0bedefbeedcdfd829fd8109",
+    "bytes": 11628
+  },
+  {
+    "path": "pilot-c01-c02/scripts/publication.py",
+    "sha256": "56558c038369bec618aa72b9b2eeb7e9fe00d70bccdd0c47cc5b275331f715c9",
+    "bytes": 3566
+  },
+  {
+    "path": "examples/ai-roadmap/fiction-plan.json",
+    "sha256": "2be094ce0627c4e73be541443e74eed28873db311631e8d85c1074432009a505",
+    "bytes": 5919
+  },
+  {
+    "path": "roadmap/roadmap.json",
+    "sha256": "a5bda60bfffd9a83d4313b8a97ae42152567bc40e0f09a39e35cc01f93b8c924",
+    "bytes": 9310
+  },
+  {
+    "path": "roadmap/roadmap.html",
+    "sha256": "41de96475142f4054589810cc4cd1db94a27248b6f8ab74c8395da18578854f6",
+    "bytes": 6668
+  },
+  {
+    "path": "wiki/concepts/attribute-comparison.md",
+    "sha256": "405ac8dd4720f94c110e27092e3a3bc4ebb5d5e60d229308cb99240ddbb6e278",
+    "bytes": 1428
+  },
+  {
+    "path": "wiki/concepts/classification-counterexample.md",
+    "sha256": "bc92b9913d186c631ab9c7caaebc292a9cc39e24dcf91cf7328e1d382818bf9e",
+    "bytes": 1464
+  },
+  {
+    "path": "wiki/concepts/conditional-reasoning.md",
+    "sha256": "617e4a341c86c14ad0e88b06d108c37c5317357623485918e7287aa565f11b7f",
+    "bytes": 1532
+  },
+  {
+    "path": "wiki/concepts/constraint-decomposition.md",
+    "sha256": "18bc77a68b763a87da2fcdd415179d45403b14531174d3cefb7593856c7b2b56",
+    "bytes": 1547
+  },
+  {
+    "path": "wiki/concepts/divergent-ideas.md",
+    "sha256": "a0aa6255b4d0ad93e03e9a581c64d18ac2c816a947879529dc3305a21895304c",
+    "bytes": 1572
+  },
+  {
+    "path": "wiki/concepts/evidence-and-alternatives.md",
+    "sha256": "0251eb741a3d0aebb917eba57d2ed5b5df70c978eb847563d05de4af62279e35",
+    "bytes": 1584
+  },
+  {
+    "path": "wiki/concepts/observation-vs-inference.md",
+    "sha256": "023c041789d0ad3c8ff16742d860b44fa0e5281ce881b0649373fc2102d18224",
+    "bytes": 1415
+  },
+  {
+    "path": "wiki/concepts/pattern-rule.md",
+    "sha256": "b735e3324ad8d598439e9513fe24dcd97a33d34ad0a9421e4fc5d5638858e075",
+    "bytes": 1433
+  },
+  {
+    "path": "wiki/concepts/perspectives-tradeoffs.md",
+    "sha256": "a1f144ed0de72d6562d98da554fa3eb3105b87e624d2f99818f3b01b9bd4bc4c",
+    "bytes": 1537
+  },
+  {
+    "path": "wiki/concepts/plan-monitor-reflect.md",
+    "sha256": "c1742fe030e6c63a6e79b2ce4c12ba5adba7b4e978b0e475dce82878855c5dd4",
+    "bytes": 1630
+  },
+  {
+    "path": "wiki/concepts/prototype-testing.md",
+    "sha256": "904319455c9ec5b1c72ff95c38200b1b1446482f786cd049bfe588c850a55b9f",
+    "bytes": 1538
+  },
+  {
+    "path": "wiki/concepts/strategy-transfer.md",
+    "sha256": "678029f38d29dfebf3d511da14c666af44390e5b0f7a620e3a4661144959cfbd",
+    "bytes": 1680
+  },
+  {
+    "path": "wiki/concepts/structured-argument.md",
+    "sha256": "75da2ec6b287692ccc5c41f8e5eff6a48b1f200b8dd69c59f462489617f5945c",
+    "bytes": 1447
+  },
+  {
+    "path": "wiki/concepts/systematic-enumeration.md",
+    "sha256": "24a6e8e8d885de816d0c69b40420fdabd79b9e2bcdafc85ae4af6a406986e128",
+    "bytes": 1475
+  },
+  {
+    "path": "scripts/concept_authorization.py",
+    "sha256": "88c791d606d53ea1cdd754ae60b2ce6b76bc75e9056e5fbd840d2ebc4d26783a",
+    "bytes": 7547
+  },
+  {
+    "path": "scripts/generate_roadmap.py",
+    "sha256": "86c993232dd3ea0ba7252b78140f261b0afcb59f220da91709d8a7b2c95db274",
+    "bytes": 7358
+  },
+  {
+    "path": "scripts/learning_evidence.py",
+    "sha256": "77397f755f6973d7df05140a67e60f093aabe60e2b8e6944de1b0ffbd4801e87",
+    "bytes": 21954
+  },
+  {
+    "path": "scripts/sigma_plan_store.py",
+    "sha256": "66a07462d7d42b66467a86bcf7d36027f058ed33a71ce26958261b085d74829b",
+    "bytes": 13521
+  },
+  {
+    "path": "scripts/sigma_session_store.py",
+    "sha256": "e26bb865a841d3123ca30e8c4c5628f2129966075fa3fe8e7a306f09164fbc4c",
+    "bytes": 26341
+  },
+  {
+    "path": "scripts/validate_personal_roadmap.py",
+    "sha256": "a2cbeb992709ecf7476af82baecf774c469efc1afb6ddd697075071946fe7440",
+    "bytes": 6501
+  },
+  {
+    "path": "experiments/sigma-integration/upstream/references/excalidraw.md",
+    "sha256": "2eda8fbabb36d5184a03a67b210a469736f2d6ae98739197e8c4ff7c64bfd7d2",
+    "bytes": 5564
+  },
+  {
+    "path": "experiments/sigma-integration/upstream/references/html-templates.md",
+    "sha256": "d94bea1b775c36db6cb71b865f7a64103b1e032ada5dc2ba87e3a20055e5e831",
+    "bytes": 4725
+  },
+  {
+    "path": "experiments/sigma-integration/upstream/references/pedagogy.md",
+    "sha256": "cae9794299bc1f058dafb9b8c84d4705f1d679e10fd8502e43b76813be992ae4",
+    "bytes": 11347
+  }
+]

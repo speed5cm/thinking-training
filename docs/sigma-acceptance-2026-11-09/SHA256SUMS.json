@@ -1,0 +1,8 @@
+{
+  "allowlist.json": "8673c3c75ff2f7b2c447458e641c7ac1b3467a419e8b6fd1760841fd4c77f2fd",
+  "review-agent-audit.txt": "12b2e86d8fda0301e62fca3b55d27561376a7524f4d0c4e48de2acfa2c677578",
+  "synthetic-route-candidate.json": "85a40ceea5f2165003fe8f49fe8a719cec36d1814e9f59048453cb9573ed0a43",
+  "synthetic-session-snapshot.json": "8342b28c60293b7736ed0cd6201891b3835fa6363e84adc84d8b82e92cabf038",
+  "synthetic-plan-history.json": "ad7b0825a1a8e7732bd1f23b92a3f8ca115896d0442ec182bddb4459f96a7487",
+  "synthetic-C01-authorization.json": "a4a58e63c6b264d5a225386544c0452719e85c660726d36e92c93d1dcb52e912"
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "learner": "synthetic-review-20261109",
+  "curriculum_digest": "59e33c829943da8ccde45743c5994ff0f6de364349ead86e9df93773e6e9c334",
+  "evidence_digest": "564a5debb628399559119ba8cfbcb1cb2006b23e3f1f5532f37c5f87fdaf453d",
+  "learner_digest": "a2413d12335f0ba6d0ceca412a16c404cede61f1f983a82f96b53f0fd6113a6d",
+  "steps": [
+    {
+      "kind": "introduce",
+      "concept": "C01",
+      "reason": "先从无先修的观察事实与推测进行初始诊断；不预设掌握。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C02",
+      "reason": "在观察基础上按稳定属性比较。",
+      "wiki_pages": [
+        "wiki/concepts/attribute-comparison.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C03",
+      "reason": "在比较基础上学习分类与反例。",
+      "wiki_pages": [
+        "wiki/concepts/classification-counterexample.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C04",
+      "reason": "在比较基础上识别和检验规律。",
+      "wiki_pages": [
+        "wiki/concepts/pattern-rule.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C05",
+      "reason": "结合分类和规律学习系统枚举。",
+      "wiki_pages": [
+        "wiki/concepts/systematic-enumeration.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C06",
+      "reason": "在观察和枚举基础上检验条件推理。",
+      "wiki_pages": [
+        "wiki/concepts/conditional-reasoning.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C07",
+      "reason": "在观察和条件推理基础上检查证据。",
+      "wiki_pages": [
+        "wiki/concepts/evidence-and-alternatives.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C08",
+      "reason": "在证据基础上组织观点和倾听。",
+      "wiki_pages": [
+        "wiki/concepts/structured-argument.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C09",
+      "reason": "在枚举和条件推理基础上分解约束。",
+      "wiki_pages": [
+        "wiki/concepts/constraint-decomposition.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C10",
+      "reason": "在论证和分解基础上比较视角和取舍。",
+      "wiki_pages": [
+        "wiki/concepts/perspectives-tradeoffs.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C11",
+      "reason": "按课程顺序规划构想发散。",
+      "wiki_pages": [
+        "wiki/concepts/divergent-ideas.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C12",
+      "reason": "在约束分解和构想基础上测试原型。",
+      "wiki_pages": [
+        "wiki/concepts/prototype-testing.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C13",
+      "reason": "在枚举、证据与分解基础上选择迁移策略。",
+      "wiki_pages": [
+        "wiki/concepts/strategy-transfer.md"
+      ]
+    },
+    {
+      "kind": "introduce",
+      "concept": "C14",
+      "reason": "规划计划、监控与反思的集中学习。",
+      "wiki_pages": [
+        "wiki/concepts/plan-monitor-reflect.md"
+      ]
+    }
+  ],
+  "gaps": [
+    "全新合成学习者，无先前诊断、学习证据或掌握确认；先修须逐项实际验证。",
+    "路线仅建议未来范围；目前仅 C01 有合成模拟授权，其余概念须分别授权后方可教学。"
+  ],
+  "revision_suggestions": []
+}

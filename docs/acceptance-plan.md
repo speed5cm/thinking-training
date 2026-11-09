@@ -1,5 +1,7 @@
 # 验收计划
 
+> **历史测试方案与执行快照**：本文件保留早期固定题卡方案、通用化前基线和当时的合成用例，包含已废弃的独立会话、题卡和 Coach 入口假设，不是现行教学或晋级规则。当前隔离协议见 [ADAPTER](../experiments/sigma-integration/ADAPTER.md)，后续部分 Agent 教学报告、未保存证据及尚待验收事项见[合成验收归档](sigma-acceptance-2026-11-09/README.md)。真实儿童入口仍关闭。
+
 ## 2026-11-09 通用化前基线
 
 在仓库原始代码上运行 `python3 -m unittest discover -s tests -v`：54 项通过；运行 `python3 -m unittest discover -s pilot-c01-c02/tests -v`：24 项通过。这是脚本测试基线，不是 Sigma Agent 行为验收，也不证明 C02/C03 的动态教学或自动晋级已经实现。上游版本与现有耦合点的核查见 [架构文档](architecture.md#2026-11-09-上游复核与迁移边界)。
@@ -48,7 +50,7 @@
 
 进入儿童试教前：B01—B04 已关闭；每一试点题和概念的来源、年龄、答案、提示、儿童视图及审核版本具证据；A03/A05/A07/A08/A11 与 H01—H08 在模拟环境通过，尤其不能以“模型承诺不泄漏”替代实际测试。完成试教后复核 H09/H10、退出/恢复和记录可用性，整理发现、未解决问题及改进；父母或课程负责人据实际证据决定扩大范围。尚未执行的项目一律保持待执行；如果没有实现自动检查，相应门禁可先由成人按同样标准人工检查，但不能称为自动测试通过。
 
-## C01 → C02 动态入口隔离验收
+## C01 → C02 动态入口隔离验收（历史用例）
 
 以下是独立的合成测试范围，不改变上面的真实儿童产品验收状态。测试从临时项目副本建立 `synthetic` 记录，模拟两份 `synthetic_simulation` 内容授权与模拟确认，不创建或声称真实人工审核。自动用例位于 [`test_dynamic_transition.py`](../tests/test_dynamic_transition.py) 和 [`test_dynamic_candidate.py`](../tests/test_dynamic_candidate.py)：
 

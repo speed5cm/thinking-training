@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "concept": "C01",
+  "version": "synthetic-review-20261109",
+  "review": {
+    "kind": "synthetic_simulation",
+    "actor": "isolated-simulation",
+    "basis": "隔离合成验证：依清单内 C01 根概念、试点概念和来源构造，不代表真实审核"
+  },
+  "status": "active",
+  "teaching_goal": "面对两个新场景能各说出3条事实+1条推测，并提出一条核实方法。",
+  "scope": "可直接核查的描述和对原因、经历、意图的猜测不同。",
+  "sources": [
+    "R04",
+    "R06"
+  ],
+  "content_sha256": {
+    "wiki/index.md": "0e4b90ea2377baab2271c1d767c27fa2021ccdc085d3c0c54a7cce52940763a9",
+    "wiki/concepts/observation-vs-inference.md": "023c041789d0ad3c8ff16742d860b44fa0e5281ce881b0649373fc2102d18224",
+    "curriculum/12-week-plan.md": "8a3fbbb7c1f6434735e0e43ad02dc81e5215a7a5dbb078a97820db1cba5f1a75",
+    "references/sources.md": "628b1062b978f7876b5a48252298800251ab0de630280861f8b4d6b5187bdd1b",
+    "references/pedagogy.md": "eb7895fa21e49327aba2b3718eab269aa374d756c60a864a5aff52fef1fe3aae",
+    "question-bank/original-examples.md": "0e78f40e5aa15f72bce85e5bf8319a96a008d604a414fbc74fbc2fa074c1bc6f",
+    "pilot-c01-c02/wiki/index.md": "4597ae15e58a73ede70ecab197befc9b15ecdcfa522098ad44d3e9e8ae62ff76",
+    "pilot-c01-c02/wiki/overview.md": "a9658aae55c2f54c647a83a1c5fc374ad56e2a1e20565375131da44541e5380d",
+    "pilot-c01-c02/wiki/concepts/C01.md": "6d9b4cfd6e6c719eb4f296ffa4e9793e553e34521f4b703d9abf0bcdb7f85f18",
+    "pilot-c01-c02/wiki/sources/project-research.md": "8121622108709b38dc11839709ef40685411512cbfe5a095a2593c560dab184c"
+  }
+}

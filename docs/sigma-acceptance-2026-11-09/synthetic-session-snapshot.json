@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "revision": 4,
+  "state": {
+    "route_version": 1,
+    "current_concept": "C01",
+    "action": "暂停；等待真实时间到期后继续复习",
+    "reason": "诊断已保存，一天后复习已安排；目前未到期",
+    "parent_observations": "unknown",
+    "wiki_read_gate": [
+      "wiki/concepts/observation-vs-inference.md",
+      "pilot-c01-c02/wiki/concepts/C01.md"
+    ]
+  },
+  "session": "3f347254-5241-4136-89ce-f294f663fc01",
+  "turns": [
+    {
+      "type": "session_start",
+      "recorded_at": "2026-11-09T13:00:10.269417+00:00",
+      "session_id": "3f347254-5241-4136-89ce-f294f663fc01"
+    },
+    {
+      "type": "question",
+      "concept": "C01",
+      "session_id": "3f347254-5241-4136-89ce-f294f663fc01",
+      "question_id": "diag-01",
+      "purpose": "teaching",
+      "text": "桌上有一个打开的蓝色盒子，盒子旁边放着两支铅笔。小明说：“一定有人刚从盒子里拿出了铅笔。”你觉得这句话里，哪些是题目告诉我们的，哪些还只是猜测？",
+      "wiki_sources": {
+        "wiki/concepts/observation-vs-inference.md": "023c041789d0ad3c8ff16742d860b44fa0e5281ce881b0649373fc2102d18224",
+        "pilot-c01-c02/wiki/concepts/C01.md": "6d9b4cfd6e6c719eb4f296ffa4e9793e553e34521f4b703d9abf0bcdb7f85f18"
+      },
+      "authorization_sha256": "74e0c796e410b1de6527fc061e624bc71497fad9f122e1578c3aa49cd68c4726",
+      "recorded_at": "2026-11-09T13:00:35.379838+00:00"
+    },
+    {
+      "type": "answer",
+      "session_id": "3f347254-5241-4136-89ce-f294f663fc01",
+      "question_id": "diag-01",
+      "text": "题目告诉我们盒子打开着，旁边有两支铅笔。我觉得有人刚从盒子里拿出了铅笔也算事实，因为铅笔就在盒子旁边。",
+      "recorded_at": "2026-11-09T13:01:27.924044+00:00"
+    },
+    {
+      "type": "analysis",
+      "session_id": "3f347254-5241-4136-89ce-f294f663fc01",
+      "question_id": "diag-01",
+      "analysis": {
+        "observation": "指出盒子打开、旁边两支铅笔；将位置作为过去取出事件必然发生的依据。",
+        "evidence_quote": "题目告诉我们盒子打开着，旁边有两支铅笔。我觉得有人刚从盒子里拿出了铅笔也算事实，因为铅笔就在盒子旁边。",
+        "hypothesis": "暂时可能混淆线索与可直接核查的过去事件，需后续检验；不推断稳定能力。",
+        "next_action": "使用新情境继续巩固，并安排一次短期复习。",
+        "support": "未提供提示"
+      },
+      "recorded_at": "2026-11-09T13:01:27.924044+00:00"
+    }
+  ]
+}

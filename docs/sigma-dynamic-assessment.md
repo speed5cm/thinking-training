@@ -1,6 +1,6 @@
 # Sigma 动态评估与晋级设计
 
-> 2026-11-09 通用化正在实施：运行协议以 [ADAPTER](../experiments/sigma-integration/ADAPTER.md) 为准。本页下述 C01/C02 和 Coach 的实现说明保留为历史；合成闭环已有针对性测试，但完整回归及真实 Agent 行为验收尚未通过，真实儿童入口保持关闭。
+> 当前运行协议以 [ADAPTER](../experiments/sigma-integration/ADAPTER.md) 为准。规则变更后曾执行完整脚本回归及部分真实 Agent 合成教学；先前 Agent 原始日志未保留，真实时钟复习闭环和其他异常门禁仍待验收。证据与限制见[合成验收归档](sigma-acceptance-2026-11-09/README.md)。真实儿童入口保持关闭。
 
 状态：**C01 → C02 动态候选、模拟确认、规划和使用点门禁已接入隔离合成试点**。聚合本身不授权晋级，真实儿童入口仍关闭。现行协议仍是 [ADAPTER.md](../experiments/sigma-integration/ADAPTER.md)；儿童正式入口关闭。旧 Coach、题卡和审核代码保留。
 
@@ -77,11 +77,11 @@
 | `scripts/learning_evidence.py` | 已直接从权威会话快照只读重算隔离候选、规则版本和证据摘要，不复制至 `evidence.jsonl`；旧固定题卡观察仅留档；候选与模拟确认绑定规则、证据和目标内容 |
 | `scripts/sigma_plan_store.py` | 继续保存路线、确认绑定及动态复习队列；评估用途须在复习题展示前声明。处理证据变化导致的路线或确认失效 |
 | `scripts/validate_personal_roadmap.py`、课程生成校验 | 接入新证据摘要及候选；规划仍是建议，不授予教学许可 |
-| `experiments/sigma-integration/formal_gate.py`、`pilot-c01-c02/scripts/coach.py` | wrapper 预检；Coach 在持锁的开始和活动使用点重新计算同一动态候选，并检查模拟确认、当前路线、Wiki、先修和 C02 授权；动态教学不依赖题卡发布 |
+| `experiments/sigma-integration/formal_gate.py`、`scripts/learning_evidence.py`、`scripts/sigma_session_store.py` | 隔离入口预检，并在提交问题时持锁重验当前路线、先修和概念授权；动态教学不依赖题卡发布。旧 Coach 固定题卡训练入口关闭 |
 
 变更后须沿用锁顺序，在最终门禁内重读检查；跨会话与证据文件中断时按稳定问题 ID 核对恢复、防重复采集。证据更正或新增关键反证后，旧决定和绑定确认不得自动沿用。
 
-当前部分概念可用性与题卡发布耦合。C01、C02 合成授权记录的摘要绑定、撤销及失效检查已实现；真实人工审核的可信身份、责任人、版本历史和受控操作仍待实现；不得因移除题卡晋级前提而放开未经授权的概念。概念授权不等于逐题授权：Sigma 仍须检查动态题的质量，不合格题不计晋级证据，也不冒充经审核题卡。
+当前隔离动态教学使用概念授权和先修门禁，不以题卡发布作为概念可用性的前提。合成授权记录的摘要绑定、撤销及失效检查已实现；真实人工审核的可信身份、责任人、版本历史和受控操作仍待实现；不得因移除题卡晋级前提而放开未经授权的概念。概念授权不等于逐题授权：Sigma 仍须检查动态题的质量，不合格题不计晋级证据，也不冒充经审核题卡。
 
 ## 当前只读聚合边界
 

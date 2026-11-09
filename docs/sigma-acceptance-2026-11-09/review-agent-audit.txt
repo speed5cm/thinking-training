@@ -1,0 +1,4 @@
+隔离范围清单 SHA-256 全部匹配；generate_roadmap --check: 通过 14 概念；初始会话 revision 0；规划 status missing。
+准备路线摘要 b1f4d1dcb7cc983822410169422b52ca88a4282d78778a08d2fa39b52256df7d。
+独立合成模拟家长原话：【合成模拟家长确认，非真实家长】我已查看完整候选，同意为 synthetic-review-20261109 隔离验收发布摘要 b1f4d1dcb7cc983822410169422b52ca88a4282d78778a08d2fa39b52256df7d 所对应的路线；不代替概念授权或晋级确认。
+发布路线 version 1 current；C01 合成授权 active；session_start 首次边界提交因试图同时修改 state 被拒，随后单独提交成功 revision 1。题 diag-01 于 revision 2 保存后展示；合成学习者原答和分析于 revision 3 保存，原文见 session-snapshot.json。schedule-dynamic 成功：task 66750562-5419-4d1f-aac3-844a484c4c02，scheduled_at 2026-11-09T13:01:40.083561+00:00，due_at 2026-11-10T13:01:40.083561+00:00，pending，due false。暂停后 state 提交成功，详见 snapshot。

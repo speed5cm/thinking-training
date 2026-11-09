@@ -12,7 +12,7 @@
 
 本节覆盖上游所有直接读取或写入 session.md、画像及逐轮记录的指令。开始、继续、查看、暂停和结束时均先运行 `python3 scripts/sigma_session_store.py read --learner <化名>`；只从返回的 `state`、`session`、`turns` 和 `revision` 恢复。每次提问展示前、接收原答后及暂停或结束前，将完整的三个字段作为 JSON 经标准输入提交给 `python3 scripts/sigma_session_store.py commit --learner <化名> --expected-revision <读取到的修订号>`；`turns` 必须保留全部已提交记录并追加新记录。先提交成功，才能展示问题或声称已保存；失败即停止，冲突时重新读取并根据最新会话重新判断，不盲目覆盖。提交载荷不含 revision 和 schema_version。不要把儿童原话放入命令行参数或历史。
 
-`session-snapshot.json` 是 Sigma 会话唯一权威来源；不得使用旧的 `state.json`、`session.md`、`turns.jsonl` 作为会话状态。路线、coach 事件和正式证据各有自己的存储及门禁，不包含在此快照事务中；跨系统操作中断后须重新核对，不能声称整个学习会话跨文件原子一致。直接绕过接口的文件操作不受程序强制约束，本协议尚需真实 Agent 端到端验收。
+`session-snapshot.json` 是 Sigma 会话唯一权威来源；不得使用旧的 `state.json`、`session.md`、`turns.jsonl` 作为会话状态。路线、coach 事件和正式证据各有自己的存储及门禁，不包含在此快照事务中；跨系统操作中断后须重新核对，不能声称整个学习会话跨文件原子一致。直接绕过接口的文件操作不受程序强制约束；本协议已有部分真实 Agent 合成教学报告，完整端到端及异常验收仍未完成，证据限制见 [合成验收归档](../../docs/sigma-acceptance-2026-11-09/README.md)。
 
 `session` 由存储程序维护，为当前活动会话 ID；不得自行填写或更改。首次在 `turns` 中单独追加 `{"type":"session_start"}`，结束时单独追加 `{"type":"session_end"}`；重新开始时单独追加 `{"type":"session_resume"}`。存储程序生成不可由 Agent 指定的唯一会话 ID，恢复事件还绑定前一已结束会话。没有活动会话不能提交问题；未答问题须先恢复或处理，不能结束。暂停后读取快照并在原活动会话恢复未答原题；暂停并非新会话。立即结束并恢复不能单独证明会话独立。旧记录中没有这类边界和存储时间的事件不能补造时间或作为跨会话证据；若旧快照仍有未答问题，只可按下述旧会话中断路径保存已发生原答。
 
