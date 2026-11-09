@@ -1,5 +1,9 @@
 # 上游机制与试点架构
 
+> 状态说明（2026-11-09）：本文其余部分保留当时的上游核查与试点架构历史，不能将“现均未实现”或未来时表述作为当前实现状态。当前 Sigma 为唯一 AI 教学与规划核心，Coach 执行已审核题卡，动态教学不构成正式晋级证据；儿童正式入口关闭。现行协议见 [ADAPTER](../experiments/sigma-integration/ADAPTER.md)。
+>
+> **已决定**采用同一 Sigma 动态生成教学题和评估题，并取消固定题卡作为新机制晋级前提；**待实现、待验证**的目标数据流和模块职责见 [动态评估设计](sigma-dynamic-assessment.md)。目标采用绑定人工审核内容版本和摘要、可撤销的概念级授权；每次概念晋级须家长确认，无须逐题确认。跨不同 UTC+8 自然日且至少间隔 12 小时的有效评估要求已决定。这些机制均待实现和验证，现有门禁不变；Wiki、先修、安全停止及可信家长身份仍须保障。旧 Coach、题卡及审核代码保留，不能把目标架构当作已经上线。
+
 核查日期：2026-11-04。依据上游 [仓库目录和 README](https://github.com/orionpax1997/llm-wiki-sigma-agent)、[AGENTS.md 实际工作流](https://github.com/orionpax1997/llm-wiki-sigma-agent/blob/main/AGENTS.md)、[sigma-with-wiki 技能文件](https://github.com/orionpax1997/llm-wiki-sigma-agent/blob/main/.claude/skills/sigma-with-wiki/SKILL.md)。通过网页读取文件，未克隆仓库或执行代码；上游 main 未锁定 commit，实施时须记录实际 SHA 并重新核验。README 与源码属于项目自述及指令，不能证明功能已实际运行。
 
 ## 上游目录及 ingest
