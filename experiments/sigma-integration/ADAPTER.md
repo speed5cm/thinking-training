@@ -14,7 +14,15 @@
 
 `session-snapshot.json` 是 Sigma 会话唯一权威来源；不得使用旧的 `state.json`、`session.md`、`turns.jsonl` 作为会话状态。路线、coach 事件和正式证据各有自己的存储及门禁，不包含在此快照事务中；跨系统操作中断后须重新核对，不能声称整个学习会话跨文件原子一致。直接绕过接口的文件操作不受程序强制约束，本协议尚需真实 Agent 端到端验收。
 
-`turns` 使用追加事件：展示前追加 `{"type":"question","question_id":"会话内唯一ID","text":"问题原文"}`；收到回答后在同一次提交中依次追加 `{"type":"answer","question_id":"同一ID","text":"回答原文"}` 和 `{"type":"analysis","question_id":"同一ID","analysis":{"understanding":"具体观察","reasoning":"理由或 unknown","support":"提示依赖","next_step":"教学判断"}}`。analysis 是非空对象，保留实际的完整分析，可增加必要字段，未知写 unknown；不得仅用会被覆盖的 state 字段存储。不得修改已提交事件。追问使用新 ID。每次仅有一个未答问题；暂停、恢复时按事件顺序寻找没有对应 answer 的 question，并恢复其原文。重复 ID、孤立回答、多个未答问题或无法解释的旧记录须停止并人工核对。快照校验新增回答及分析的关联和顺序；旧记录不自动重写，其他语义仍由 Agent 检查。
+`turns` 使用追加事件。以下契约只用于 C01 隔离合成验证；教学循环、出题、追问、提示和评价继续由上游 Sigma 执行，程序只验证记录与授权，不生成题目或评分。`question_id` 在整个快照内唯一，`session_id` 标识所属学习会话且非空；同一时间只允许一个未答问题。每个新增问题必须先提交成功，才能展示、提示或接收原答。追问是新问题，仍须先保存。旧快照不自动改写；旧问题缺少本契约所需字段时不得用于新动态评估。
+
+问题事件：`{"type":"question","concept":"C01","session_id":"合成会话ID","question_id":"唯一ID","purpose":"teaching|assessment","text":"原题","wiki_sources":{"wiki/concepts/observation-vs-inference.md":"该文件SHA-256","pilot-c01-c02/wiki/concepts/C01.md":"该文件SHA-256"},"authorization_sha256":"实时授权记录摘要"}`。`authorization_sha256` 使用 `concept_authorization.py check` 返回值；`wiki_sources` 至少含上述两个概念页，也可包含授权文件清单中的其他来源，摘要须与实时文件一致。可附 `review_task_id`。评估题还须在展示前保存 `context`（情境）、`dimensions`（本题考查的维度数组）、`answer_basis`（可接受答案或判断依据）及 `practice`（是否为生成性实践，布尔值）。保存后用途和题目不可修改，教学题不得转为评估题。Sigma 仍须自行检查适龄、题意、多解、来源与实质重复；这些字段不证明题目质量。
+
+题目已保存后，在展示提示或其他支持前追加 `{"type":"support","session_id":"合成会话ID","question_id":"唯一ID","event_id":"唯一事件ID","kind":"hint|example|demonstration|clarification|other","text":"完整支持原文"}`。揭示解题方向的追问或示范须如实记录为支持，不能仅凭 `clarification` 标签认定无提示。收到回答后在同次提交中依次追加 `{"type":"answer","session_id":"合成会话ID","question_id":"唯一ID","text":"完整原答"}` 和 `{"type":"analysis","session_id":"合成会话ID","question_id":"唯一ID","analysis":{...}}`。教学分析为非空对象；评估分析只含 `dimensions`，其中必须有 `accuracy`、`explanation`、`novel_application`、`discrimination` 四项，每项为 `{"status":"supported|not_supported|unknown","answer_quote":"原答引用","wiki_path":"来源路径","wiki_quote":"来源原文"}`。已判断的维度必须逐字引用该题原答及其已声明 Wiki 来源；未声明考查或无法判断的维度写 `unknown`，引用可留空。引用只能验证文字存在，不能验证推理、陌生性或题目质量。
+
+更正使用 `{"type":"correction","session_id":"合成会话ID","question_id":"唯一ID","event_id":"唯一事件ID","reason":"更正依据","replacement":{"dimensions":{...完整四维...}}}`；失效使用 `{"type":"invalidation","session_id":"合成会话ID","question_id":"唯一ID","event_id":"唯一事件ID","reason":"失效原因"}`。它们只追加，不覆盖原题、原答或评价；同一问题的重复失效、重复事件 ID、孤立记录、重复回答和修改历史均被拒绝。更正不等于重新授权或晋级；后续聚合器必须理解更正、失效和中断，不能将其当作有效证据。
+
+若问题保存后授权撤销、内容变化、授权依据缺失，或重新授权的记录摘要与出题时不一致，停止教学和评价；已发生的原答通过一次独立提交保存两个事件：`answer` 和 `{"type":"interruption","session_id":"合成会话ID","question_id":"唯一ID","reason":"authorization_or_content_changed"}`。此提交只能关联先前保存且尚未回答的问题，不能改变 `state`、`session`、历史或加入分析、提示、新问题和其他事件。程序在锁内复查授权或出题时摘要，正常授权下不能伪造该中断路径；中断题恢复授权后也不得补评或作为有效晋级证据。若提交冲突或失败，先重读快照，用同一原答核对是否已保存，不盲目覆盖；未保存时再次按中断路径提交。原答保存成功不表示评价完成。
 
 `state.planning_basis` 是可选 JSON 对象，只记录影响概念顺序、长期复习需求或教学目标的实质性变化；及时更新真实理解变化，不能为了避免重规划隐瞒。每轮分析、进度显示、短期提示、选例子、下一题教学动作和暂停放在其他状态或追加事件中，不能放入 planning_basis；仅仅选择平行例子不会使路线失效。路线摘要独立绑定正式证据、家长确认及 Wiki，普通问答和修订号不触发重规划。Wiki 和正式授权每次仍须实时检查。
 
@@ -34,7 +42,7 @@
 
 ## C01 概念授权的隔离首批实现
 
-本批只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的 C01 合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须运行 `python3 scripts/concept_authorization.py check --learner <化名>`，失败立即停止受影响活动；不能把该检查当作路线、先修、题卡发布或题目质量的替代。每个新 question 事件必须包含 `"concept":"C01"`，提交时会在发布锁内重验；动态复习安排和完成也重验。当前尚无动态评估题和证据采集实现，不得声称已支持动态晋级。
+本批只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的 C01 合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须运行 `python3 scripts/concept_authorization.py check --learner <化名>`，失败立即停止受影响活动；不能把该检查当作路线、先修、题卡发布或题目质量的替代。每个新 question 事件必须包含 `"concept":"C01"`，提交时会在发布锁内重验；动态复习安排和完成也重验。动态评估题与评价仅支持记录，动态证据采集和晋级尚未实现，不得声称已支持动态晋级。
 
 记录位置为 `pilot-c01-c02/concept-authorizations/C01.json`，本仓库不预置有效授权。结构为 `schema_version: 1`、`concept: C01`、`version`、`review: {kind, actor, basis}`、`status`、`teaching_goal`、`scope`、`sources` 和 `content_sha256`。目标和范围须逐字等于根概念页的掌握判据及试点概念页 Core Thesis；来源为 R04、R06，摘要覆盖根索引、C01、课程、来源及教法、样题和试点 survey、概念与来源材料。具体必需文件以 `concept_authorization.py` 的 `FILES` 为准。内容变化、缺失、记录不完整或撤销均停止；模拟重新审核须创建新的测试记录及版本。`revoke` 只撤销已有合成记录，不提供批准接口。
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 from unittest import mock
+from concept_authorization_fixture import question_event, event
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,7 +79,7 @@ class PersonalRoadmapTests(unittest.TestCase):
             (Path(tmp) / 'tutor-state.json').write_text('{"status":"paused"}', encoding='utf-8')
             self.assertEqual(planner.context('fiction-demo')['learner_digest'], before)
 
-    @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={})
+    @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={'authorization_sha256':'a' * 64})
     def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self, _check):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
             snapshot = {'state': {'question': '原题'}, 'session': '记录', 'turns': []}
@@ -89,11 +90,11 @@ class PersonalRoadmapTests(unittest.TestCase):
                 plan[key] = ctx[key]
             planner.validate(plan, ctx, 'fiction-demo')
             snapshot['state']['question'] = '下一题'
-            snapshot['turns'].append({'type': 'question', 'concept': 'C01', 'question_id': 'q1', 'text': '下一题'})
+            snapshot['turns'].append(question_event(ROOT, 'q1', text='下一题', auth_sha='a' * 64))
             planner.sigma_session.operate('fiction-demo', snapshot, 1)
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
-            snapshot['turns'].append({'type': 'answer', 'question_id': 'q1', 'text': '回答'})
-            snapshot['turns'].append({'type': 'analysis', 'question_id': 'q1', 'analysis': {'reason': '普通教学观察'}})
+            snapshot['turns'].append(event('answer', 'q1', text='回答'))
+            snapshot['turns'].append(event('analysis', 'q1', analysis={'reason': '普通教学观察'}))
             planner.sigma_session.operate('fiction-demo', snapshot, 2)
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
             snapshot['state']['planning_basis'] = {'C01': '需要复习'}

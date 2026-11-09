@@ -22,7 +22,7 @@ class SigmaIntegration(unittest.TestCase):
                 result = subprocess.run([sys.executable, str(root / 'scripts' / script), *args], input=json.dumps(data, ensure_ascii=False) if data is not None else None, capture_output=True, text=True, cwd=root, timeout=15)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 return json.loads(result.stdout)
-            from concept_authorization_fixture import write_authorization
+            from concept_authorization_fixture import write_authorization, question_event, event
             write_authorization(root)
             learner = ('--learner', 'synthetic')
             snapshot = {'state': {}, 'session': '', 'turns': []}
@@ -46,9 +46,9 @@ class SigmaIntegration(unittest.TestCase):
             # Routine coach events do not change formal evidence or the plan.
             (folder / 'events.jsonl').write_text(json.dumps({'type':'parent_feedback','text':'普通记录'}, ensure_ascii=False) + '\n')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
-            events = [[{'type':'question','concept':'C01','question_id':'q1','text':'问题'}],
-                      [{'type':'answer','question_id':'q1','text':'回答'}, {'type':'analysis','question_id':'q1','analysis':{'reason':'分析'}}],
-                      [{'type':'question','concept':'C01','question_id':'q2','text':'追问'}]]
+            events = [[question_event(root, 'q1')],
+                      [event('answer', 'q1', text='回答'), event('analysis', 'q1', analysis={'reason':'分析'})],
+                      [question_event(root, 'q2', text='追问')]]
             for revision, batch in enumerate(events, 1):
                 snapshot['turns'].extend(batch)
                 call('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=snapshot)
@@ -71,13 +71,12 @@ class SigmaIntegration(unittest.TestCase):
             saved = json.loads(history.read_text())
             saved['dynamic_reviews'][0]['due_at'] = '2020-01-01T00:00:00+00:00'
             history.write_text(json.dumps(saved, ensure_ascii=False))
-            snapshot['turns'].extend([
-                {'type':'answer','question_id':'q2','text':'回答'},
-                {'type':'analysis','question_id':'q2','analysis':{'reason':'分析'}},
-                {'type':'question','concept':'C01','question_id':'q3','text':'复习题','review_task_id':task['task_id']},
-                {'type':'answer','question_id':'q3','text':'复习回答'},
-                {'type':'analysis','question_id':'q3','analysis':{'reason':'复习分析'}}])
+            snapshot['turns'].extend([event('answer','q2',text='回答'), event('analysis','q2',analysis={'reason':'分析'})])
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '6', data=snapshot)
+            snapshot['turns'].append(question_event(root, 'q3', text='复习题', review_task_id=task['task_id']))
+            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '7', data=snapshot)
+            snapshot['turns'].extend([event('answer','q3',text='复习回答'), event('analysis','q3',analysis={'reason':'复习分析'})])
+            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '8', data=snapshot)
             before = history.read_bytes()
             call('concept_authorization.py', 'revoke')
             denied = subprocess.run([sys.executable, str(root / 'scripts/sigma_plan_store.py'), 'complete-dynamic', *learner],

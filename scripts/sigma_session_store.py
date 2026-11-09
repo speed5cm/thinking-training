@@ -35,26 +35,154 @@ def validate(obj):
     if 'planning_basis' in obj['state'] and not isinstance(obj['state']['planning_basis'], dict):
         raise Invalid('planning_basis 必须是对象')
 
-def validate_new_events(previous, current):
-    """Validate new analysis records without rewriting legacy snapshot history."""
-    turns = current['turns']
-    added = turns[len(previous['turns']):]
+DIMENSIONS = ('accuracy', 'explanation', 'novel_application', 'discrimination')
+
+
+def nonempty(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
+def validate_dimensions(value, question, answer):
+    if not isinstance(value, dict) or set(value) != set(DIMENSIONS):
+        raise Invalid('评估须记录完整四维评价')
+    for dimension, item in value.items():
+        if (not isinstance(item, dict) or set(item) != {'status', 'answer_quote', 'wiki_path', 'wiki_quote'}
+                or item['status'] not in ('supported', 'not_supported', 'unknown')
+                or any(not isinstance(item[k], str) for k in ('answer_quote', 'wiki_path', 'wiki_quote'))):
+            raise Invalid('四维评价格式无效')
+        if dimension not in question['dimensions'] and item['status'] != 'unknown':
+            raise Invalid('未声明考查的维度须为 unknown')
+        quote, path, wiki_quote = item['answer_quote'], item['wiki_path'], item['wiki_quote']
+        if item['status'] != 'unknown' and (not nonempty(quote) or not nonempty(path) or not nonempty(wiki_quote)):
+            raise Invalid('已评价维度必须引用原答和 Wiki 依据')
+        if quote and (not nonempty(quote) or quote not in answer):
+            raise Invalid('原答引用不匹配')
+        if path or wiki_quote:
+            if (path not in question['wiki_sources'] or not nonempty(wiki_quote)
+                    or wiki_quote not in (authorization.ROOT / path).read_text(encoding='utf-8')):
+                raise Invalid('Wiki 依据不匹配')
+
+
+def validate_new_events(previous, current, auth, blocked):
+    """Validate the new tail against committed questions, preserving old history."""
+    old = previous['turns']
+    added = current['turns'][len(old):]
+    if not added:
+        return
+    # An emergency save is strictly answer + interruption, without state changes.
+    emergency = blocked is not None
+    if emergency:
+        if (current['state'] != previous['state'] or current['session'] != previous['session']
+                or len(added) != 2 or [e.get('type') for e in added] != ['answer', 'interruption']):
+            raise Invalid('授权失效后只能保存原答和中断记录')
+    committed_questions = {e.get('question_id'): e for e in old if e.get('type') == 'question'}
+    if len(committed_questions) != sum(e.get('type') == 'question' for e in old):
+        raise Invalid('旧记录问题 ID 重复，须人工核对')
+    questions = dict(committed_questions)
+    answered = {e.get('question_id') for e in old if e.get('type') == 'answer'}
+    interrupted = {e.get('question_id') for e in old if e.get('type') == 'interruption'}
+    analyses = {e.get('question_id') for e in old if e.get('type') == 'analysis'}
+    invalidated = {e.get('question_id') for e in old if e.get('type') == 'invalidation'}
+    pending = set(questions) - answered - invalidated
+    if len(pending) > 1:
+        raise Invalid('存在多个未答问题，须人工核对')
+    batch_answers = set()
+    event_ids = {e.get('event_id') for e in old if e.get('event_id') is not None}
     for event in added:
-        if event.get('type') not in ('answer', 'analysis'):
-            continue
+        kind = event.get('type')
         qid = event.get('question_id')
-        if not isinstance(qid, str) or not qid:
-            raise Invalid('回答和分析须关联问题 ID')
-        questions = [e for e in turns if e.get('type') == 'question' and e.get('question_id') == qid]
-        answers = [e for e in turns if e.get('type') == 'answer' and e.get('question_id') == qid]
-        analyses = [e for e in turns if e.get('type') == 'analysis' and e.get('question_id') == qid]
-        if len(questions) != 1 or len(answers) != 1 or len(analyses) != 1:
-            raise Invalid('每个新回答须关联唯一问题和唯一分析，并在同次提交中保存')
-        analysis = analyses[0].get('analysis')
-        if not isinstance(analysis, dict) or not analysis:
-            raise Invalid('分析须为非空对象')
-        if turns.index(questions[0]) >= turns.index(answers[0]) or turns.index(answers[0]) >= turns.index(analyses[0]):
-            raise Invalid('事件顺序须为问题、回答、分析')
+        if not nonempty(qid):
+            raise Invalid('事件须关联问题 ID')
+        if kind == 'question':
+            required = {'type', 'concept', 'session_id', 'question_id', 'purpose', 'text', 'wiki_sources', 'authorization_sha256'}
+            optional = {'review_task_id', 'context', 'dimensions', 'answer_basis', 'practice'}
+            if (not required <= set(event) or set(event) - required - optional or qid in questions or pending
+                    or event['concept'] != 'C01' or event['purpose'] not in ('teaching', 'assessment')
+                    or not nonempty(event['session_id']) or not nonempty(event['text'])
+                    or event['authorization_sha256'] != auth['authorization_sha256']):
+                raise Invalid('问题字段、用途、授权或顺序无效')
+            if 'review_task_id' in event and not nonempty(event['review_task_id']):
+                raise Invalid('复习任务 ID 无效')
+            sources = event['wiki_sources']
+            required_sources = {'wiki/concepts/observation-vs-inference.md', 'pilot-c01-c02/wiki/concepts/C01.md'}
+            if (not isinstance(sources, dict) or not required_sources <= set(sources)
+                    or not set(sources) <= set(authorization.FILES)):
+                raise Invalid('Wiki 来源不完整或未授权')
+            for path, digest in sources.items():
+                if not isinstance(digest, str) or digest != evidence.coach.digest(authorization.ROOT / path):
+                    raise Invalid('Wiki 来源摘要不匹配')
+            if event['purpose'] == 'assessment':
+                dimensions = event.get('dimensions')
+                if (not nonempty(event.get('context')) or not nonempty(event.get('answer_basis'))
+                        or not isinstance(dimensions, list) or not dimensions
+                        or any(d not in DIMENSIONS for d in dimensions) or len(set(dimensions)) != len(dimensions)
+                        or type(event.get('practice')) is not bool):
+                    raise Invalid('评估题须声明情境、维度、判断依据及实践用途')
+            questions[qid] = event
+            pending.add(qid)
+            continue
+        if kind not in ('answer', 'analysis', 'support', 'interruption', 'correction', 'invalidation'):
+            raise Invalid('新事件类型无效')
+        if kind in ('support', 'correction', 'invalidation'):
+            event_id = event.get('event_id')
+            if not nonempty(event_id) or event_id in event_ids:
+                raise Invalid('事件 ID 缺失或重复')
+            event_ids.add(event_id)
+        # A question must have been saved in an earlier revision before any response.
+        if qid not in committed_questions or event.get('session_id') != committed_questions[qid].get('session_id'):
+            raise Invalid('事件必须关联先前提交的唯一问题及会话')
+        question = committed_questions[qid]
+        if kind in ('support', 'answer', 'analysis', 'correction') and qid in invalidated | interrupted:
+            raise Invalid('已中断或失效的问题不得继续教学或评价')
+        if kind in ('support', 'answer', 'analysis', 'correction') and not emergency:
+            if question.get('authorization_sha256') != auth['authorization_sha256']:
+                raise Invalid('问题依据或授权已变化，须停止并重新核对')
+        if kind == 'support':
+            if (set(event) != {'type', 'session_id', 'question_id', 'event_id', 'kind', 'text'} or qid in answered
+                    or event['kind'] not in ('hint', 'example', 'demonstration', 'clarification', 'other')
+                    or not nonempty(event['text'])):
+                raise Invalid('支持记录无效')
+        elif kind == 'answer':
+            if set(event) != {'type', 'session_id', 'question_id', 'text'} or not isinstance(event['text'], str) or qid in answered or qid not in pending:
+                raise Invalid('原答无效或重复')
+            answered.add(qid); pending.discard(qid); batch_answers.add(qid)
+        elif kind == 'analysis':
+            if set(event) != {'type', 'session_id', 'question_id', 'analysis'} or qid not in batch_answers or qid in analyses:
+                raise Invalid('分析须与首次回答同次提交')
+            analysis = event['analysis']
+            if not isinstance(analysis, dict) or not analysis:
+                raise Invalid('分析须为非空对象')
+            if question.get('purpose') == 'assessment':
+                if set(analysis) != {'dimensions'}:
+                    raise Invalid('评估分析字段无效')
+                answer = next(e['text'] for e in added if e.get('type') == 'answer' and e.get('question_id') == qid)
+                validate_dimensions(analysis['dimensions'], question, answer)
+            analyses.add(qid)
+        elif kind == 'interruption':
+            if (not emergency or set(event) != {'type', 'session_id', 'question_id', 'reason'}
+                    or qid not in batch_answers or event['reason'] != 'authorization_or_content_changed'):
+                raise Invalid('中断记录无效')
+            interrupted.add(qid)
+        elif kind == 'invalidation':
+            if set(event) != {'type', 'session_id', 'question_id', 'event_id', 'reason'} or not nonempty(event['reason']) or qid in invalidated:
+                raise Invalid('失效记录无效或重复')
+            invalidated.add(qid); pending.discard(qid)
+        elif kind == 'correction':
+            if (set(event) != {'type', 'session_id', 'question_id', 'event_id', 'reason', 'replacement'}
+                    or qid not in analyses or qid in invalidated or not nonempty(event['reason'])
+                    or question.get('purpose') != 'assessment'
+                    or not isinstance(event['replacement'], dict) or set(event['replacement']) != {'dimensions'}):
+                raise Invalid('更正须关联评估并提供依据及完整四维')
+            answers = [e['text'] for e in old if e.get('type') == 'answer' and e.get('question_id') == qid]
+            if len(answers) != 1:
+                raise Invalid('更正缺少唯一原答')
+            validate_dimensions(event['replacement']['dimensions'], question, answers[0])
+    if emergency:
+        if added[0]['question_id'] != added[1]['question_id'] or added[0]['session_id'] != added[1]['session_id']:
+            raise Invalid('原答和中断记录必须关联同一问题')
+    elif batch_answers - analyses:
+        raise Invalid('每个回答须在同次提交中保存分析')
+
 
 def operate(learner, proposed=None, expected=None):
     folder = evidence.get_folder(learner)
@@ -77,13 +205,21 @@ def operate(learner, proposed=None, expected=None):
         if current['turns'][:len(previous['turns'])] != previous['turns']:
             raise Invalid('不能覆盖已提交的逐轮记录')
         added = current['turns'][len(previous['turns']):]
-        if any(e.get('type') not in ('question', 'answer', 'analysis') for e in added):
-            raise Invalid('新事件类型无效')
-        if any(e.get('type') == 'question' and e.get('concept') != 'C01' for e in added):
-            raise Invalid('动态问题须声明已授权的 C01 概念')
+        auth = None
+        blocked = None
         if added:
-            authorization.check('C01', learner)
-        validate_new_events(previous, current)
+            try:
+                auth = authorization.check('C01', learner)
+                # Reauthorization after a question cannot retroactively authorize its answer.
+                if added[0].get('type') == 'answer':
+                    matches = [e for e in previous['turns'] if e.get('type') == 'question' and e.get('question_id') == added[0].get('question_id')]
+                    if len(matches) == 1 and matches[0].get('authorization_sha256') != auth['authorization_sha256']:
+                        blocked = 'authorization_or_content_changed'
+            except (authorization.Invalid, evidence.coach.Stop, OSError, ValueError, TypeError, KeyError):
+                blocked = 'authorization_or_content_changed'
+        if blocked and not authorization.synthetic_learner(learner):
+            raise Invalid('中断保存仅适用于隔离合成测试')
+        validate_new_events(previous, current, auth, blocked)
         fd, temp = tempfile.mkstemp(dir=dest, prefix='.session-')
         try:
             os.fchmod(fd, 0o600)

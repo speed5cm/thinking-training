@@ -22,9 +22,12 @@ RECORD = 'pilot-c01-c02/concept-authorizations/C01.json'
 class Invalid(ValueError):
     pass
 
+def synthetic_learner(learner):
+    return isinstance(learner, str) and bool(re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', learner))
+
 def check(concept, learner):
     """Caller holds the shared publication lock through use; only synthetic records count."""
-    if concept != 'C01' or not isinstance(learner, str) or not re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', learner):
+    if concept != 'C01' or not synthetic_learner(learner):
         raise Invalid('概念授权仅适用于 C01 隔离合成测试')
     record = evidence.coach.json_read(ROOT / RECORD)
     required = {'schema_version', 'concept', 'version', 'review', 'status', 'teaching_goal', 'scope', 'sources', 'content_sha256'}
@@ -56,7 +59,8 @@ def check(concept, learner):
         raise Invalid('教学目标或范围依据缺失')
     if record['sources'] != ['R04', 'R06'] or any(x not in root_page for x in record['sources']):
         raise Invalid('来源依据缺失')
-    return {'concept': concept, 'version': record['version'], 'review_kind': review['kind'], 'status': 'active'}
+    return {'concept': concept, 'version': record['version'], 'review_kind': review['kind'], 'status': 'active',
+            'authorization_sha256': evidence.evidence_digest([record])}
 
 def revoke():
     """Revoke an existing simulated record; never create or approve one."""

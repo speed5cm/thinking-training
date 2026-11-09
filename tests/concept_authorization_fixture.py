@@ -20,3 +20,18 @@ def write_authorization(root, version='synthetic-1'):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(record, ensure_ascii=False), encoding='utf-8')
     return path
+
+def question_event(root, qid, text='问题', purpose='teaching', auth_sha=None, **extra):
+    if auth_sha is None:
+        record = json.loads((root / 'pilot-c01-c02/concept-authorizations/C01.json').read_text())
+        auth_sha = hashlib.sha256(json.dumps([record], ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    sources = ('wiki/concepts/observation-vs-inference.md', 'pilot-c01-c02/wiki/concepts/C01.md')
+    event = {'type': 'question', 'concept': 'C01', 'session_id': 'session-1', 'question_id': qid,
+             'purpose': purpose, 'text': text, 'authorization_sha256': auth_sha,
+             'wiki_sources': {p: hashlib.sha256((root / p).read_bytes()).hexdigest() for p in sources}}
+    if purpose == 'assessment':
+        event.update(context='合成情境', dimensions=['accuracy'], answer_basis='Wiki 中的概念定义', practice=False)
+    return {**event, **extra}
+
+def event(event_type, qid, **values):
+    return {'type': event_type, 'session_id': 'session-1', 'question_id': qid, **values}

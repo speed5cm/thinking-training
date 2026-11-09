@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 
-from concept_authorization_fixture import write_authorization
+from concept_authorization_fixture import write_authorization, question_event, event
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,7 +22,7 @@ class ConceptAuthorization(unittest.TestCase):
                     input=json.dumps(data, ensure_ascii=False) if data is not None else None,
                     capture_output=True, text=True, cwd=root, timeout=15)
             args = ('commit', '--learner', 'synthetic', '--expected-revision', '0')
-            question = {'state': {}, 'session': '', 'turns': [{'type':'question','concept':'C01','question_id':'q1','text':'测试'}]}
+            question = {'state': {}, 'session': '', 'turns': [question_event(root, 'q1', text='测试', auth_sha='a' * 64)]}
             def commit(): return run('sigma_session_store.py', *args, data=question)
             self.assertNotEqual(commit().returncode, 0)
             path = write_authorization(root)
@@ -44,9 +44,10 @@ class ConceptAuthorization(unittest.TestCase):
             for concept in (None, 'C02'):
                 bypass = {'state': {}, 'session':'', 'turns':[{'type':'question', 'concept':concept, 'question_id':'x', 'text':'测试'}]}
                 self.assertNotEqual(run('sigma_session_store.py', *args, data=bypass).returncode, 0)
+            question['turns'][0] = question_event(root, 'q1', text='测试')
             self.assertEqual(commit().returncode, 0)
             self.assertEqual(run('concept_authorization.py', 'revoke').returncode, 0)
-            question['turns'].extend([{'type':'answer','question_id':'q1','text':'回答'}, {'type':'analysis','question_id':'q1','analysis':{'reason':'评价'}}])
+            question['turns'].extend([event('answer','q1',text='回答'), event('analysis','q1',analysis={'reason':'评价'})])
             self.assertNotEqual(run('sigma_session_store.py', 'commit', '--learner','synthetic','--expected-revision','1',data=question).returncode, 0)
             saved = run('sigma_session_store.py','read','--learner','synthetic')
             self.assertEqual(len(json.loads(saved.stdout)['turns']), 1)
