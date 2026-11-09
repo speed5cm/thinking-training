@@ -1,0 +1,26 @@
+Found 23 stale source page(s):
+  • S01.md ← raw/project/wiki/index.md
+  • S02.md ← raw/project/wiki/concepts/attribute-comparison.md
+  • S03.md ← raw/project/wiki/concepts/classification-counterexample.md
+  • S04.md ← raw/project/wiki/concepts/conditional-reasoning.md
+  • S05.md ← raw/project/wiki/concepts/constraint-decomposition.md
+  • S06.md ← raw/project/wiki/concepts/divergent-ideas.md
+  • S07.md ← raw/project/wiki/concepts/evidence-and-alternatives.md
+  • S08.md ← raw/project/wiki/concepts/observation-vs-inference.md
+  • S09.md ← raw/project/wiki/concepts/pattern-rule.md
+  • S10.md ← raw/project/wiki/concepts/perspectives-tradeoffs.md
+  • S11.md ← raw/project/wiki/concepts/plan-monitor-reflect.md
+  • S12.md ← raw/project/wiki/concepts/prototype-testing.md
+  • S13.md ← raw/project/wiki/concepts/strategy-transfer.md
+  • S14.md ← raw/project/wiki/concepts/structured-argument.md
+  • S15.md ← raw/project/wiki/concepts/systematic-enumeration.md
+  • S16.md ← raw/project/curriculum/12-week-plan.md
+  • S17.md ← raw/project/references/sources.md
+  • S18.md ← raw/project/references/pedagogy.md
+  • S19.md ← raw/project/pilot-c01-c02/wiki/concepts/C01.md
+  • S20.md ← raw/project/pilot-c01-c02/wiki/concepts/C02.md
+  • S21.md ← raw/project/pilot-c01-c02/wiki/index.md
+  • S22.md ← raw/project/pilot-c01-c02/wiki/overview.md
+  • S23.md ← raw/project/pilot-c01-c02/wiki/sources/project-research.md
+
+[DRY RUN] No changes made.

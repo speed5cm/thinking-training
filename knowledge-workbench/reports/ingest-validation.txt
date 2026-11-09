@@ -1,0 +1,5 @@
+Running wiki validation (no ingest)...
+
+No broken wikilinks found.
+
+All pages are indexed.

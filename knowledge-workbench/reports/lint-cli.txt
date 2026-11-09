@@ -1,0 +1,11 @@
+Linting 39 wiki pages...
+  orphans: 0
+  broken links: 0
+  missing entity pages: 0
+  sparse pages (< 2 outbound links): 2
+  running graph-aware checks...
+    hub stubs: 0
+    fragile bridges: 0
+    isolated communities: 0
+  running semantic lint via API...
+Error: litellm not installed. Run: pip install litellm

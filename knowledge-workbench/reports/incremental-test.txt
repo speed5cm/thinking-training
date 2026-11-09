@@ -1,0 +1,4 @@
+隔离目录：/tmp/thinking-wiki-incremental（工作区副本，不影响交付知识库）
+输入：正式 C01 资料副本；本地 mock litellm 返回固定来源 slug 和可控内容。
+命令：PYTHONPATH=mock python3 tools/ingest.py test-source.md（重复 2 次）；向测试副本添加标记后再运行一次；随后不使用 mock 再运行。
+结果：来源页 1 个、索引同一链接 3 次；修改后来源页内容 modified；未模拟概念更新。无 litellm 时退出 1，报 Error: litellm not installed，失败前后 Wiki 内容哈希一致。以上不能证明真实模型行为、概念同步或写入中途事务恢复。工作副本中没有覆盖交付数据。

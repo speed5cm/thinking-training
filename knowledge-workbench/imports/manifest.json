@@ -1,0 +1,181 @@
+{
+  "created": "2026-11-09",
+  "status": "planned before import",
+  "sources": [
+    {
+      "id": "S01",
+      "original_path": "wiki/index.md",
+      "snapshot": "raw/project/wiki/index.md",
+      "sha256": "0e4b90ea2377baab2271c1d767c27fa2021ccdc085d3c0c54a7cce52940763a9",
+      "category": "项目参考材料"
+    },
+    {
+      "id": "S02",
+      "original_path": "wiki/concepts/attribute-comparison.md",
+      "snapshot": "raw/project/wiki/concepts/attribute-comparison.md",
+      "sha256": "405ac8dd4720f94c110e27092e3a3bc4ebb5d5e60d229308cb99240ddbb6e278",
+      "category": "教学概念"
+    },
+    {
+      "id": "S03",
+      "original_path": "wiki/concepts/classification-counterexample.md",
+      "snapshot": "raw/project/wiki/concepts/classification-counterexample.md",
+      "sha256": "bc92b9913d186c631ab9c7caaebc292a9cc39e24dcf91cf7328e1d382818bf9e",
+      "category": "教学概念"
+    },
+    {
+      "id": "S04",
+      "original_path": "wiki/concepts/conditional-reasoning.md",
+      "snapshot": "raw/project/wiki/concepts/conditional-reasoning.md",
+      "sha256": "617e4a341c86c14ad0e88b06d108c37c5317357623485918e7287aa565f11b7f",
+      "category": "教学概念"
+    },
+    {
+      "id": "S05",
+      "original_path": "wiki/concepts/constraint-decomposition.md",
+      "snapshot": "raw/project/wiki/concepts/constraint-decomposition.md",
+      "sha256": "18bc77a68b763a87da2fcdd415179d45403b14531174d3cefb7593856c7b2b56",
+      "category": "教学概念"
+    },
+    {
+      "id": "S06",
+      "original_path": "wiki/concepts/divergent-ideas.md",
+      "snapshot": "raw/project/wiki/concepts/divergent-ideas.md",
+      "sha256": "a0aa6255b4d0ad93e03e9a581c64d18ac2c816a947879529dc3305a21895304c",
+      "category": "教学概念"
+    },
+    {
+      "id": "S07",
+      "original_path": "wiki/concepts/evidence-and-alternatives.md",
+      "snapshot": "raw/project/wiki/concepts/evidence-and-alternatives.md",
+      "sha256": "0251eb741a3d0aebb917eba57d2ed5b5df70c978eb847563d05de4af62279e35",
+      "category": "教学概念"
+    },
+    {
+      "id": "S08",
+      "original_path": "wiki/concepts/observation-vs-inference.md",
+      "snapshot": "raw/project/wiki/concepts/observation-vs-inference.md",
+      "sha256": "023c041789d0ad3c8ff16742d860b44fa0e5281ce881b0649373fc2102d18224",
+      "category": "教学概念"
+    },
+    {
+      "id": "S09",
+      "original_path": "wiki/concepts/pattern-rule.md",
+      "snapshot": "raw/project/wiki/concepts/pattern-rule.md",
+      "sha256": "b735e3324ad8d598439e9513fe24dcd97a33d34ad0a9421e4fc5d5638858e075",
+      "category": "教学概念"
+    },
+    {
+      "id": "S10",
+      "original_path": "wiki/concepts/perspectives-tradeoffs.md",
+      "snapshot": "raw/project/wiki/concepts/perspectives-tradeoffs.md",
+      "sha256": "a1f144ed0de72d6562d98da554fa3eb3105b87e624d2f99818f3b01b9bd4bc4c",
+      "category": "教学概念"
+    },
+    {
+      "id": "S11",
+      "original_path": "wiki/concepts/plan-monitor-reflect.md",
+      "snapshot": "raw/project/wiki/concepts/plan-monitor-reflect.md",
+      "sha256": "c1742fe030e6c63a6e79b2ce4c12ba5adba7b4e978b0e475dce82878855c5dd4",
+      "category": "教学概念"
+    },
+    {
+      "id": "S12",
+      "original_path": "wiki/concepts/prototype-testing.md",
+      "snapshot": "raw/project/wiki/concepts/prototype-testing.md",
+      "sha256": "904319455c9ec5b1c72ff95c38200b1b1446482f786cd049bfe588c850a55b9f",
+      "category": "教学概念"
+    },
+    {
+      "id": "S13",
+      "original_path": "wiki/concepts/strategy-transfer.md",
+      "snapshot": "raw/project/wiki/concepts/strategy-transfer.md",
+      "sha256": "678029f38d29dfebf3d511da14c666af44390e5b0f7a620e3a4661144959cfbd",
+      "category": "教学概念"
+    },
+    {
+      "id": "S14",
+      "original_path": "wiki/concepts/structured-argument.md",
+      "snapshot": "raw/project/wiki/concepts/structured-argument.md",
+      "sha256": "75da2ec6b287692ccc5c41f8e5eff6a48b1f200b8dd69c59f462489617f5945c",
+      "category": "教学概念"
+    },
+    {
+      "id": "S15",
+      "original_path": "wiki/concepts/systematic-enumeration.md",
+      "snapshot": "raw/project/wiki/concepts/systematic-enumeration.md",
+      "sha256": "24a6e8e8d885de816d0c69b40420fdabd79b9e2bcdafc85ae4af6a406986e128",
+      "category": "教学概念"
+    },
+    {
+      "id": "S16",
+      "original_path": "curriculum/12-week-plan.md",
+      "snapshot": "raw/project/curriculum/12-week-plan.md",
+      "sha256": "8a3fbbb7c1f6434735e0e43ad02dc81e5215a7a5dbb078a97820db1cba5f1a75",
+      "category": "项目参考材料"
+    },
+    {
+      "id": "S17",
+      "original_path": "references/sources.md",
+      "snapshot": "raw/project/references/sources.md",
+      "sha256": "628b1062b978f7876b5a48252298800251ab0de630280861f8b4d6b5187bdd1b",
+      "category": "项目参考材料"
+    },
+    {
+      "id": "S18",
+      "original_path": "references/pedagogy.md",
+      "snapshot": "raw/project/references/pedagogy.md",
+      "sha256": "eb7895fa21e49327aba2b3718eab269aa374d756c60a864a5aff52fef1fe3aae",
+      "category": "项目参考材料"
+    },
+    {
+      "id": "S19",
+      "original_path": "pilot-c01-c02/wiki/concepts/C01.md",
+      "snapshot": "raw/project/pilot-c01-c02/wiki/concepts/C01.md",
+      "sha256": "6d9b4cfd6e6c719eb4f296ffa4e9793e553e34521f4b703d9abf0bcdb7f85f18",
+      "category": "试点补充知识"
+    },
+    {
+      "id": "S20",
+      "original_path": "pilot-c01-c02/wiki/concepts/C02.md",
+      "snapshot": "raw/project/pilot-c01-c02/wiki/concepts/C02.md",
+      "sha256": "c5276d1ee100dfe427d7fe31d738845be89c44524cfe86404934f2776f9131b5",
+      "category": "试点补充知识"
+    },
+    {
+      "id": "S21",
+      "original_path": "pilot-c01-c02/wiki/index.md",
+      "snapshot": "raw/project/pilot-c01-c02/wiki/index.md",
+      "sha256": "4597ae15e58a73ede70ecab197befc9b15ecdcfa522098ad44d3e9e8ae62ff76",
+      "category": "试点补充知识"
+    },
+    {
+      "id": "S22",
+      "original_path": "pilot-c01-c02/wiki/overview.md",
+      "snapshot": "raw/project/pilot-c01-c02/wiki/overview.md",
+      "sha256": "a9658aae55c2f54c647a83a1c5fc374ad56e2a1e20565375131da44541e5380d",
+      "category": "试点补充知识"
+    },
+    {
+      "id": "S23",
+      "original_path": "pilot-c01-c02/wiki/sources/project-research.md",
+      "snapshot": "raw/project/pilot-c01-c02/wiki/sources/project-research.md",
+      "sha256": "8121622108709b38dc11839709ef40685411512cbfe5a095a2593c560dab184c",
+      "category": "试点补充知识"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "question-bank/original-examples.md",
+      "reason": "历史原创题卡，仅为示例，非研究依据；不导入以避免混同当前教学与证据。"
+    },
+    {
+      "path": "question-bank/answer-audit.md",
+      "reason": "题卡审计与测试记录，不属于研究资料。"
+    },
+    {
+      "path": "学习记录、模拟证据和测试",
+      "reason": "不在导入范围，避免个人信息及证据混淆。"
+    }
+  ]
+}

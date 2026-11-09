@@ -1,0 +1,50 @@
+# C13 跨情境策略选择
+
+- **知识点编号**：C13
+- **主要周次**：W10—W12
+- **训练能力**：独立解决问题；逻辑/批判
+- **先修**：[[concepts/systematic-enumeration]], [[concepts/evidence-and-alternatives]], [[concepts/constraint-decomposition]]
+- **概念定义（项目原创表述）**：不依赖旧题表面特征，识别新任务中隐含的结构并自主选择策略。
+
+<!-- roadmap-metadata
+{
+  "abilities": [
+    "独立解决/元认知",
+    "逻辑推理",
+    "批判性思考"
+  ],
+  "hard_prerequisites": [
+    "C05",
+    "C07",
+    "C09"
+  ],
+  "interleavable": []
+}
+-->
+
+## 教学动作
+先说题目要做什么→从列举/画图/检验证据中选方法→执行→复核→必要时换策略。
+
+## 自编例子
+面对新书架库存问题，选算式或列表并解释依据。
+
+## 常见错误
+只认旧题图案；完成数字计算后不核对题意。
+
+## 掌握与迁移
+- **掌握判据**：在至少2类从未做过的任务中独立使用恰当策略，H0—H1。
+- **新情境**：科学解释、阅读推理、家庭规划。
+
+## 三阶启发式引导
+1. 请先说你已经知道什么，不急着选答案。
+2. 哪条线索或哪一个限制能帮助你检查？
+3. 试着画一个表、示范一个局部步骤，再由你完成余下部分。
+
+## 对应题目
+- `ST-C13-01`
+- `ST-C13-02`
+
+## 来源与知识关系
+- **来源索引**：R02, R06, R07（详见 `../../references/sources.md`）
+- **相关先修**：[[concepts/systematic-enumeration]], [[concepts/evidence-and-alternatives]], [[concepts/constraint-decomposition]]
+- **版权**：本页表述和例子为本项目独立编写；不含原教材文本。
