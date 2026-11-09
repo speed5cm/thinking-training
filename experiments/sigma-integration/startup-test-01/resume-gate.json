@@ -1,0 +1,21 @@
+{
+  "concept": "C01",
+  "wiki_gate": [
+    {
+      "path": "wiki/overview.md",
+      "sha256": "d8ab6184132969cde72673c95ba81231ce75a0bff0f41255ea540c3293692805"
+    },
+    {
+      "path": "wiki/index.md",
+      "sha256": "4597ae15e58a73ede70ecab197befc9b15ecdcfa522098ad44d3e9e8ae62ff76"
+    },
+    {
+      "path": "wiki/concepts/C01.md",
+      "sha256": "fb596a03d96629833e88610875638a3e059ba59427993a69e94879ae5cf1c170"
+    },
+    {
+      "path": "wiki/sources/project-research.md",
+      "sha256": "8121622108709b38dc11839709ef40685411512cbfe5a095a2593c560dab184c"
+    }
+  ]
+}

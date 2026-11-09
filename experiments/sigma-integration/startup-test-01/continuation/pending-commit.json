@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "revision": 5,
+  "state": {
+    "mode": "isolated_synthetic_replay",
+    "status": "awaiting_answer",
+    "concept": "C01",
+    "mastery": "unknown",
+    "support": "H0",
+    "candidate_sha256": "4af2fbdecf352b253e12ec3936f0b2b8e76577b4d641bd277829315c65f97f7e",
+    "candidate_status": "published",
+    "source_fixture": "experiments/sigma-integration/acceptance-2026-11-08/targeted/input-06.txt",
+    "parent_observation": "unknown",
+    "last_observation": "合成回答正确区分照片当前信息与对过去的推测，单次表现不足以判定掌握。",
+    "pause_reason": "测试要求暂停，问答已完成",
+    "resume_result": "已读回完整问答和分析；无未答题；规划尚未发布。",
+    "plan_version": 1,
+    "current_question": "fresh-001"
+  },
+  "session": "合成隔离测试，路线 v1 已模拟家长确认并发布；动态问答不属于正式证据。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "synthetic-q01",
+      "text": "照片里，椅子上放着一顶帽子。小明说：“刚才一定有人坐在这里。”这句话是照片能确认的事实，还是猜测？请说说依据。",
+      "concept": "C01",
+      "kind": "dynamic_diagnostic_fixture_replay",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "support": "H0",
+      "self_review": "适龄、单一主问题及理由、符合 C01、不泄露正式题答案；重放既有合成动态例题。"
+    },
+    {
+      "type": "answer",
+      "question_id": "synthetic-q01",
+      "text": "这是猜测，照片只能看到椅子上有帽子，不能看到刚才有没有人坐过。",
+      "source": "已保存的成人模拟夹具重放"
+    },
+    {
+      "type": "analysis",
+      "question_id": "synthetic-q01",
+      "analysis": {
+        "understanding": "将帽子在椅子上区分为照片可见信息，将刚才有人坐过区分为猜测。",
+        "reasoning": "回答明确指出照片不能看到刚才是否有人坐过；未补充题设没有给出的过去事实。",
+        "support": "H0；本次夹具回放没有提示。",
+        "next_step": "保持 C01，后续如获得允许可使用不同场景继续观察；不据此判掌握或解锁 C02。",
+        "limitations": "重放历史合成回答，不是独立新学习者表现；家长观察 unknown。"
+      }
+    },
+    {
+      "type": "question",
+      "question_id": "fresh-001",
+      "concept": "C01",
+      "kind": "dynamic_practice",
+      "text": "图片里，一个空盒子打开着。有人说：‘礼物一定已经被拿走了。’这句话是图片能确认的事实，还是猜测？请说说你的理由。",
+      "support": "H0",
+      "reason": "观察能否区分图片内容与对过去的推测；准备跨进程未答题恢复。",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "self_review": "单一主问题及理由，适龄，符合 C01；不复述正式题卡情境或答案。"
+    }
+  ]
+}

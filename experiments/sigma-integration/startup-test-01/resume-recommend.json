@@ -1,0 +1,39 @@
+{
+  "action": "collect_or_reinforce",
+  "concept": "C01",
+  "reason": "证据不足；可继续采集已发布训练的观察，重复同题不能证明迁移。",
+  "assessment": {
+    "assessments": [
+      {
+        "concept": "C01",
+        "learning_progress": {
+          "evidence_opportunities": 0
+        },
+        "mastery": "pending_confirmation",
+        "eligible_sessions": 0,
+        "eligible_distinct_cards": 0,
+        "novel_transfer_observed": false,
+        "unclear_explanations": 0,
+        "difficulty_observations": 0,
+        "note": "候选须家长复核；训练完成、进度和掌握相互独立。"
+      },
+      {
+        "concept": "C02",
+        "learning_progress": {
+          "evidence_opportunities": 0
+        },
+        "mastery": "pending_confirmation",
+        "eligible_sessions": 0,
+        "eligible_distinct_cards": 0,
+        "novel_transfer_observed": false,
+        "unclear_explanations": 0,
+        "difficulty_observations": 0,
+        "note": "候选须家长复核；训练完成、进度和掌握相互独立。"
+      }
+    ],
+    "historical_evidence_pending_review": 0,
+    "evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "c01_evidence_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "training_status": "none"
+  }
+}

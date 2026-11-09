@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "state": {
+    "mode": "isolated_synthetic_replay",
+    "status": "awaiting_answer",
+    "concept": "C01",
+    "mastery": "unknown",
+    "support": "H0",
+    "candidate_sha256": "f7d85a930f972a18b9f9438905e497824bc544ddc9e4504251cfbfdfb1283f28",
+    "candidate_status": "awaiting_parent_confirmation",
+    "source_fixture": "experiments/sigma-integration/acceptance-2026-11-08/targeted/input-06.txt",
+    "parent_observation": "unknown"
+  },
+  "session": "合成夹具重放，非真实儿童。C01 动态诊断，不是正式测评；没有发布规划，也没有掌握或进阶授权。",
+  "turns": [
+    {
+      "type": "question",
+      "question_id": "synthetic-q01",
+      "text": "照片里，椅子上放着一顶帽子。小明说：“刚才一定有人坐在这里。”这句话是照片能确认的事实，还是猜测？请说说依据。",
+      "concept": "C01",
+      "kind": "dynamic_diagnostic_fixture_replay",
+      "wiki_pages": [
+        "wiki/concepts/observation-vs-inference.md",
+        "pilot-c01-c02/wiki/concepts/C01.md"
+      ],
+      "support": "H0",
+      "self_review": "适龄、单一主问题及理由、符合 C01、不泄露正式题答案；重放既有合成动态例题。"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "assessments": [
+    {
+      "concept": "C01",
+      "learning_progress": {
+        "evidence_opportunities": 1
+      },
+      "mastery": "pending_confirmation",
+      "eligible_sessions": 1,
+      "eligible_distinct_cards": 1,
+      "novel_transfer_observed": false,
+      "unclear_explanations": 0,
+      "difficulty_observations": 0,
+      "note": "候选须家长复核；训练完成、进度和掌握相互独立。"
+    },
+    {
+      "concept": "C02",
+      "learning_progress": {
+        "evidence_opportunities": 0
+      },
+      "mastery": "pending_confirmation",
+      "eligible_sessions": 0,
+      "eligible_distinct_cards": 0,
+      "novel_transfer_observed": false,
+      "unclear_explanations": 0,
+      "difficulty_observations": 0,
+      "note": "候选须家长复核；训练完成、进度和掌握相互独立。"
+    }
+  ],
+  "historical_evidence_pending_review": 0,
+  "evidence_digest": "ed8c9f1e03c6a690029feeaa0f30a4dfcfa62fae169fabdce6e35f91341af2d5",
+  "c01_evidence_digest": "ed8c9f1e03c6a690029feeaa0f30a4dfcfa62fae169fabdce6e35f91341af2d5",
+  "training_status": "completed"
+}
