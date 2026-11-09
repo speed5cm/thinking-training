@@ -4,13 +4,13 @@
 
 通过 GitHub 读取参考仓库 main 的 commit [`4bc20999ac502ea4899bdf144dc539f6f9ef015f`](https://github.com/orionpax1997/llm-wiki-sigma-agent/commit/4bc20999ac502ea4899bdf144dc539f6f9ef015f) 及该 commit 的 [Sigma Skill](https://github.com/orionpax1997/llm-wiki-sigma-agent/blob/4bc20999ac502ea4899bdf144dc539f6f9ef015f/.claude/skills/sigma-with-wiki/SKILL.md)。连接器返回的 Skill 文本与本仓库固定副本逐字节相同（SHA-256 均为 `20c84479ff69f515186be4510ea54694f8030dae0f4e09217ab809e9ea754e53`），因此本次未发现需要移植的教学规则差异。连接器报告上游 blob 为 `4deba6755b43a7e469b08cb2d51b9608e217bc8d`，本地返回文本的 Git blob 为 `f50fbe301f8015f066afd339bf099635cd0bd2c4`；不能据此断言原始 Git 对象相同。未执行上游 Agent，上述结论仅限读取的文本。
 
-原版已包含 Wiki Survey、概念入口重读、Wiki 路线、动态问题与提示、四维掌握检查、生成性实践、下一概念及间隔复习。儿童适配增加单轮一问、隔离会话和证据、概念授权及家长确认；本项目更严格的跨日、独立推理、迁移和混淆条件不能由上游 80% 阈值替代。
+原版已包含 Wiki Survey、概念入口重读、Wiki 路线、动态问题与提示、四维掌握检查、生成性实践、下一概念及间隔复习。儿童适配增加单轮一问、隔离会话和证据、概念授权及家长确认；本项目保留定性证据、迁移和混淆检查，不采用上游百分比评分；晋级不再要求跨日或固定等待。
 
 迁移前审计发现：`generate_roadmap.py` 的正式教学状态来自 Coach 题卡；`concept_authorization.py` 调用 Coach gate 并限定 C01/C02；`sigma_session_store.py` 固定检查 C01；`learning_evidence.py` 固定 C01 候选及 C02 目的地；`sigma_plan_store.py` 的动态复习限定 C01。规划输入还绑定确认与动态证据，因此晋级可能使原路线过期。当前已接入按概念的授权、证据和提交点门禁，并关闭 Coach 固定题卡训练入口；旧代码与记录仍保留。隔离脚本闭环已验证，完整回归和真实 Agent 行为验收仍未通过，不可用于真实儿童。
 
 > 状态说明：本文其余部分保留当时的上游核查与试点架构历史，不能将历史表述作为当前实现状态。现行协议见 [ADAPTER](../experiments/sigma-integration/ADAPTER.md)；动态门禁尚待完整回归和真实 Agent 验收，儿童正式入口关闭。
 >
-> **已决定**采用同一 Sigma 动态生成教学题和评估题，并取消固定题卡作为新机制晋级前提；**待实现、待验证**的目标数据流和模块职责见 [动态评估设计](sigma-dynamic-assessment.md)。目标采用绑定人工审核内容版本和摘要、可撤销的概念级授权；每次概念晋级须家长确认，无须逐题确认。跨不同 UTC+8 自然日且至少间隔 12 小时的有效评估要求已决定。这些机制均待实现和验证，现有门禁不变；Wiki、先修、安全停止及可信家长身份仍须保障。旧 Coach、题卡及审核代码保留，不能把目标架构当作已经上线。
+> **已决定**采用同一 Sigma 动态生成教学题和评估题，并取消固定题卡作为新机制晋级前提；**待实现、待验证**的目标数据流和模块职责见 [动态评估设计](sigma-dynamic-assessment.md)。目标采用绑定人工审核内容版本和摘要、可撤销的概念级授权；每次概念晋级须家长确认，无须逐题确认。取消跨日及 12 小时晋级硬门槛，概念通过后安排间隔复习。这些机制均待实现和验证，现有门禁不变；Wiki、先修、安全停止及可信家长身份仍须保障。旧 Coach、题卡及审核代码保留，不能把目标架构当作已经上线。
 
 核查日期：2026-11-04。依据上游 [仓库目录和 README](https://github.com/orionpax1997/llm-wiki-sigma-agent)、[AGENTS.md 实际工作流](https://github.com/orionpax1997/llm-wiki-sigma-agent/blob/main/AGENTS.md)、[sigma-with-wiki 技能文件](https://github.com/orionpax1997/llm-wiki-sigma-agent/blob/main/.claude/skills/sigma-with-wiki/SKILL.md)。通过网页读取文件，未克隆仓库或执行代码；上游 main 未锁定 commit，实施时须记录实际 SHA 并重新核验。README 与源码属于项目自述及指令，不能证明功能已实际运行。
 

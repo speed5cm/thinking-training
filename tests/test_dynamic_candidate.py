@@ -77,7 +77,7 @@ class DynamicCandidate(unittest.TestCase):
 
     def question(self, qid, **kwargs):
         q = question_event(self.root, qid, text='问题' + qid, purpose='assessment', session_id=self.snap['session'],
-                           dimensions=list(store.DIMENSIONS), context='情境' + qid, practice=qid == 'q3')
+                           dimensions=list(store.DIMENSIONS), context='情境' + qid, practice=qid == 'q4')
         self.commit([q])
         if kwargs.get('support'):
             self.commit([self.ev('support', qid, event_id=kwargs['support'][0], kind='hint', text='提示方向')])
@@ -89,6 +89,7 @@ class DynamicCandidate(unittest.TestCase):
         self.now = second_time or self.now + dt.timedelta(hours=24)
         self.commit([{'type':'session_resume'}])
         self.question('q3', novel='yes', related=['q1'])
+        self.question('q4')
 
     def result(self): return evidence.dynamic_candidate('synthetic')
 
@@ -96,34 +97,36 @@ class DynamicCandidate(unittest.TestCase):
         self.build(); before = self.result(); self.assertTrue(before['candidate'], before)
         self.assertTrue(all(c['met'] for c in before['conditions'].values()))
         without_practice = copy.deepcopy(self.snap); without_practice.update(schema_version=1, revision=self.rev)
-        next(e for e in without_practice['turns'] if e.get('question_id') == 'q3' and e['type'] == 'question')['practice'] = False
+        next(e for e in without_practice['turns'] if e.get('question_id') == 'q4' and e['type'] == 'question')['practice'] = False
         auth = store.authorization.check('C01', 'synthetic')
         self.assertFalse(evidence.aggregate_dynamic(without_practice, auth, '', store, store.authorization)['conditions']['generative_practice']['met'])
+        early_practice = copy.deepcopy(without_practice)
+        next(e for e in early_practice['turns'] if e.get('question_id') == 'q1' and e['type'] == 'question')['practice'] = True
+        self.assertFalse(evidence.aggregate_dynamic(early_practice, auth, '', store, store.authorization)['conditions']['generative_practice']['met'])
         replacement = self.assessment('q3', novel='no', accuracy='not_supported')
         self.commit([self.ev('correction','q3', event_id='c1', reason='核对后更正', replacement=replacement)])
         after = self.result(); self.assertFalse(after['candidate']); self.assertNotEqual(before['evidence_digest'], after['evidence_digest'])
-        self.assertEqual(after['evidence'][-1]['correctness'], 'not_supported')
+        self.assertEqual(next(x for x in after['evidence'] if x['id'] == 'q3')['correctness'], 'not_supported')
         self.assertTrue(after['conditions']['valid_questions']['met'])
         self.assertFalse(after['conditions']['novel_transfer']['met'])
         self.commit([self.ev('invalidation','q3', event_id='i1', reason='题意歧义')])
-        self.assertFalse(self.result()['conditions']['valid_questions']['met'])
+        self.assertFalse(self.result()['conditions']['generative_practice']['met'])
 
     def test_insufficient_and_duplicate(self):
         self.question('q1'); self.question('q2', repeat='yes', related=['q1'])
         result = self.result(); self.assertFalse(result['candidate']); self.assertTrue(result['evidence'][1]['valid']); self.assertFalse(result['evidence'][1]['eligible_for_coverage'])
         self.assertEqual(result['conditions']['valid_questions']['evidence_ids'], ['q1'])
 
-    def test_utc8_boundaries(self):
-        for delta in (dt.timedelta(hours=4), dt.timedelta(hours=13)):
-            with self.subTest(delta=delta):
-                # First at 15:00 UTC: 4h crosses midnight, 13h crosses midnight too;
-                # for the latter use 16:10 UTC so 13h stays on the same UTC+8 day.
-                self.now = dt.datetime(2030,1,1,15 if delta.total_seconds() == 14400 else 16,10,tzinfo=dt.timezone.utc)
-                self.build(self.now + delta)
-                self.assertFalse(self.result()['conditions']['independent_sessions']['met'])
-                (self.folder / 'sigma/session-snapshot.json').unlink()
-                self.snap = {'state':{},'session':'','turns':[]}; self.rev = 0
-                self.now = dt.datetime(2030,1,1,0,tzinfo=dt.timezone.utc); self.commit([{'type':'session_start'}])
+    def test_mastery_and_practice_in_one_session(self):
+        teaching = question_event(self.root, 't1', text='教学问题', purpose='teaching', session_id=self.snap['session'])
+        teaching['context'] = '教学情境'
+        self.commit([teaching])
+        self.commit([self.ev('answer', 't1', text='教学原答'), self.ev('analysis', 't1', analysis={'reason':'教学观察'})])
+        self.question('q3', novel='yes', related=['t1'])
+        self.question('q4')
+        result = self.result()
+        self.assertTrue(result['candidate'], result)
+        self.assertNotIn('independent_sessions', result['conditions'])
 
     def test_resume_link_and_missing_time(self):
         self.build(); snap = copy.deepcopy(self.snap)
@@ -131,7 +134,7 @@ class DynamicCandidate(unittest.TestCase):
         snap.update(schema_version=1, revision=self.rev)
         auth = store.authorization.check('C01', 'synthetic')
         result = evidence.aggregate_dynamic(snap, auth, '', store, store.authorization)
-        self.assertFalse(result['conditions']['independent_sessions']['met']); self.assertFalse(result['candidate'])
+        self.assertFalse(result['conditions']['record_integrity']['met']); self.assertFalse(result['candidate'])
         resume['previous_session_id'] = next(e['session_id'] for e in snap['turns'] if e['type'] == 'session_end')
         next(e for e in snap['turns'] if e['type'] == 'answer').pop('recorded_at')
         self.assertFalse(evidence.aggregate_dynamic(snap, auth, '', store, store.authorization)['candidate'])

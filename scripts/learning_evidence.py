@@ -42,7 +42,7 @@ def load_evidence(folder):
 def evidence_digest(records):
     return hashlib.sha256(json.dumps(records, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
 
-DYNAMIC_RULE_VERSION = 'dynamic-candidate-v1'
+DYNAMIC_RULE_VERSION = 'dynamic-candidate-v2'
 
 
 def dynamic_candidate(learner, already_locked=False, concept='C01'):
@@ -207,7 +207,8 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization, conce
                   'semantic_usable': semantic_usable, 'reasons': reasons, 'eligibility_reasons': eligibility_reasons,
                   'correctness': dims.get('accuracy', {}).get('status', 'unknown'),
                   'dimensions': dims, 'observations': obs,
-                  'answer_time': timestamp(answer[1]) if answer else None, 'analysis_order': analysis[0] if analysis else -1}
+                  'answer_time': timestamp(answer[1]) if answer else None, 'question_order': qi,
+                  'analysis_order': analysis[0] if analysis else -1}
         items.append(record)
 
     valid = [x for x in items if x['eligible_for_coverage']]
@@ -215,36 +216,11 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization, conce
     def condition(ok, rows, reason):
         return {'met': bool(ok), 'evidence_ids': ids(rows), 'reason': '' if ok else reason}
     conditions = {}
-    conditions['valid_questions'] = condition(len(valid) >= 3, valid, '至少需要 3 道有效且非重复的评估题')
-    contexts = {}
-    for item in valid: contexts.setdefault(item['context'], item)
-    conditions['contexts'] = condition(len(contexts) >= 2, list(contexts.values()), '至少需要 2 种不同情境及非重复判断')
-    pair = []
-    zone = dt.timezone(dt.timedelta(hours=8))
-    for a in valid:
-        for b in valid:
-            if not a['answer_time'] or not b['answer_time'] or a['session_id'] == b['session_id']: continue
-            first, second = (a, b) if a['answer_time'] < b['answer_time'] else (b, a)
-            s1, s2 = timeline.get(first['session_id'], {}), timeline.get(second['session_id'], {})
-            # Follow the complete chain of ended sessions, not just distinct IDs.
-            cursor, visited = second['session_id'], set()
-            while cursor and cursor != first['session_id'] and cursor not in visited:
-                visited.add(cursor); node = timeline.get(cursor, {})
-                if not node.get('valid'): break
-                parent = node.get('previous'); parent_node = timeline.get(parent, {})
-                if not parent_node.get('valid') or not parent_node.get('end') or not node.get('start') or parent_node['end'] > node['start']: break
-                cursor = parent
-            if (cursor == first['session_id'] and s1.get('valid') and s2.get('valid') and s1.get('end')
-                    and first['answer_time'] <= s1['end'] <= s2['start'] <= second['answer_time']
-                    and second['answer_time'] - first['answer_time'] >= dt.timedelta(hours=12)
-                    and first['answer_time'].astimezone(zone).date() != second['answer_time'].astimezone(zone).date()):
-                pair = [first, second]; break
-        if pair: break
-    conditions['independent_sessions'] = condition(pair, pair, '需要可靠结束与恢复链、UTC+8 跨日且作答间隔至少 12 小时')
+    conditions['valid_questions'] = condition(valid, valid, '需要有效且非重复的评估题')
     successes = [x for x in valid if x['correctness'] == 'supported' and x['dimensions'].get('explanation', {}).get('status') == 'supported'
                  and x['observations'].get('support_complete', {}).get('status') == 'confirmed'
                  and not x['observations']['support_complete'].get('support_event_ids')]
-    conditions['unprompted_reasoned'] = condition(len(successes) >= 2, successes, '需要 2 道无提示、正确且理由成立的题，支持完整性必须确认')
+    conditions['unprompted_reasoned'] = condition(successes, successes, '需要无提示、正确且理由成立的评估，支持完整性必须确认')
     transfer = [x for x in successes if x['observations'].get('novel_transfer', {}).get('status') == 'yes'
                 and x['dimensions'].get('novel_application', {}).get('status') == 'supported'
                 and all(ref in answers and ref not in invalid and ref not in interrupted
@@ -252,9 +228,16 @@ def aggregate_dynamic(snapshot, auth, auth_error, sessions, authorization, conce
                         and questions[ref][1]['context'] != x['context']
                         for ref in x['observations']['novel_transfer'].get('related_question_ids', []))]
     conditions['novel_transfer'] = condition(transfer, transfer, '需要有依据的成功陌生迁移且没有提示污染')
+    def check_complete_before(item):
+        earlier = [x for x in valid if x['practice'] is False and x['analysis_order'] < item['question_order']]
+        return (any(x in successes for x in earlier) and any(x in transfer for x in earlier)
+                and all(any(x['dimensions'].get(dim, {}).get('status') == 'supported'
+                            and (dim != 'novel_application' or x in transfer) for x in earlier)
+                        for dim in sessions.DIMENSIONS))
     practice = [x for x in valid if x['practice'] is True and x['correctness'] == 'supported'
-                and x['dimensions'].get('explanation', {}).get('status') == 'supported']
-    conditions['generative_practice'] = condition(practice, practice, '需要完成有正确作答及理由依据的生成性实践')
+                and x['dimensions'].get('explanation', {}).get('status') == 'supported'
+                and check_complete_before(x)]
+    conditions['generative_practice'] = condition(practice, practice, '需要在无提示掌握检查后完成有正确作答及理由依据的生成性实践')
     for dim in sessions.DIMENSIONS:
         positive = [x for x in valid if x['dimensions'].get(dim, {}).get('status') == 'supported'
                     and (dim != 'novel_application' or x in transfer)]

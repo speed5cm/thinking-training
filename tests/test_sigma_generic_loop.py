@@ -103,7 +103,7 @@ class GenericLoop(unittest.TestCase):
             q = copy.deepcopy(question)
             q.update(question_id=qid, purpose='assessment', text='问题' + qid,
                      session_id=self.f.snap['session'], context='情境' + qid,
-                     dimensions=list(fixture.store.DIMENSIONS), answer_basis=record['scope'], practice=novel)
+                     dimensions=list(fixture.store.DIMENSIONS), answer_basis=record['scope'], practice=qid == 'c02-a4')
             self.f.commit([q])
             analysis = self.f.assessment(qid, novel='yes' if novel else 'no', related=['c02-a1'] if novel else None)
             for d in analysis['dimensions'].values():
@@ -118,6 +118,7 @@ class GenericLoop(unittest.TestCase):
         self.f.now += dt.timedelta(hours=24)
         self.f.commit([{'type':'session_resume'}])
         assess('c02-a3', novel=True)
+        assess('c02-a4')
         self.assertTrue(self.cli('scripts/learning_evidence.py', 'dynamic-candidate', '--concept', 'C02')['candidate'])
         self.cli('scripts/learning_evidence.py', 'check', '--concept', 'C03', ok=False)
         self.cli('scripts/learning_evidence.py', 'confirm', '--concept', 'C02', '--synthetic-confirmation')

@@ -81,7 +81,7 @@ class DynamicTransition(unittest.TestCase):
         current = path.read_text()
         module = self.root / 'scripts/learning_evidence.py'
         source = module.read_text()
-        module.write_text(source.replace("DYNAMIC_RULE_VERSION = 'dynamic-candidate-v1'", "DYNAMIC_RULE_VERSION = 'dynamic-candidate-v2'") + '\n# changed rule fixture\n')
+        module.write_text(source.replace("DYNAMIC_RULE_VERSION = 'dynamic-candidate-v2'", "DYNAMIC_RULE_VERSION = 'dynamic-candidate-v3'") + '\n# changed rule fixture\n')
         self.gate(ok=False); self.coach('start','--mode','C02',ok=False)
         module.write_text(source)
         path.write_text(json.dumps({'concept':'C01','confirmation':'parent','evidence_digest':self.fixture.result()['evidence_digest']}))
