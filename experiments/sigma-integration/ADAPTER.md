@@ -50,7 +50,7 @@
 
 ## C01 概念授权的隔离首批实现
 
-本批只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的 C01 合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须运行 `python3 scripts/concept_authorization.py check --learner <化名>`，失败立即停止受影响活动；不能把该检查当作路线、先修、题卡发布或题目质量的替代。每个新 question 事件必须包含 `"concept":"C01"`，提交时会在发布锁内重验；动态复习安排和完成也重验。动态评估题与评价仅支持记录，动态证据采集和晋级尚未实现，不得声称已支持动态晋级。
+本批只支持化名 `synthetic` 或 `synthetic-...` / `synthetic_...` 的 C01 合成模拟；真实儿童入口仍关闭。动态教学、动态评估及恢复未答题前须运行 `python3 scripts/concept_authorization.py check --learner <化名>`，失败立即停止受影响活动；不能把该检查当作路线、先修、题卡发布或题目质量的替代。每个新 question 事件必须包含 `"concept":"C01"`，提交时会在发布锁内重验；动态复习安排和完成也重验。动态评估题与评价支持记录；`learning_evidence.py dynamic-candidate` 仅对隔离合成快照只读重算候选，尚未接入确认或教学门禁，不得声称已支持动态晋级。
 
 记录位置为 `pilot-c01-c02/concept-authorizations/C01.json`，本仓库不预置有效授权。结构为 `schema_version: 1`、`concept: C01`、`version`、`review: {kind, actor, basis}`、`status`、`teaching_goal`、`scope`、`sources` 和 `content_sha256`。目标和范围须逐字等于根概念页的掌握判据及试点概念页 Core Thesis；来源为 R04、R06，摘要覆盖根索引、C01、课程、来源及教法、样题和试点 survey、概念与来源材料。具体必需文件以 `concept_authorization.py` 的 `FILES` 为准。内容变化、缺失、记录不完整或撤销均停止；模拟重新审核须创建新的测试记录及版本。`revoke` 只撤销已有合成记录，不提供批准接口。
 
