@@ -1,11 +1,13 @@
 import importlib.util
 import json
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
 spec = importlib.util.spec_from_file_location('learning_evidence', ROOT / 'scripts/learning_evidence.py')
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
@@ -22,8 +24,10 @@ class EvidenceTests(unittest.TestCase):
         for p in self.patches:
             p.start()
             self.addCleanup(p.stop)
-        for learner in ('a', 'b'):
+        for learner in ('synthetic-a', 'synthetic-b'):
             (mod.coach.ROOT / 'records' / learner).mkdir(parents=True)
+        self.candidate = {'candidate': False, 'rule_version':'test-rule', 'evidence_digest':'test-digest', 'evidence':[], 'conditions':{'authorization':{'met':True},'record_integrity':{'met':True}}}
+        p = patch.object(mod, 'dynamic_candidate', side_effect=lambda *args, **kwargs: dict(self.candidate)); p.start(); self.addCleanup(p.stop)
         self.extra = {'reason_quote': '因为看见了', 'transfer': {'status': 'unknown', 'observation': '', 'parent_verified_novel': False}, 'parent_feedback': '需要休息'}
 
     def make_session(self, learner, sid, response='因为看见了', correctness='correct', explanation='valid'):
@@ -36,89 +40,78 @@ class EvidenceTests(unittest.TestCase):
             mod.coach.append(folder, e)
 
     def test_capture_fields_isolation_duplicate_and_completion(self):
-        self.make_session('a', 's1')
-        mod.capture('a', 's1', self.extra)
-        record = mod.load_evidence(mod.get_folder('a'))[0]
+        self.make_session('synthetic-a', 's1')
+        mod.capture('synthetic-a', 's1', self.extra)
+        record = mod.load_evidence(mod.get_folder('synthetic-a'))[0]
         self.assertEqual((record['raw_response'], record['reason_quote'], record['ai_temporary_correctness'], record['explanation_quality'], record['hint_level']), ('因为看见了', '因为看见了', 'correct', 'valid', 0))
         self.assertEqual(record['coach_parent_feedback'], ['家长观察'])
         self.assertEqual(record['parent_feedback'], '需要休息')
         self.assertEqual(record['transfer']['status'], 'unknown')
-        self.assertEqual(mod.assess('a')['training_status'], 'completed')
-        self.assertEqual(mod.assess('a')['assessments'][0]['mastery'], 'pending_confirmation')
-        self.assertEqual(mod.assess('b')['assessments'][0]['learning_progress']['evidence_opportunities'], 0)
-        with self.assertRaises(mod.EvidenceError): mod.capture('a', 's1', self.extra)
+        self.assertEqual(mod.assess('synthetic-a')['training_status'], 'completed')
+        self.assertEqual(mod.assess('synthetic-a')['assessments'][0]['mastery'], 'pending_confirmation')
+        self.assertEqual(mod.assess('synthetic-b')['assessments'][0]['learning_progress']['evidence_opportunities'], 0)
+        with self.assertRaises(mod.EvidenceError): mod.capture('synthetic-a', 's1', self.extra)
 
     def test_last_attempt_captures_actual_hints_and_support(self):
-        self.make_session('a', 's1', correctness='unknown', explanation='none')
-        folder = mod.get_folder('a')
+        self.make_session('synthetic-a', 's1', correctness='unknown', explanation='none')
+        folder = mod.get_folder('synthetic-a')
         events = mod.coach.load_events(folder)
         events[2]['session_completed'] = False
         (folder / 'events.jsonl').write_text(''.join(json.dumps(e, ensure_ascii=False)+'\n' for e in events))
         mod.coach.append(folder, {'type':'hint','session_id':'s1','question':'ST-C01-01','level':1})
         mod.coach.append(folder, {'type':'attempt','session_id':'s1','question':'ST-C01-01','raw_response':'因为看见了','ai_assessment':{'correctness':'correct','explanation':'valid'},'session_completed':True})
-        mod.capture('a', 's1', self.extra)
+        mod.capture('synthetic-a', 's1', self.extra)
         record = mod.load_evidence(folder)[0]
         self.assertEqual((record['hint_level'], record['prior_attempts']), (1, 1))
 
     def test_same_card_repeated_cannot_prove_mastery(self):
         for sid in ('s1','s2','s3'):
-            self.make_session('a', sid)
-            mod.capture('a', sid, self.extra)
-        result = mod.assess('a')['assessments'][0]
-        self.assertEqual(result['eligible_sessions'], 3)
-        self.assertEqual(result['eligible_distinct_cards'], 1)
+            self.make_session('synthetic-a', sid)
+            mod.capture('synthetic-a', sid, self.extra)
+        result = mod.assess('synthetic-a')['assessments'][0]
+        self.assertEqual(result['learning_progress']['evidence_opportunities'], 0)
         self.assertEqual(result['mastery'], 'pending_confirmation')
 
-    def test_evaluation_needs_transfer_and_distinct_sessions_and_cards(self):
-        base = {'concept':'C01','session_id':'s1','card':{'id':'q1'},'ai_temporary_correctness':'correct', 'explanation_quality':'valid', 'raw_response':'因为看见了','reason_quote':'因为看见了','hint_level':0,'prior_attempts':0,'prior_support':[], 'transfer':{'status':'unknown','parent_verified_novel':False,'observation':''}}
-        other = {**base, 'session_id':'s2', 'card':{'id':'q2'}}
-        self.assertEqual(mod.evaluate([base, other], 'C01')['mastery'], 'pending_confirmation')
-        other = {**other, 'transfer':{'status':'yes','parent_verified_novel':True,'observation':'陌生场景'}}
-        self.assertEqual(mod.evaluate([base, other], 'C01')['mastery'], 'mastered_candidate')
-        self.assertEqual(mod.evaluate([base, {**other, 'session_id':'s1'}], 'C01')['mastery'], 'pending_confirmation')
-        self.assertEqual(mod.evaluate([base, {**other, 'prior_support':['demo']}], 'C01')['mastery'], 'pending_confirmation')
+    def test_legacy_card_observations_do_not_create_dynamic_candidate(self):
+        for sid in ('s1', 's2'):
+            self.make_session('synthetic-a', sid)
+            mod.capture('synthetic-a', sid, self.extra)
+        result = mod.assess('synthetic-a')
+        self.assertEqual(result['historical_evidence_pending_review'], 2)
+        self.assertEqual(result['assessments'][0]['mastery'], 'pending_confirmation')
 
     def test_diagnosis_and_revoked_cards_block(self):
-        self.make_session('a', 's1')
+        self.make_session('synthetic-a', 's1')
         with patch.object(mod.coach, 'load_card', side_effect=mod.coach.Stop('撤销')):
-            with self.assertRaises(mod.coach.Stop): mod.capture('a', 's1', self.extra)
-        mod.capture('a', 's1', self.extra)
-        with patch.object(mod.coach, 'load_card', side_effect=mod.coach.Stop('撤销')):
-            with self.assertRaises(mod.coach.Stop): mod.recommend('a')
+            with self.assertRaises(mod.coach.Stop): mod.capture('synthetic-a', 's1', self.extra)
+        mod.capture('synthetic-a', 's1', self.extra)
+        self.candidate['conditions'] = {'authorization':{'met':False}}
+        self.assertEqual(mod.recommend('synthetic-a')['action'], 'blocked')
 
     def test_parent_confirmation_and_c02_gate(self):
-        with self.assertRaises(mod.EvidenceError): mod.confirm_c01('a')
-        candidate = {'concept':'C01', 'mastery':'mastered_candidate', 'learning_progress':{'evidence_opportunities':2}, 'eligible_sessions':2, 'eligible_distinct_cards':2, 'novel_transfer_observed':True, 'unclear_explanations':0, 'difficulty_observations':0}
-        data = {'concepts':[{'id':'C01','formal_teaching_available':True}, {'id':'C02','formal_teaching_available':True,'hard_prerequisites':['C01']}]}
-        with patch.object(mod, 'evaluate', return_value=candidate), patch.object(mod.roadmap, 'build', return_value=data):
-            self.assertEqual(mod.recommend('a')['action'], 'parent_review')
-            mod.confirm_c01('a')
-            self.assertEqual(mod.recommend('a')['concept'], 'C02')
-            data['concepts'][1]['formal_teaching_available'] = False
-            self.assertEqual(mod.recommend('a')['action'], 'blocked')
-            data['concepts'][1]['formal_teaching_available'] = True
-            # Confirmation is tied to the exact evidence, including later additions.
-            with patch.object(mod, 'evidence_digest', return_value='changed'):
-                self.assertEqual(mod.recommend('a')['action'], 'parent_review')
+        with self.assertRaises(mod.EvidenceError): mod.confirm_c01('synthetic-a')
+        self.candidate['candidate'] = True
+        destination = {'authorization':{'authorization_sha256':'synthetic'}, 'wiki_digest':'wiki', 'prerequisites':['C01']}
+        with patch.object(mod, 'destination_basis', return_value=destination):
+            self.assertEqual(mod.recommend('synthetic-a')['action'], 'parent_review')
+            self.assertEqual(mod.confirm_c01('synthetic-a', synthetic_confirmation=True)['confirmation'], 'synthetic_simulation')
+            self.assertEqual(mod.recommend('synthetic-a')['concept'], 'C02')
+            self.candidate['evidence_digest'] = 'changed'
+            self.assertEqual(mod.recommend('synthetic-a')['action'], 'parent_review')
 
     def test_confirmation_scope_and_legacy_fail_closed(self):
-        c01 = [{'concept': 'C01', 'session_id': 'synthetic-1'}]
-        both = c01 + [{'concept': 'C02', 'session_id': 'synthetic-2'}]
-        scoped = {'concept': 'C01', 'confirmation': 'parent', 'digest_scope': 'C01',
-                  'evidence_digest': mod.c01_digest(c01)}
-        legacy = {'concept': 'C01', 'confirmation': 'parent',
-                  'evidence_digest': mod.evidence_digest(c01)}
-        self.assertTrue(mod.confirmation_valid(scoped, mod.c01_digest(both), mod.evidence_digest(both)))
-        self.assertFalse(mod.confirmation_valid(legacy, mod.c01_digest(both), mod.evidence_digest(both)))
-        self.assertTrue(mod.confirmation_valid(legacy, mod.c01_digest(c01), mod.evidence_digest(c01)))
-        self.assertFalse(mod.confirmation_valid({**scoped, 'digest_scope': 'unknown'}, mod.c01_digest(both), mod.evidence_digest(both)))
+        candidate = {'rule_version':'dynamic-v1', 'evidence_digest':'new'}
+        destination = {'synthetic':'destination'}
+        current = {'concept':'C01', 'confirmation':'synthetic_simulation', 'rule_version':'dynamic-v1',
+                   'evidence_digest':'new', 'destination_digest':mod.evidence_digest([destination])}
+        self.assertTrue(mod.confirmation_valid(current, candidate, destination))
+        self.assertFalse(mod.confirmation_valid({'concept':'C01','confirmation':'parent','evidence_digest':'new'}, candidate, destination))
+        self.assertFalse(mod.confirmation_valid(current, {**candidate,'rule_version':'new-rule'}, destination))
+        self.assertFalse(mod.confirmation_valid(current, candidate, {'synthetic':'changed'}))
 
     def test_recommendation_is_only_c01_and_respects_live_gate(self):
-        data = {'concepts':[{'id':'C01','formal_teaching_available':True}, {'id':'C02','formal_teaching_available':True}]}
-        with patch.object(mod.roadmap, 'build', return_value=data):
-            self.assertEqual(mod.recommend('a')['concept'], 'C01')
-            data['concepts'][0]['formal_teaching_available'] = False
-            self.assertEqual(mod.recommend('a')['action'], 'blocked')
-            self.assertIsNone(mod.recommend('a')['concept'])
+        self.assertEqual(mod.recommend('synthetic-a')['concept'], 'C01')
+        self.candidate['conditions'] = {'authorization': {'met':False}}
+        self.assertEqual(mod.recommend('synthetic-a')['action'], 'blocked')
 
 if __name__ == '__main__': unittest.main()

@@ -42,3 +42,18 @@ def snapshot(result):
 def begin(store, learner):
     result = store.operate(learner, {'state':{}, 'session':'', 'turns':[{'type':'session_start'}]}, 0)
     return snapshot(result), result['revision']
+
+def write_c02_authorization(root, version='synthetic-c02-1'):
+    """Create only a simulated test authorization in a temporary project."""
+    files = tuple('wiki/concepts/attribute-comparison.md' if p == 'wiki/concepts/observation-vs-inference.md'
+                  else 'pilot-c01-c02/wiki/concepts/C02.md' if p == 'pilot-c01-c02/wiki/concepts/C01.md'
+                  else p for p in FILES)
+    record = {'schema_version':1, 'concept':'C02', 'version':version,
+              'review':{'kind':'synthetic_simulation','actor':'synthetic reviewer','basis':'isolated fixture only'},
+              'status':'active', 'teaching_goal':'对陌生材料能选至少2个稳定属性并说清异同。',
+              'scope':'固定相同的属性维度比较，才能说清相同与不同。', 'sources':['R01','R04'],
+              'content_sha256':{p:hashlib.sha256((root / p).read_bytes()).hexdigest() for p in files}}
+    path = root / 'pilot-c01-c02/concept-authorizations/C02.json'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record, ensure_ascii=False), encoding='utf-8')
+    return path

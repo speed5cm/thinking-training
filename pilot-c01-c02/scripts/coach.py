@@ -181,35 +181,22 @@ def save_summary(folder, ev):
 
 def authorize_c02_locked(folder):
     """Caller holds the learner lock and publication read lock; no nested locks."""
-    path = ROOT.parent / 'scripts' / 'learning_evidence.py'
-    if not path.is_file():
-        raise Stop('证据模块不可用，C02 不可授权')
-    spec = importlib.util.spec_from_file_location('coach_authorization_evidence', path)
-    evidence = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(evidence)
-    evidence.coach = types.SimpleNamespace(MODES=MODES, gate=gate, load_card=load_card)
+    if not re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', folder.name):
+        raise Stop('C02 仅支持隔离合成测试，C01 掌握证据不足')
+    sys.path.insert(0, str(ROOT.parent / 'scripts'))
     try:
-        records = evidence.load_evidence(folder)
-        seen = set()
-        eligible_records = []
-        for record in records:
-            key = (record['session_id'], record['card']['id'])
-            if key in seen: raise Stop('重复证据')
-            seen.add(key)
-            if evidence.current_card(record['concept'], record['card']): eligible_records.append(record)
-        if evidence.evaluate(eligible_records, 'C01')['mastery'] != 'mastered_candidate':
-            raise Stop('C01 掌握证据不足，C02 不可授权')
-        confirmation = json_read(folder / 'mastery-confirmation.json')
-        if not evidence.confirmation_valid(confirmation, evidence.c01_digest(records), evidence.evidence_digest(records)):
-            raise Stop('C01 家长确认缺失或已过期')
-        curriculum = evidence.roadmap.build(ROOT.parent)
-        c02 = next(x for x in curriculum['concepts'] if x['id'] == 'C02')
-        if c02['hard_prerequisites'] != ['C01'] or not c02['formal_teaching_available']:
-            raise Stop('C02 先修或发布状态不满足')
-    except (evidence.EvidenceError, OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
+        import learning_evidence as evidence
+    except ImportError as exc:
+        raise Stop('C02 授权失败：' + str(exc)) from exc
+    try:
+        evidence.authorize_c02_locked(folder.name)
+    except (ImportError, evidence.coach.Stop, OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
         raise Stop('C02 授权失败：' + str(exc)) from exc
 
+
 def run(args):
+    if not re.fullmatch(r'synthetic(?:[-_][A-Za-z0-9_-]+)?', args.learner):
+        raise Stop('仅允许隔离合成学习者；真实儿童入口关闭')
     folder=learner_dir(args.learner)
     folder.mkdir(mode=0o700, parents=True, exist_ok=True)
     # Release writers MUST hold .publication.lock exclusively throughout changes.
@@ -250,8 +237,9 @@ def run(args):
         if args.action == 'resume':
             if st != 'paused': raise Stop('训练未暂停')
         elif st != 'active': raise Stop('训练已暂停，请先继续')
-        if ev[0]['mode'] == 'C02': authorize_c02_locked(folder)
         q=current(ev)
+        if ev[0]['mode'] == 'C02' or (q and q['concept'] == 'C02'):
+            authorize_c02_locked(folder)
         if q is None:
             if args.action == 'resume':
                 append(folder, {'type':'resume','session_id':ev[0]['session_id']})

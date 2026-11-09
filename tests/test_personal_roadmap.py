@@ -64,47 +64,55 @@ class PersonalRoadmapTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
             profile = Path(tmp) / 'planner-profile.md'
             profile.write_text('诊断：未知', encoding='utf-8')
-            ctx = planner.context('fiction-demo')
+            ctx = planner.context('synthetic-demo')
             plan = copy.deepcopy(self.plan)
+            plan['learner'] = 'synthetic-demo'
             for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'):
                 plan[key] = ctx[key]
-            planner.validate(plan, ctx, 'fiction-demo')
+            planner.validate(plan, ctx, 'synthetic-demo')
             profile.write_text('诊断：需要复核', encoding='utf-8')
             with self.assertRaises(planner.Invalid):
-                planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
+                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
 
     def test_old_tutor_state_is_not_a_planning_input(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
-            before = planner.context('fiction-demo')['learner_digest']
+            before = planner.context('synthetic-demo')['learner_digest']
             (Path(tmp) / 'tutor-state.json').write_text('{"status":"paused"}', encoding='utf-8')
-            self.assertEqual(planner.context('fiction-demo')['learner_digest'], before)
+            self.assertEqual(planner.context('synthetic-demo')['learner_digest'], before)
 
     @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={'authorization_sha256':'a' * 64})
-    def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self, _check):
+    def test_sigma_snapshot_and_planning_basis_invalidate_plan(self, _check):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
-            snap, rev = begin(planner.sigma_session, 'fiction-demo')
+            snap, rev = begin(planner.sigma_session, 'synthetic-demo')
             snap['state']['question'] = '原题'
-            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            result = planner.sigma_session.operate('synthetic-demo', snap, rev)
             snap, rev = snapshot(result), result['revision']
-            ctx = planner.context('fiction-demo')
+            ctx = planner.context('synthetic-demo')
             plan = copy.deepcopy(self.plan)
+            plan['learner'] = 'synthetic-demo'
             for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'):
                 plan[key] = ctx[key]
-            planner.validate(plan, ctx, 'fiction-demo')
+            planner.validate(plan, ctx, 'synthetic-demo')
             snap['state']['question'] = '下一题'
             snap['turns'].append(question_event(ROOT, 'q1', text='下一题', auth_sha='a' * 64, session_id=snap['session']))
-            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            result = planner.sigma_session.operate('synthetic-demo', snap, rev)
             snap, rev = snapshot(result), result['revision']
-            planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
+            with self.assertRaises(planner.Invalid):
+                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
+            ctx = planner.context('synthetic-demo')
+            for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'): plan[key] = ctx[key]
             snap['turns'].append(event('answer', 'q1', text='回答', session_id=snap['session']))
             snap['turns'].append(event('analysis', 'q1', analysis={'reason': '普通教学观察'}, session_id=snap['session']))
-            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            result = planner.sigma_session.operate('synthetic-demo', snap, rev)
             snap, rev = snapshot(result), result['revision']
-            planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
-            snap['state']['planning_basis'] = {'C01': '需要复习'}
-            planner.sigma_session.operate('fiction-demo', snap, rev)
             with self.assertRaises(planner.Invalid):
-                planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
+                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
+            ctx = planner.context('synthetic-demo')
+            for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'): plan[key] = ctx[key]
+            snap['state']['planning_basis'] = {'C01': '需要复习'}
+            planner.sigma_session.operate('synthetic-demo', snap, rev)
+            with self.assertRaises(planner.Invalid):
+                planner.validate(plan, planner.context('synthetic-demo'), 'synthetic-demo')
 
     def test_proposed_actions_cannot_grant_mastery_or_teaching(self):
         for kind in ('mastered', 'teach', 'skip'):

@@ -38,8 +38,11 @@ class SigmaIntegration(unittest.TestCase):
             candidate = folder / 'candidate.json'
             candidate.write_text(json.dumps(plan, ensure_ascii=False))
             def publish():
+                ctx = call('validate_personal_roadmap.py', 'context', *learner)
+                for key in ('curriculum_digest','evidence_digest','learner_digest'): plan[key] = ctx[key]
+                candidate.write_text(json.dumps(plan, ensure_ascii=False))
                 pending = call('sigma_plan_store.py', 'prepare', *learner, '--plan', str(candidate))
-                return call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate), '--confirmed-sha', pending['plan_sha256'])
+                return call('sigma_plan_store.py', 'publish', *learner, '--plan', str(candidate), '--confirmed-sha', pending['plan_sha256'], '--synthetic-confirmation')
             published = publish()
             self.assertEqual(published['status'], 'current')
             self.assertTrue(published['review_queue'][0]['due'])
@@ -56,7 +59,7 @@ class SigmaIntegration(unittest.TestCase):
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '4', data=snapshot)
             resumed = call('sigma_session_store.py', 'read', *learner)
             self.assertEqual(resumed['turns'][-1]['question_id'], 'q2')
-            self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
+            self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'stale')
             snapshot['state']['planning_basis'] = {'C01':'需要复习'}
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '5', data=snapshot)
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'stale')

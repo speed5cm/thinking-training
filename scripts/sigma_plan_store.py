@@ -86,7 +86,7 @@ def dynamic_answer(snapshot, question_id, task=None):
         raise Invalid('动态复习分析缺失')
     return found
 
-def operate(action, learner, candidate=None, session=None, payload=None, confirmed_sha=None):
+def operate(action, learner, candidate=None, session=None, payload=None, confirmed_sha=None, synthetic_confirmation=False):
     folder=evidence.get_folder(learner); dest=folder/'sigma';dest.mkdir(mode=0o700,exist_ok=True)
     path=dest/'plan-history.json'
     # Lock order is publication, learner, plan, shared with coach/evidence.
@@ -105,6 +105,8 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
             if action == 'prepare':
                 write(pending_path, {'plan':plan, 'plan_sha256':candidate_sha, 'inputs':inputs, 'nonce':str(uuid.uuid4())})
                 return {'status':'awaiting_parent_confirmation', 'plan_sha256':candidate_sha, 'inputs':inputs, 'plan':plan}
+            if not synthetic_confirmation or not sessions.authorization.synthetic_learner(learner):
+                raise Invalid('路线确认只接受明确标记的合成模拟')
             if not confirmed_sha or not pending_path.exists():
                 raise Invalid('请先准备候选并由家长确认其摘要')
             pending = json.loads(pending_path.read_text(encoding='utf-8'))
@@ -116,7 +118,7 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
             records=[r for r in evidence.load_evidence(folder) if evidence.current_card(r['concept'], r['card'])]
             # Recheck Wiki and snapshots while holding the shared authorization locks.
             if planner.context(learner, already_locked=True) != ctx: raise Invalid('规划输入发生变化，请重试')
-            item={'version':len(store['history'])+1,'plan_sha256':sha(plan),'confirmation_nonce':pending['nonce'],'created_at':dt.datetime.now(dt.timezone.utc).isoformat(),
+            item={'version':len(store['history'])+1,'plan_sha256':sha(plan),'confirmation_kind':'synthetic_simulation','confirmation_nonce':pending['nonce'],'created_at':dt.datetime.now(dt.timezone.utc).isoformat(),
                   'inputs':{k:ctx[k] for k in ('curriculum_digest','learner_digest','evidence_digest')},'plan':plan,'review_queue':queue(records,store['history'],store.get('review_events',[]))}
             store['history'].append(item);write(path,store)
             try: pending_path.unlink()
@@ -126,7 +128,9 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
             return {'status':'missing','review_queue':[], 'dynamic_reviews':[]}
         item=store['history'][-1]
         if item['plan_sha256'] != sha(item['plan']): raise Invalid('规划内容摘要不匹配')
-        stale=any(item['inputs'][k] != ctx[k] for k in item['inputs'])
+        stale=(item.get('confirmation_kind') != 'synthetic_simulation'
+               or set(item.get('inputs', {})) != {'curriculum_digest','learner_digest','evidence_digest'}
+               or any(item['inputs'][k] != ctx[k] for k in item['inputs']))
         if action in ('schedule-dynamic', 'complete-dynamic'):
             if stale: raise Invalid('路线已过期，请先重新检查教学范围并更新路线，再推进动态复习')
             if not isinstance(payload, dict): raise Invalid('动态复习需要 JSON 对象')
@@ -194,12 +198,12 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
         return {'status':'stale' if stale else 'current','version':item['version'],'plan_sha256':item['plan_sha256'], 'inputs':item['inputs'],'review_queue':reviews, 'dynamic_reviews':dynamic, 'notice':'复习安排非掌握判定或教学授权；须重新检查实时门禁。'}
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['prepare','publish','status','complete-review','schedule-dynamic','complete-dynamic']);p.add_argument('--learner',required=True);p.add_argument('--plan');p.add_argument('--confirmed-sha');p.add_argument('--session');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['prepare','publish','status','complete-review','schedule-dynamic','complete-dynamic']);p.add_argument('--learner',required=True);p.add_argument('--plan');p.add_argument('--confirmed-sha');p.add_argument('--session');p.add_argument('--synthetic-confirmation', action='store_true');a=p.parse_args()
     try:
         if a.action in ('prepare','publish') and not a.plan: raise Invalid('prepare/publish 需要 --plan')
         if a.action=='complete-review' and not a.session: raise Invalid('complete-review 需要 --session')
         payload=json.load(sys.stdin) if a.action in ('schedule-dynamic','complete-dynamic') else None
-        print(json.dumps(operate(a.action,a.learner,a.plan,a.session,payload,a.confirmed_sha),ensure_ascii=False,indent=2))
+        print(json.dumps(operate(a.action,a.learner,a.plan,a.session,payload,a.confirmed_sha,a.synthetic_confirmation),ensure_ascii=False,indent=2))
     except (Invalid, sessions.authorization.Invalid, planner.Invalid, evidence.EvidenceError, evidence.coach.Stop, evidence.roadmap.Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print('停止：'+str(exc),file=sys.stderr); return 1
     return 0

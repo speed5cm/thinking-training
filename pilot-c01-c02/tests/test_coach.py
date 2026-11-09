@@ -15,7 +15,7 @@ spec = importlib.util.spec_from_file_location('coach', SOURCE / 'scripts' / 'coa
 coach = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(coach)
 
-def args(action, learner='child_a', **kw):
+def args(action, learner='synthetic-a', **kw):
     return SimpleNamespace(action=action, learner=learner, **kw)
 
 class CoachTest(unittest.TestCase):
@@ -40,24 +40,24 @@ class CoachTest(unittest.TestCase):
         review={'card_id':qid,'version':card['version'],'content_sha256':coach.digest(coach.card_path(qid)),'transitions':entries}
         (self.root/'reviews'/f"{qid}@{card['version']}.json").write_text(json.dumps(review),encoding='utf-8')
 
-    def start(self, learner='child_a',mode='C01'):
+    def start(self, learner='synthetic-a',mode='C01'):
         for q in coach.MODES[mode]: self.approve_fixture(q)
         coach.run(args('start',learner,mode=mode))
         return coach.run(args('show',learner))
 
-    def attempt(self, response='不知道', correct='unknown', explanation='none',learner='child_a'):
+    def attempt(self, response='不知道', correct='unknown', explanation='none',learner='synthetic-a'):
         return coach.run(args('attempt',learner,response=response,correctness=correct,explanation=explanation))
 
     def test_unreviewed_card_is_rejected(self):
         with self.assertRaises(coach.Stop): coach.run(args('start',mode='C01'))
-        self.assertFalse((self.root/'records/child_a/events.jsonl').exists())
+        self.assertFalse((self.root/'records/synthetic-a/events.jsonl').exists())
 
     def test_real_published_reviews_allow_all_modes(self):
         # 复制正式审核记录到隔离目录，不构造或修改审核内容。
         for review in (SOURCE / 'reviews').glob('*@*.json'):
             shutil.copy2(review, self.root / 'reviews' / review.name)
         for mode in ('diagnosis', 'C01', 'C02'):
-            learner = 'published_' + mode
+            learner = 'synthetic-published_' + mode
             # This test checks published snapshots; authorization has separate tests.
             with patch.object(coach, 'authorize_c02_locked'):
                 coach.run(args('start', learner, mode=mode))
@@ -70,21 +70,21 @@ class CoachTest(unittest.TestCase):
         for name in ('learning_evidence.py', 'generate_roadmap.py'):
             shutil.copy(PROJECT / 'scripts' / name, scripts / name)
         result = subprocess.run([sys.executable, str(self.root / 'scripts/coach.py'),
-                                 'start', '--learner', 'child_a', '--mode', 'C02'],
+                                 'start', '--learner', 'synthetic-a', '--mode', 'C02'],
                                 capture_output=True, text=True)
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn('C01 掌握证据不足', result.stderr)
-        self.assertFalse((self.root / 'records/child_a/events.jsonl').exists())
+        self.assertIn('C02 授权失败', result.stderr)
+        self.assertFalse((self.root / 'records/synthetic-a/events.jsonl').exists())
 
     def test_concurrent_starts_create_only_one_session(self):
         self.approve_fixture('ST-C01-01')
         command = [sys.executable, str(self.root / 'scripts/coach.py'),
-                   'start', '--learner', 'child_a', '--mode', 'C01']
+                   'start', '--learner', 'synthetic-a', '--mode', 'C01']
         processes = [subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                       text=True) for _ in range(2)]
         results = [p.communicate(timeout=10) for p in processes]
         self.assertEqual(sorted(p.returncode for p in processes), [0, 1], results)
-        events = coach.load_events(self.root / 'records/child_a')
+        events = coach.load_events(self.root / 'records/synthetic-a')
         self.assertEqual(sum(e['type'] == 'start' for e in events), 1)
 
     def test_ai_cannot_approve(self):
@@ -109,7 +109,7 @@ class CoachTest(unittest.TestCase):
 
     def test_correct_answer_wrong_explanation_does_not_mark_mastery(self):
         self.start(); self.attempt('B，因为水迹证明碰倒了', 'correct','invalid')
-        e=coach.load_events(coach.learner_dir('child_a'))[-1]
+        e=coach.load_events(coach.learner_dir('synthetic-a'))[-1]
         self.assertEqual(e['raw_response'],'B，因为水迹证明碰倒了')
         self.assertEqual(e['ai_assessment'],{'correctness':'correct','explanation':'invalid'})
         self.assertNotIn('mastered',json.dumps(e))
@@ -118,7 +118,7 @@ class CoachTest(unittest.TestCase):
         self.start(); self.attempt('A','incorrect','invalid'); out=self.attempt('C','incorrect','invalid')
         self.assertIn('暂停',out['message'])
         with self.assertRaises(coach.Stop): self.attempt('B','correct','valid')
-        demo=coach.run(args('demo')); self.assertIn('平行',coach.load_events(coach.learner_dir('child_a'))[-1]['kind'].replace('parallel','平行'))
+        demo=coach.run(args('demo')); self.assertIn('平行',coach.load_events(coach.learner_dir('synthetic-a'))[-1]['kind'].replace('parallel','平行'))
         self.assertIn('parallel_demo',demo)
 
     def test_dont_know_allows_hint_or_pause(self):
@@ -139,10 +139,10 @@ class CoachTest(unittest.TestCase):
     def test_new_process_resume_from_disk(self):
         self.start(); self.attempt(); coach.run(args('hint')); coach.run(args('pause',text=''))
         script=self.root/'scripts/coach.py'
-        proc=subprocess.run([sys.executable,str(script),'resume','--learner','child_a'],capture_output=True,text=True)
+        proc=subprocess.run([sys.executable,str(script),'resume','--learner','synthetic-a'],capture_output=True,text=True)
         self.assertEqual(proc.returncode,0,proc.stderr)
         self.assertEqual(json.loads(proc.stdout)['current_question'],'ST-C01-01')
-        proc=subprocess.run([sys.executable,str(script),'hint','--learner','child_a'],capture_output=True,text=True)
+        proc=subprocess.run([sys.executable,str(script),'hint','--learner','synthetic-a'],capture_output=True,text=True)
         self.assertEqual(proc.returncode,0,proc.stderr)
         self.assertEqual(json.loads(proc.stdout)['level'],2)
 
@@ -160,27 +160,29 @@ class CoachTest(unittest.TestCase):
         with self.assertRaises(coach.Stop): coach.run(args('resume'))
 
     def test_children_isolated_and_parent_feedback_preserved(self):
-        self.start('child_a'); self.attempt('答案甲','correct','valid','child_a')
-        self.start('child_b'); self.attempt('答案乙','incorrect','invalid','child_b')
-        coach.run(args('feedback','child_a',text='家长观察：愿意画图'))
-        result=coach.run(args('end','child_a',text='结束'))
+        self.start('synthetic-a'); self.attempt('答案甲','correct','valid','synthetic-a')
+        self.start('synthetic-b'); self.attempt('答案乙','incorrect','invalid','synthetic-b')
+        coach.run(args('feedback','synthetic-a',text='家长观察：愿意画图'))
+        result=coach.run(args('end','synthetic-a',text='结束'))
         self.assertEqual(result['summary']['parent_feedback'],['家长观察：愿意画图'])
-        a=(self.root/'records/child_a/events.jsonl').read_text(); b=(self.root/'records/child_b/events.jsonl').read_text()
+        a=(self.root/'records/synthetic-a/events.jsonl').read_text(); b=(self.root/'records/synthetic-b/events.jsonl').read_text()
         self.assertNotIn('答案乙',a); self.assertNotIn('答案甲',b)
-        self.assertEqual(coach.run(args('progress','child_b'))['status'],'active')
+        self.assertEqual(coach.run(args('progress','synthetic-b'))['status'],'active')
 
     def test_diagnosis_one_question_at_a_time_and_skip(self):
         out=self.start(mode='diagnosis'); self.assertEqual(out['id'],'PILOT-DIAG-C01')
-        coach.run(args('skip')); out=coach.run(args('show')); self.assertEqual(out['id'],'PILOT-DIAG-C02')
-        self.attempt('圆形一样，颜色不同','correct','valid'); coach.run(args('complete'))
+        coach.run(args('skip'))
+        with patch.object(coach, 'authorize_c02_locked'):
+            out=coach.run(args('show')); self.assertEqual(out['id'],'PILOT-DIAG-C02')
+            self.attempt('圆形一样，颜色不同','correct','valid'); coach.run(args('complete'))
         self.assertIsNone(coach.run(args('progress'))['current'])
 
     def test_skip_final_completed_and_idempotent(self):
         self.start(); result=coach.run(args('skip')); self.assertEqual(result['status'],'completed')
         self.assertEqual(coach.run(args('progress'))['status'],'completed')
-        count=len(coach.load_events(coach.learner_dir('child_a')))
+        count=len(coach.load_events(coach.learner_dir('synthetic-a')))
         self.assertEqual(coach.run(args('skip'))['status'],'completed')
-        self.assertEqual(len(coach.load_events(coach.learner_dir('child_a'))),count)
+        self.assertEqual(len(coach.load_events(coach.learner_dir('synthetic-a'))),count)
 
     def test_correct_and_explained_final_answer_completes(self):
         self.start()
@@ -192,9 +194,9 @@ class CoachTest(unittest.TestCase):
     def test_complete_final_completed_and_idempotent(self):
         self.start(); self.attempt('B', 'correct','invalid')
         self.assertEqual(coach.run(args('complete'))['status'],'completed')
-        events=coach.load_events(coach.learner_dir('child_a'))
+        events=coach.load_events(coach.learner_dir('synthetic-a'))
         self.assertEqual(coach.run(args('complete'))['status'],'completed')
-        self.assertEqual(coach.load_events(coach.learner_dir('child_a')),events)
+        self.assertEqual(coach.load_events(coach.learner_dir('synthetic-a')),events)
         self.assertNotIn('mastered',json.dumps(events))
 
     def test_failed_persistence_never_returns_completed(self):
@@ -214,7 +216,7 @@ class CoachTest(unittest.TestCase):
         self.attempt('不确定','unknown','none')
         with self.assertRaises(coach.Stop): coach.run(args('explain',consent=False))
         out=coach.run(args('explain',consent=True)); self.assertEqual(out['support'],'full_explanation')
-        self.assertEqual(coach.load_events(coach.learner_dir('child_a'))[-1]['type'],'final_explanation')
+        self.assertEqual(coach.load_events(coach.learner_dir('synthetic-a'))[-1]['type'],'final_explanation')
 
     def test_direct_answer_request_policy_exists_but_is_not_runtime_behavior(self):
         skill=(self.root/'skills/child-thinking-coach/SKILL.md').read_text()

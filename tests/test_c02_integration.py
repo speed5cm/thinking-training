@@ -49,8 +49,6 @@ class C02Integration(unittest.TestCase):
         sha1 = hashlib.sha256((cards / 'ST-C01-01.json').read_bytes()).hexdigest()
         self.records = [record('synthetic-1', 'ST-C01-01', sha1), record('synthetic-2', card['id'], sha)]
         self.save_records()
-        result = self.evidence('confirm-c01')
-        self.assertEqual(result.returncode, 0, result.stderr)
 
     def save_records(self):
         (self.folder / 'evidence.jsonl').write_text(''.join(json.dumps(r, ensure_ascii=False)+'\n' for r in self.records))
@@ -61,57 +59,28 @@ class C02Integration(unittest.TestCase):
     def coach(self, action, *args):
         return subprocess.run([sys.executable, str(self.script), action, '--learner', 'synthetic', *args], text=True, capture_output=True)
 
-    def test_c02_continuity_and_confirmation_invalidation(self):
-        self.assertEqual(self.coach('start', '--mode', 'C02').returncode, 0)
-        self.assertEqual(self.coach('show').returncode, 0)
-        self.assertEqual(self.coach('attempt', '--response', 'synthetic', '--correctness', 'correct', '--explanation', 'valid').returncode, 0)
-        sid = json.loads(self.coach('progress').stdout)['session_id']
-        extra = {'reason_quote':'synthetic', 'transfer':{'status':'unknown','observation':'','parent_verified_novel':False}, 'parent_feedback':''}
-        captured = self.evidence('capture', '--session', sid, input=json.dumps(extra))
-        self.assertEqual(captured.returncode, 0, captured.stderr)
-        again = self.coach('start', '--mode', 'C02')
-        self.assertEqual(again.returncode, 0, again.stderr)
-        self.assertEqual(self.coach('show').returncode, 0)
-        self.records = [json.loads(line) for line in (self.folder / 'evidence.jsonl').read_text().splitlines()]
-        self.records[0]['parent_feedback'] = 'synthetic changed observation'
-        self.save_records()
-        result = self.coach('show')
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn('确认', result.stderr)
-
-    def test_revoked_c02_blocks_and_concurrent_start_serialized(self):
-        command = [sys.executable, str(self.script), 'start', '--learner', 'synthetic', '--mode', 'C02']
-        ps = [subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for _ in range(2)]
-        output = [p.communicate(timeout=15) for p in ps]
-        self.assertEqual(sorted(p.returncode for p in ps), [0, 1], output)
-        (self.pilot / 'reviews/ST-C02-01@1.1.0.json').unlink()
+    def test_legacy_cards_and_confirmation_cannot_authorize_c02(self):
+        # Historical card evidence and parent-shaped confirmation cannot authorize the new rule.
+        self.assertNotEqual(self.evidence('confirm-c01', '--synthetic-confirmation').returncode, 0)
+        (self.folder / 'mastery-confirmation.json').write_text(json.dumps({'concept':'C01','confirmation':'parent','evidence_digest':'legacy'}))
+        self.assertNotEqual(self.coach('start', '--mode', 'C02').returncode, 0)
         self.assertNotEqual(self.coach('show').returncode, 0)
 
-    def test_old_card_is_validated_but_excluded_pending_review(self):
-        cards = self.pilot / 'cards'
-        path = cards / 'ST-C01-01.json'
-        card = json.loads(path.read_text())
-        card['version'] = '1.2.0'
-        path.write_text(json.dumps(card, ensure_ascii=False, indent=2) + '\n')
-        sha = hashlib.sha256(path.read_bytes()).hexdigest()
-        registry_path = cards / 'versions.json'
-        registry = json.loads(registry_path.read_text())
-        registry['ST-C01-01']['1.2.0'] = sha
-        registry_path.write_text(json.dumps(registry))
-        shutil.copy(path, cards / 'archive/ST-C01-01/1.2.0.json')
-        review = json.loads((self.pilot / 'reviews/ST-C01-01@1.1.0.json').read_text())
-        review.update(version='1.2.0', content_sha256=sha)
-        for transition in review['transitions']:
-            transition['actor'] = 'SYNTHETIC_TEST_ONLY'
-        (self.pilot / 'reviews/ST-C01-01@1.2.0.json').write_text(json.dumps(review))
+    def test_revoked_c02_and_concurrent_legacy_starts_are_denied(self):
+        (self.pilot / 'reviews/ST-C02-01@1.1.0.json').unlink()
+        command = [sys.executable, str(self.script), 'start', '--learner', 'synthetic', '--mode', 'C02']
+        processes = [subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for _ in range(2)]
+        output = [p.communicate(timeout=15) for p in processes]
+        self.assertEqual([p.returncode for p in processes], [1, 1], output)
+
+    def test_old_card_records_remain_archived_and_never_satisfy_dynamic_rule(self):
         result = self.evidence('assess')
         self.assertEqual(result.returncode, 0, result.stderr)
         assessment = json.loads(result.stdout)
-        self.assertEqual(assessment['historical_evidence_pending_review'], 1)
+        self.assertEqual(assessment['historical_evidence_pending_review'], 2)
         self.assertEqual(assessment['assessments'][0]['mastery'], 'pending_confirmation')
         self.assertNotEqual(self.coach('start', '--mode', 'C02').returncode, 0)
-        (cards / 'archive/ST-C01-01/1.1.0.json').write_text('{}')
-        self.assertNotEqual(self.evidence('assess').returncode, 0)
+        self.assertTrue((self.folder / 'evidence.jsonl').is_file())
 
 if __name__ == '__main__':
     unittest.main()

@@ -45,9 +45,13 @@ def context(learner, already_locked=False):
         basis = snapshot['state'].get('planning_basis')
         if basis is not None:
             learner_files['sigma/planning_basis'] = basis
+    try:
+        destination = evidence.destination_basis(learner)
+    except (evidence.EvidenceError, OSError, ValueError, KeyError, TypeError) as exc:
+        destination = {'unavailable': str(exc)}
     return {'curriculum': curriculum, 'curriculum_digest': digest(contents),
             'learner_digest': digest(learner_files),
-            'evidence_digest': assessment['evidence_digest'], 'assessment': assessment,
+            'evidence_digest': digest([assessment['evidence_digest'], destination]), 'assessment': assessment,
             'current_recommendation': recommendation}
 
 def validate(plan, ctx, learner):
