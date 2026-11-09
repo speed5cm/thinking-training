@@ -13,14 +13,15 @@ spec = importlib.util.spec_from_file_location('sigma_session_store_test', ROOT /
 store = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(store)
 
+@mock.patch.object(store.authorization, 'check', return_value={})
 class SnapshotTests(unittest.TestCase):
-    def test_analysis_survives_multiple_turns_and_rejects_missing_or_duplicate(self):
-        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(store.evidence, 'get_folder', return_value=Path(tmp)):
+    def test_analysis_survives_multiple_turns_and_rejects_missing_or_duplicate(self, _check):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(store.evidence, 'get_folder', return_value=Path(tmp)), mock.patch.object(store.evidence.coach, 'ROOT', Path(tmp)):
             proposed = {'state': {}, 'session': '', 'turns': []}
             revision = 0
             for i in range(5):
                 qid = f'q{i}'
-                proposed['turns'].append({'type':'question','question_id':qid,'text':'问题'})
+                proposed['turns'].append({'type':'question','concept':'C01','question_id':qid,'text':'问题'})
                 revision = store.operate('synthetic', proposed, revision)['revision']
                 proposed['turns'].append({'type':'answer','question_id':qid,'text':f'原话{i}'})
                 with self.assertRaises(store.Invalid):
@@ -32,11 +33,11 @@ class SnapshotTests(unittest.TestCase):
             proposed['turns'].append({'type':'analysis','question_id':'q0','analysis':{'reason':'重复'}})
             with self.assertRaises(store.Invalid): store.operate('synthetic', proposed, revision)
             self.assertEqual(store.operate('synthetic'), restored)
-    def test_failure_and_conflict_leave_complete_snapshot(self):
+    def test_failure_and_conflict_leave_complete_snapshot(self, _check):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
-            proposed = {'state': {'status':'active'}, 'session':'synthetic', 'turns':[{'question':'synthetic'}]}
-            with mock.patch.object(store.evidence, 'get_folder', return_value=folder):
+            proposed = {'state': {'status':'active'}, 'session':'synthetic', 'turns':[{'type':'question','concept':'C01','question_id':'q','text':'synthetic'}]}
+            with mock.patch.object(store.evidence, 'get_folder', return_value=folder), mock.patch.object(store.evidence.coach, 'ROOT', folder):
                 store.operate('synthetic', proposed, 0)
                 with mock.patch.object(store.os, 'replace', side_effect=OSError('synthetic disk error')):
                     with self.assertRaises(OSError):

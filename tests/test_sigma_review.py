@@ -49,10 +49,10 @@ class ReviewPersistence(unittest.TestCase):
             candidate = root / 'proposal.json'; candidate.write_text('{}')
             ctx = {k:'snapshot' for k in ('curriculum_digest','evidence_digest','learner_digest')}
             ctx['curriculum'] = {'concepts':[{'id':'C01'}]}
-            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'):
+            with mock.patch.object(plans.evidence.coach, 'ROOT', root), mock.patch.object(plans.evidence, 'get_folder', return_value=folder), mock.patch.object(plans.evidence, 'load_evidence', return_value=[]), mock.patch.object(plans.planner, 'context', return_value=ctx), mock.patch.object(plans.planner, 'validate'), mock.patch.object(plans.sessions.authorization, 'check', return_value={}):
                 self.publish(candidate)
                 snap = {'state':{}, 'session':'', 'turns':[
-                    {'type':'question','question_id':'q1','text':'问题'},
+                    {'type':'question','concept':'C01','question_id':'q1','text':'问题'},
                     {'type':'answer','question_id':'q1','text':'不知道'},
                     {'type':'analysis','question_id':'q1','analysis':{'reason':'需要复习'}}]}
                 plans.sessions.operate('test', snap, 0)
@@ -61,7 +61,7 @@ class ReviewPersistence(unittest.TestCase):
                 self.assertEqual(scheduled['version'], 1)
                 with self.assertRaises(plans.Invalid):
                     plans.operate('schedule-dynamic','test',payload={'concept':'C01','question_id':'q1','reason':'重复','interval_days':1})
-                snap['turns'] += [{'type':'question','question_id':'q2','text':'复习题','review_task_id':task['task_id']},
+                snap['turns'] += [{'type':'question','concept':'C01','question_id':'q2','text':'复习题','review_task_id':task['task_id']},
                                   {'type':'answer','question_id':'q2','text':'回答'},
                                   {'type':'analysis','question_id':'q2','analysis':{'reason':'解释充分'}}]
                 plans.sessions.operate('test', snap, 1)

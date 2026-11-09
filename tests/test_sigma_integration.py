@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,6 +22,8 @@ class SigmaIntegration(unittest.TestCase):
                 result = subprocess.run([sys.executable, str(root / 'scripts' / script), *args], input=json.dumps(data, ensure_ascii=False) if data is not None else None, capture_output=True, text=True, cwd=root, timeout=15)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 return json.loads(result.stdout)
+            from concept_authorization_fixture import write_authorization
+            write_authorization(root)
             learner = ('--learner', 'synthetic')
             snapshot = {'state': {}, 'session': '', 'turns': []}
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '0', data=snapshot)
@@ -43,9 +46,9 @@ class SigmaIntegration(unittest.TestCase):
             # Routine coach events do not change formal evidence or the plan.
             (folder / 'events.jsonl').write_text(json.dumps({'type':'parent_feedback','text':'普通记录'}, ensure_ascii=False) + '\n')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
-            events = [[{'type':'question','question_id':'q1','text':'问题'}],
+            events = [[{'type':'question','concept':'C01','question_id':'q1','text':'问题'}],
                       [{'type':'answer','question_id':'q1','text':'回答'}, {'type':'analysis','question_id':'q1','analysis':{'reason':'分析'}}],
-                      [{'type':'question','question_id':'q2','text':'追问'}]]
+                      [{'type':'question','concept':'C01','question_id':'q2','text':'追问'}]]
             for revision, batch in enumerate(events, 1):
                 snapshot['turns'].extend(batch)
                 call('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=snapshot)
@@ -71,11 +74,18 @@ class SigmaIntegration(unittest.TestCase):
             snapshot['turns'].extend([
                 {'type':'answer','question_id':'q2','text':'回答'},
                 {'type':'analysis','question_id':'q2','analysis':{'reason':'分析'}},
-                {'type':'question','question_id':'q3','text':'复习题','review_task_id':task['task_id']},
+                {'type':'question','concept':'C01','question_id':'q3','text':'复习题','review_task_id':task['task_id']},
                 {'type':'answer','question_id':'q3','text':'复习回答'},
                 {'type':'analysis','question_id':'q3','analysis':{'reason':'复习分析'}}])
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '6', data=snapshot)
             before = history.read_bytes()
+            call('concept_authorization.py', 'revoke')
+            denied = subprocess.run([sys.executable, str(root / 'scripts/sigma_plan_store.py'), 'complete-dynamic', *learner],
+                                    input=json.dumps({'task_id':task['task_id'],'question_id':'q3','result':'correct','next_interval_days':2}),
+                                    capture_output=True, text=True, cwd=root, timeout=15)
+            self.assertNotEqual(denied.returncode, 0)
+            self.assertEqual(history.read_bytes(), before)
+            write_authorization(root)
             with (root / 'wiki/concepts/observation-vs-inference.md').open('a') as page: page.write('\n<!-- test -->\n')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'stale')
             for action, payload in (
@@ -92,6 +102,7 @@ class SigmaIntegration(unittest.TestCase):
             ctx = call('validate_personal_roadmap.py', 'context', *learner)
             for key in ('curriculum_digest','evidence_digest','learner_digest'): plan[key] = ctx[key]
             candidate.write_text(json.dumps(plan, ensure_ascii=False))
+            write_authorization(root, version='synthetic-2')  # Simulated review of changed content.
             republished = publish()
             self.assertEqual((republished['status'], republished['version']), ('current', 3))
             completed = call('sigma_plan_store.py', 'complete-dynamic', *learner, data={

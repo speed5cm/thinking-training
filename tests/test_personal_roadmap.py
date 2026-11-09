@@ -78,7 +78,8 @@ class PersonalRoadmapTests(unittest.TestCase):
             (Path(tmp) / 'tutor-state.json').write_text('{"status":"paused"}', encoding='utf-8')
             self.assertEqual(planner.context('fiction-demo')['learner_digest'], before)
 
-    def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self):
+    @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={})
+    def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self, _check):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
             snapshot = {'state': {'question': '原题'}, 'session': '记录', 'turns': []}
             planner.sigma_session.operate('fiction-demo', snapshot, 0)
@@ -88,7 +89,7 @@ class PersonalRoadmapTests(unittest.TestCase):
                 plan[key] = ctx[key]
             planner.validate(plan, ctx, 'fiction-demo')
             snapshot['state']['question'] = '下一题'
-            snapshot['turns'].append({'type': 'question', 'question_id': 'q1', 'text': '下一题'})
+            snapshot['turns'].append({'type': 'question', 'concept': 'C01', 'question_id': 'q1', 'text': '下一题'})
             planner.sigma_session.operate('fiction-demo', snapshot, 1)
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
             snapshot['turns'].append({'type': 'answer', 'question_id': 'q1', 'text': '回答'})

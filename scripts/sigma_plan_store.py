@@ -130,6 +130,7 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
         if action in ('schedule-dynamic', 'complete-dynamic'):
             if stale: raise Invalid('路线已过期，请先重新检查教学范围并更新路线，再推进动态复习')
             if not isinstance(payload, dict): raise Invalid('动态复习需要 JSON 对象')
+            sessions.authorization.check('C01', learner)
             tasks = store.setdefault('dynamic_reviews', [])
             snapshot = sessions.read_folder(folder)
             now = dt.datetime.now(dt.timezone.utc)
@@ -137,6 +138,7 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
                 if set(payload) != {'concept', 'question_id', 'reason', 'interval_days'}:
                     raise Invalid('安排复习字段无效')
                 concept, qid, reason, days = (payload[k] for k in ('concept','question_id','reason','interval_days'))
+                if concept != 'C01': raise Invalid('动态概念授权仅覆盖 C01')
                 if not isinstance(concept, str) or concept not in {c['id'] for c in ctx['curriculum']['concepts']}:
                     raise Invalid('未知概念')
                 if not isinstance(qid, str) or not qid or not isinstance(reason, str) or not reason.strip():
@@ -155,6 +157,7 @@ def operate(action, learner, candidate=None, session=None, payload=None, confirm
                 matches = [t for t in tasks if t['task_id'] == task_id_value]
                 if len(matches) != 1 or matches[0]['status'] != 'pending': raise Invalid('复习任务不存在或已完成')
                 task = matches[0]
+                if task.get('concept') != 'C01': raise Invalid('动态概念授权仅覆盖 C01')
                 if parse_date(task['due_at']) > now: raise Invalid('复习任务尚未到期')
                 if not isinstance(qid, str) or not qid: raise Invalid('复习问题 ID 无效')
                 if result not in ('correct', 'partial', 'incorrect'): raise Invalid('复习结果无效')
@@ -197,7 +200,7 @@ def main():
         if a.action=='complete-review' and not a.session: raise Invalid('complete-review 需要 --session')
         payload=json.load(sys.stdin) if a.action in ('schedule-dynamic','complete-dynamic') else None
         print(json.dumps(operate(a.action,a.learner,a.plan,a.session,payload,a.confirmed_sha),ensure_ascii=False,indent=2))
-    except (Invalid, planner.Invalid, evidence.EvidenceError, evidence.coach.Stop, evidence.roadmap.Invalid, OSError, ValueError, KeyError, TypeError) as exc:
+    except (Invalid, sessions.authorization.Invalid, planner.Invalid, evidence.EvidenceError, evidence.coach.Stop, evidence.roadmap.Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print('停止：'+str(exc),file=sys.stderr); return 1
     return 0
 if __name__=='__main__': sys.exit(main())

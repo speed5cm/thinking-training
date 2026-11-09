@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Atomic Sigma session snapshot; not a teaching gate."""
+"""Atomic Sigma session snapshot with a C01 synthetic content gate."""
 import argparse
 import fcntl
 import json
@@ -9,6 +9,7 @@ import sys
 import tempfile
 
 import learning_evidence as evidence
+import concept_authorization as authorization
 
 class Invalid(ValueError):
     pass
@@ -60,7 +61,8 @@ def operate(learner, proposed=None, expected=None):
     dest = folder / 'sigma'
     dest.mkdir(mode=0o700, exist_ok=True)
     path = dest / 'session-snapshot.json'
-    with (folder / '.lock').open('a') as lock:
+    with (evidence.coach.ROOT / '.publication.lock').open('a') as pub, (folder / '.lock').open('a') as lock:
+        fcntl.flock(pub, fcntl.LOCK_SH)
         fcntl.flock(lock, fcntl.LOCK_EX)
         previous = read_folder(folder)
         if proposed is None:
@@ -74,6 +76,13 @@ def operate(learner, proposed=None, expected=None):
         # Previously committed turns must remain byte-for-byte equivalent in JSON data.
         if current['turns'][:len(previous['turns'])] != previous['turns']:
             raise Invalid('不能覆盖已提交的逐轮记录')
+        added = current['turns'][len(previous['turns']):]
+        if any(e.get('type') not in ('question', 'answer', 'analysis') for e in added):
+            raise Invalid('新事件类型无效')
+        if any(e.get('type') == 'question' and e.get('concept') != 'C01' for e in added):
+            raise Invalid('动态问题须声明已授权的 C01 概念')
+        if added:
+            authorization.check('C01', learner)
         validate_new_events(previous, current)
         fd, temp = tempfile.mkstemp(dir=dest, prefix='.session-')
         try:
@@ -98,7 +107,7 @@ def main():
     try:
         result = operate(args.learner, json.load(sys.stdin), args.expected_revision) if args.action == 'commit' else operate(args.learner)
         print(json.dumps(result, ensure_ascii=False, indent=2))
-    except (Invalid, evidence.EvidenceError, evidence.coach.Stop, OSError, ValueError, TypeError) as exc:
+    except (Invalid, authorization.Invalid, evidence.EvidenceError, evidence.coach.Stop, OSError, ValueError, TypeError) as exc:
         print('停止：' + str(exc), file=sys.stderr)
         return 1
     return 0
