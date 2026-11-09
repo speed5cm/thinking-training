@@ -22,11 +22,11 @@ class SigmaIntegration(unittest.TestCase):
                 result = subprocess.run([sys.executable, str(root / 'scripts' / script), *args], input=json.dumps(data, ensure_ascii=False) if data is not None else None, capture_output=True, text=True, cwd=root, timeout=15)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 return json.loads(result.stdout)
-            from concept_authorization_fixture import write_authorization, question_event, event
+            from concept_authorization_fixture import write_authorization, question_event, event, snapshot as saved_snapshot
             write_authorization(root)
             learner = ('--learner', 'synthetic')
-            snapshot = {'state': {}, 'session': '', 'turns': []}
-            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '0', data=snapshot)
+            snapshot = {'state': {}, 'session': '', 'turns': [{'type':'session_start'}]}
+            snapshot = saved_snapshot(call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '0', data=snapshot))
             card_path = root / 'pilot-c01-c02/cards/ST-C01-01.json'
             card = json.loads(card_path.read_text())
             record = {'concept':'C01', 'session_id':'synthetic-evidence', 'captured_at':'2020-01-01T00:00:00+00:00', 'card':{'id':'ST-C01-01','version':card['version'],'sha256':hashlib.sha256(card_path.read_bytes()).hexdigest()}, 'ai_temporary_correctness':'correct','explanation_quality':'valid','reason_quote':'因为','raw_response':'因为','hint_level':0,'prior_attempts':0,'prior_support':[],'transfer':{'status':'unknown','parent_verified_novel':False,'observation':''}}
@@ -46,16 +46,16 @@ class SigmaIntegration(unittest.TestCase):
             # Routine coach events do not change formal evidence or the plan.
             (folder / 'events.jsonl').write_text(json.dumps({'type':'parent_feedback','text':'普通记录'}, ensure_ascii=False) + '\n')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
-            events = [[question_event(root, 'q1')],
-                      [event('answer', 'q1', text='回答'), event('analysis', 'q1', analysis={'reason':'分析'})],
-                      [question_event(root, 'q2', text='追问')]]
+            events = [[question_event(root, 'q1', session_id=snapshot['session'])],
+                      [event('answer', 'q1', text='回答', session_id=snapshot['session']), event('analysis', 'q1', analysis={'reason':'分析'}, session_id=snapshot['session'])],
+                      [question_event(root, 'q2', text='追问', session_id=snapshot['session'])]]
             for revision, batch in enumerate(events, 1):
                 snapshot['turns'].extend(batch)
-                call('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=snapshot)
+                snapshot = saved_snapshot(call('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=snapshot))
             snapshot['state']['status'] = 'paused'
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '4', data=snapshot)
             resumed = call('sigma_session_store.py', 'read', *learner)
-            self.assertEqual(resumed['turns'][-1], events[-1][0])
+            self.assertEqual(resumed['turns'][-1]['question_id'], 'q2')
             self.assertEqual(call('sigma_plan_store.py', 'status', *learner)['status'], 'current')
             snapshot['state']['planning_basis'] = {'C01':'需要复习'}
             call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '5', data=snapshot)
@@ -71,12 +71,12 @@ class SigmaIntegration(unittest.TestCase):
             saved = json.loads(history.read_text())
             saved['dynamic_reviews'][0]['due_at'] = '2020-01-01T00:00:00+00:00'
             history.write_text(json.dumps(saved, ensure_ascii=False))
-            snapshot['turns'].extend([event('answer','q2',text='回答'), event('analysis','q2',analysis={'reason':'分析'})])
-            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '6', data=snapshot)
-            snapshot['turns'].append(question_event(root, 'q3', text='复习题', review_task_id=task['task_id']))
-            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '7', data=snapshot)
-            snapshot['turns'].extend([event('answer','q3',text='复习回答'), event('analysis','q3',analysis={'reason':'复习分析'})])
-            call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '8', data=snapshot)
+            snapshot['turns'].extend([event('answer','q2',text='回答',session_id=snapshot['session']), event('analysis','q2',analysis={'reason':'分析'},session_id=snapshot['session'])])
+            snapshot = saved_snapshot(call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '6', data=snapshot))
+            snapshot['turns'].append(question_event(root, 'q3', text='复习题', review_task_id=task['task_id'], session_id=snapshot['session']))
+            snapshot = saved_snapshot(call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '7', data=snapshot))
+            snapshot['turns'].extend([event('answer','q3',text='复习回答',session_id=snapshot['session']), event('analysis','q3',analysis={'reason':'复习分析'},session_id=snapshot['session'])])
+            snapshot = saved_snapshot(call('sigma_session_store.py', 'commit', *learner, '--expected-revision', '8', data=snapshot))
             before = history.read_bytes()
             call('concept_authorization.py', 'revoke')
             denied = subprocess.run([sys.executable, str(root / 'scripts/sigma_plan_store.py'), 'complete-dynamic', *learner],

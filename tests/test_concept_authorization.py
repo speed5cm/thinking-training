@@ -21,10 +21,11 @@ class ConceptAuthorization(unittest.TestCase):
                 return subprocess.run([sys.executable, str(root / 'scripts' / script), *args],
                     input=json.dumps(data, ensure_ascii=False) if data is not None else None,
                     capture_output=True, text=True, cwd=root, timeout=15)
-            args = ('commit', '--learner', 'synthetic', '--expected-revision', '0')
-            question = {'state': {}, 'session': '', 'turns': [question_event(root, 'q1', text='测试', auth_sha='a' * 64)]}
-            def commit(): return run('sigma_session_store.py', *args, data=question)
-            self.assertNotEqual(commit().returncode, 0)
+            learner = ('--learner','synthetic')
+            start = {'state':{}, 'session':'', 'turns':[{'type':'session_start'}]}
+            def run_commit(data, revision):
+                return run('sigma_session_store.py', 'commit', *learner, '--expected-revision', str(revision), data=data)
+            self.assertNotEqual(run_commit(start, 0).returncode, 0)
             path = write_authorization(root)
             self.assertEqual(run('concept_authorization.py', 'check', '--learner', 'synthetic').returncode, 0)
             self.assertNotEqual(run('concept_authorization.py', 'check', '--learner', 'child').returncode, 0)
@@ -33,23 +34,28 @@ class ConceptAuthorization(unittest.TestCase):
                            {'review': {'kind':'ai', 'actor':'agent', 'basis':'claim'}},
                            {'sources': []}, {'scope': ''}, {'status':'revoked'}, {'content_sha256': {}}):
                 path.write_text(json.dumps({**original, **change}, ensure_ascii=False))
-                self.assertNotEqual(commit().returncode, 0, change)
+                self.assertNotEqual(run_commit(start, 0).returncode, 0, change)
             path.write_text(json.dumps(original, ensure_ascii=False))
             source = root / 'references/pedagogy.md'
             source.write_text(source.read_text() + '\nchanged\n')
-            self.assertNotEqual(commit().returncode, 0)
+            self.assertNotEqual(run_commit(start, 0).returncode, 0)
             write_authorization(root, version='synthetic-2')
-            bad = {'state': {}, 'session':'', 'turns':[{'question':'bypass'}]}
-            self.assertNotEqual(run('sigma_session_store.py', *args, data=bad).returncode, 0)
+            started = json.loads(run_commit(start, 0).stdout)
+            question = {k:started[k] for k in ('state','session','turns')}
+            bad = {**question, 'turns':question['turns'] + [{'question':'bypass'}]}
+            self.assertNotEqual(run_commit(bad, 1).returncode, 0)
             for concept in (None, 'C02'):
-                bypass = {'state': {}, 'session':'', 'turns':[{'type':'question', 'concept':concept, 'question_id':'x', 'text':'测试'}]}
-                self.assertNotEqual(run('sigma_session_store.py', *args, data=bypass).returncode, 0)
-            question['turns'][0] = question_event(root, 'q1', text='测试')
-            self.assertEqual(commit().returncode, 0)
+                q = question_event(root, 'x', session_id=question['session'], concept=concept)
+                bypass = {**question, 'turns':question['turns'] + [q]}
+                self.assertNotEqual(run_commit(bypass, 1).returncode, 0)
+            question['turns'].append(question_event(root, 'q1', text='测试', session_id=question['session']))
+            stored = run_commit(question, 1)
+            self.assertEqual(stored.returncode, 0, stored.stderr)
+            question = {k:json.loads(stored.stdout)[k] for k in ('state','session','turns')}
             self.assertEqual(run('concept_authorization.py', 'revoke').returncode, 0)
-            question['turns'].extend([event('answer','q1',text='回答'), event('analysis','q1',analysis={'reason':'评价'})])
-            self.assertNotEqual(run('sigma_session_store.py', 'commit', '--learner','synthetic','--expected-revision','1',data=question).returncode, 0)
+            question['turns'].extend([event('answer','q1',text='回答',session_id=question['session']), event('analysis','q1',analysis={'reason':'评价'},session_id=question['session'])])
+            self.assertNotEqual(run('sigma_session_store.py', 'commit', '--learner','synthetic','--expected-revision','2',data=question).returncode, 0)
             saved = run('sigma_session_store.py','read','--learner','synthetic')
-            self.assertEqual(len(json.loads(saved.stdout)['turns']), 1)
+            self.assertEqual(len(json.loads(saved.stdout)['turns']), 2)
 
 if __name__ == '__main__': unittest.main()

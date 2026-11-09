@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 from unittest import mock
-from concept_authorization_fixture import question_event, event
+from concept_authorization_fixture import question_event, event, begin, snapshot
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,23 +82,27 @@ class PersonalRoadmapTests(unittest.TestCase):
     @mock.patch.object(planner.sigma_session.authorization, 'check', return_value={'authorization_sha256':'a' * 64})
     def test_sigma_planning_basis_invalidates_plan_but_turns_do_not(self, _check):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(planner.evidence.coach, 'learner_dir', return_value=Path(tmp)):
-            snapshot = {'state': {'question': '原题'}, 'session': '记录', 'turns': []}
-            planner.sigma_session.operate('fiction-demo', snapshot, 0)
+            snap, rev = begin(planner.sigma_session, 'fiction-demo')
+            snap['state']['question'] = '原题'
+            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            snap, rev = snapshot(result), result['revision']
             ctx = planner.context('fiction-demo')
             plan = copy.deepcopy(self.plan)
             for key in ('curriculum_digest', 'evidence_digest', 'learner_digest'):
                 plan[key] = ctx[key]
             planner.validate(plan, ctx, 'fiction-demo')
-            snapshot['state']['question'] = '下一题'
-            snapshot['turns'].append(question_event(ROOT, 'q1', text='下一题', auth_sha='a' * 64))
-            planner.sigma_session.operate('fiction-demo', snapshot, 1)
+            snap['state']['question'] = '下一题'
+            snap['turns'].append(question_event(ROOT, 'q1', text='下一题', auth_sha='a' * 64, session_id=snap['session']))
+            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            snap, rev = snapshot(result), result['revision']
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
-            snapshot['turns'].append(event('answer', 'q1', text='回答'))
-            snapshot['turns'].append(event('analysis', 'q1', analysis={'reason': '普通教学观察'}))
-            planner.sigma_session.operate('fiction-demo', snapshot, 2)
+            snap['turns'].append(event('answer', 'q1', text='回答', session_id=snap['session']))
+            snap['turns'].append(event('analysis', 'q1', analysis={'reason': '普通教学观察'}, session_id=snap['session']))
+            result = planner.sigma_session.operate('fiction-demo', snap, rev)
+            snap, rev = snapshot(result), result['revision']
             planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
-            snapshot['state']['planning_basis'] = {'C01': '需要复习'}
-            planner.sigma_session.operate('fiction-demo', snapshot, 3)
+            snap['state']['planning_basis'] = {'C01': '需要复习'}
+            planner.sigma_session.operate('fiction-demo', snap, rev)
             with self.assertRaises(planner.Invalid):
                 planner.validate(plan, planner.context('fiction-demo'), 'fiction-demo')
 

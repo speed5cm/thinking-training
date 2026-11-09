@@ -35,3 +35,10 @@ def question_event(root, qid, text='问题', purpose='teaching', auth_sha=None, 
 
 def event(event_type, qid, **values):
     return {'type': event_type, 'session_id': 'session-1', 'question_id': qid, **values}
+
+def snapshot(result):
+    return {key: result[key] for key in ('state', 'session', 'turns')}
+
+def begin(store, learner):
+    result = store.operate(learner, {'state':{}, 'session':'', 'turns':[{'type':'session_start'}]}, 0)
+    return snapshot(result), result['revision']
